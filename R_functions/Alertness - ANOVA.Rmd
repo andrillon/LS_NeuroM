@@ -1,0 +1,220 @@
+---
+title: "VAS - Alertness (ANOVA)"
+output: html_document
+---
+
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+
+VAS_alertness_exclusions <- read_excel("Desktop/PSY4100/Data /VAS_alertness_exclusions.xlsx")
+VAS_alertness_exclusions <- select(VAS_alertness_exclusions, -c(1,...15, ...16))
+names(VAS_alertness_exclusions) <- c("Participant","MPH_1", "MPH_2", "MPH_3", "ATM_1", "ATM_2", "ATM_3", "CIT_1", "CIT_2", "CIT_3", "PLA_1", "PLA_2", "PLA_3")
+VAS_alertness_exclusions$Participant <- as.factor(VAS_alertness_exclusions$Participant)
+alertness.long <- melt(VAS_alertness_exclusions, id.vars = "Participant", variable.name = "condition", value.name = "score")
+
+```
+
+``` {r}
+## mean and sd
+alertness.long %>% group_by(condition) %>% get_summary_stats(score, type = "mean_sd")
+alertness.mean <- ggplot(alertness.long, aes(condition, score)) +
+    stat_summary(fun.data = mean_cl_normal) +
+    theme_pubr()
+print(alertness.mean)
+
+##outliers
+alertness.long %>% group_by(condition) %>% identify_outliers(score)
+
+## identifying and renaming NAs
+alertness.long[alertness.long == 0.00000] <- NA
+alertness.long %>% group_by(condition) %>% identify_outliers(score)
+
+alertness.long %>%
+  group_by(condition) %>%
+  shapiro_test(score)
+ggqqplot(alertness.long, "score", facet.by = "condition")
+```
+ 
+ PLA-2 was not normally distributed according to Shapiro-Wilk (p was 0.0396), but, upon careful inspection of the QQ-plot, it does not stray from the proposed normal distribution 
+
+
+```{r}
+##One-Way ANOVA Test
+alertness.anova <- anova_test(alertness.long, score ~ condition, dv = score, wid = Participant)
+get_anova_table(alertness.anova)
+
+pwc.alertness <- alertness.long %>% pairwise_t_test(score ~ condition, paired = TRUE, p.adjust.method = "bonferroni")
+pwc.alertness
+
+```
+
+Significant differences were found for: MPH-1 and ATM-3, MPH-1 and CIT-3, MPH-1 and PLA-3, MPH-2 and ATM-3, MPH-2 and CIT-3, MPH-2 and PLA-2, MPH-2 and PLA-3, MPH-3 and ATM-3, MPH-3 and CIT-3, MPH-3 and PLA-3, ATM-1 and ATM-3, ATM-1 and CIT-3, ATM-1 and PLA-3, ATM-2 and ATM-3, ATM-2 and CIT-3, ATM-2 and PLA-3, ATM-3 and CIT-1, ATM-3 and CIT-2, ATM-3 and PLA-1, CIT-1 and CIT-3, CIT-1 and PLA-3, CIT-2 and CIT-3, CIT-2 and PLA-3, CIT-3 and PLA-1, CIT-3 and PLA-2, PLA-1 and PLA-3, PLA-2 and PLA-3
+
+
+
+#REDO AFTER REMOVAL OF NAs
+
+```{r}
+##removal of participant with 4 as they have NAs coded 
+alertness.long.NoNA <-na.omit(alertness.long)
+
+##check there are no NAs
+complete.cases(alertness.long.NoNA)
+summary(alertness.long.NoNA)
+
+##new mean and SD
+alertness.long.NoNA %>% group_by(condition) %>% get_summary_stats(score, type = "mean_sd")
+alertness.mean1 <- ggplot(alertness.long.NoNA, aes(condition, score)) +
+    stat_summary(fun.data = mean_cl_normal) +
+    theme_pubr()
+print(alertness.mean1)
+
+##outliers
+alertness.long.NoNA %>% group_by(condition) %>% identify_outliers(score)
+
+##normality 
+alertness.long.NoNA %>%
+  group_by(condition) %>%
+  shapiro_test(score)
+ggqqplot(alertness.long.NoNA, "score", facet.by = "condition")
+
+## linearity assumption 
+library(GGally)
+linearity.alertness <- alertness.long.NoNA %>%
+  select(score, condition) %>%
+  group_by(condition) %>%
+  doo(~ggpairs(.) + theme_bw(), result = "plots")
+linearity.alertness
+
+linearity.alertness$plots
+
+## homogeneity of variance 
+leveneTest(score ~ condition, data = alertness.long.NoNA)
+```
+
+- No change in mean or SD was found from the removal of NA values 
+- No outliers were found 
+- Same graphs obtained for normality 
+- Insignificant results were obtained for Levene's test and thus, homogeneity of variance was not violated 
+
+```{r}
+##Re-run of The One-Way ANOVA Test
+alertness.anova1 <- anova_test(alertness.long.NoNA, score ~ condition, dv = score, wid = Participant)
+get_anova_table(alertness.anova1)
+
+##Pair-wise T-test
+pwc.alertness1 <- alertness.long.NoNA %>% pairwise_t_test(score ~ condition, paired = FALSE, p.adjust.method = "bonferroni")
+pwc.alertness1
+
+```
+
+Some differences observed in pair-wise t-test from this time compared to last time 
+
+
+NOW CONDUCTING TWO-WAY REPREATED MEASURES ANOVA 
+``` {r}
+## separate condition and time into two different columns
+ alertness.long.NoNA <- separate(alertness.long.NoNA, "condition", c("condition", "time"))
+
+##change condition and time to factors 
+alertness.long.NoNA$time <- as.factor(alertness.long.NoNA$time)
+alertness.long.NoNA$condition <- as.factor(alertness.long.NoNA$condition)
+str(alertness.long.NoNA)
+
+## summary statistics 
+sum.alertness <- alertness.long.NoNA%>%
+  group_by(condition, time) %>%
+  get_summary_stats(score, type = "mean_sd")
+sum.alertness
+
+##boxplot
+bxp.alertness <- ggboxplot(
+  alertness.long.NoNA, x = "condition", y = "score",
+  color = "time", palette = "jco")
+bxp.alertness
+
+##outliers 
+alertness.long.NoNA %>%
+  group_by(condition, time) %>%
+  identify_outliers(score)
+
+##normality assumption 
+alertness.long.NoNA %>%
+  group_by(condition, time) %>%
+  shapiro_test(score)
+
+ggqqplot(alertness.long.NoNA, "score", ggtheme = theme_bw()) +
+  facet_grid(time ~ condition, labeller = "label_both")
+
+```
+-no extreme outliers were found, thus none will be removed 
+- PLA-2 was again found to violate normality according to shapiro-whilk, but inspection of the qqplot proved otherwise
+
+
+```{r}
+##two-way repeated measures ANOVA 
+alertness.aov <- anova_test(
+  data = alertness.long.NoNA, dv = score, wid = Participant,
+  within = c(condition, time))
+get_anova_table(alertness.aov)
+
+## Effect of condition at each time point
+one.way.alertness <- alertness.long.NoNA %>%
+  group_by(time) %>%
+  anova_test(dv = score, wid = Participant, within = condition) %>%
+  get_anova_table() %>%
+  adjust_pvalue(method = "bonferroni")
+one.way.alertness
+# Pairwise comparisons between condition groups
+pwc.alertness.2 <- alertness.long.NoNA %>%
+  group_by(time) %>%
+  pairwise_t_test(
+    score ~ condition, paired = FALSE,
+    p.adjust.method = "bonferroni")
+pwc.alertness.2
+
+# Effect of time at each level of condition
+one.way2 <- alertness.long.NoNA %>%
+  group_by(condition) %>%
+  anova_test(dv = score, wid = Participant, within = time) %>%
+  get_anova_table() %>%
+  adjust_pvalue(method = "bonferroni")
+# Pairwise comparisons between time points
+pwc2 <- alertness.long.NoNA %>%
+  group_by(condition) %>%
+  pairwise_t_test(
+    score ~ time, paired = TRUE,
+    p.adjust.method = "bonferroni"
+    )
+pwc2
+```
+-condition was found to be significant only at times 2 and 3 (not 1)
+-pairwise comparison shows that the mean self-esteem score was significantly different between ATM and MPH at time 3 (p = .007), CIT and MPH at time 3 (p = .000296), and MPH and PLA at time 3 (p = .000606).
+-for time, a few effects were found to be significant
+
+```{r}
+
+alertness.graph <- ggplot(alertness.long.NoNA, aes(x = time, y = score, fill = condition)) +
+  geom_flat_violin(aes(fill = condition), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) +
+  geom_point(aes(x = as.numeric(time)-.225, y = score, colour = condition), position = position_jitter(width = .05), size = .25, shape = 20)  + geom_boxplot(aes(x = time, y = score, fill = condition), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = sum.alertness, aes(x = as.numeric(time)+.1, y = mean, group = condition, colour = condition), linetype = 3, size = .6) + geom_point(data = sum.alertness, aes(x = as.numeric(time)+.1, y = mean, group = condition, colour = condition), shape = 18) +
+  scale_colour_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ggtitle("Reported levels of alertness across time and condition")
+
+alertness.graph
+
+```
+** got rid of SE because my stats summary didnt have it 
+- it was used for ymin = mean-se, ymax = mean + se for the geom_errorbar
+**took out error_bar
