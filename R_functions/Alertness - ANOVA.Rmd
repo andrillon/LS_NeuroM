@@ -16,7 +16,7 @@ library(tidyr)
 library(reshape2)
 library(rstatix)
 
-VAS_alertness_exclusions <- read_excel("Desktop/PSY4100/Data /VAS_alertness_exclusions.xlsx")
+VAS_alertness_exclusions <- read_excel("/Users/elaine/Desktop/PSY4100/Data /VAS_alertness_exclusions.xlsx")
 VAS_alertness_exclusions <- select(VAS_alertness_exclusions, -c(1,...15, ...16))
 names(VAS_alertness_exclusions) <- c("Participant","MPH_1", "MPH_2", "MPH_3", "ATM_1", "ATM_2", "ATM_3", "CIT_1", "CIT_2", "CIT_3", "PLA_1", "PLA_2", "PLA_3")
 VAS_alertness_exclusions$Participant <- as.factor(VAS_alertness_exclusions$Participant)
@@ -218,3 +218,6 @@ alertness.graph
 ** got rid of SE because my stats summary didnt have it 
 - it was used for ymin = mean-se, ymax = mean + se for the geom_errorbar
 **took out error_bar
+
+
+*** if probem occurs in geom_flat_violin : type in console: source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R"))
