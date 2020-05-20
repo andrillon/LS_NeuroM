@@ -6,15 +6,15 @@ output: html_document
 
 ```{r}
 library(ggplot2)
-#library(ggpubr)
+library(ggpubr)
 library(car)
 library(haven)
 library(data.table)
-#library(visreg)
+library(visreg)
 library(dplyr)
 library(tidyr)
 library(reshape2)
-#library(rstatix)
+library(rstatix)
 
 VAS_alertness_exclusions <- read_excel("../Tables/VAS_alertness_exclusions.xlsx")
 VAS_alertness_exclusions <- select(VAS_alertness_exclusions, -c(1,...15, ...16))
