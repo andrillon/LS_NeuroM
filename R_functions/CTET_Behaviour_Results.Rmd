@@ -30,6 +30,7 @@ library(multilevelTools)
 CTET_Behaviour <- read.table("/Users/elaine/Desktop/PSY4100/LS_NeuroM/Tables/CTET_behav_res.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 CTET_Behaviour$SubID<-as.factor(CTET_Behaviour$SubID)
 CTET_Behaviour$Treatment<-as.factor(CTET_Behaviour$Treatment)
+CTET_Behaviour$Treatment <- relevel(CTET_Behaviour$Treatment, "PLA")
 ```
 
 
