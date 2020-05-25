@@ -1,0 +1,211 @@
+---
+title: "CTET_Behaviour_Results"
+author: "Elaine P."
+date: "17/05/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+
+
+CTET_Behaviour <- read.table("../Tables/CTET_behav_res.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+CTET_Behaviour$SubID<-as.factor(CTET_Behaviour$SubID)
+CTET_Behaviour$Treatment<-as.factor(CTET_Behaviour$Treatment)
+CTET_Behaviour$BlockN<-as.numeric(CTET_Behaviour$BlockN)
+CTET_Behaviour$Treatment<-relevel(CTET_Behaviour$Treatment,"PLA")
+CTET_Behaviour<-CTET_Behaviour[!is.na(CTET_Behaviour$BlockN),]
+```
+
+
+```{r}
+##Summary descriptive statistics (mean/SD, or number/frequency)
+egltable(c("Treatment", "FA", "Hit_RT", "Miss"), data = CTET_Behaviour, strict=FALSE)
+```
+
+```{r}
+##Effects of treatment on false alarms 
+lm.FA0 <- lmer(FA ~ 1 + (1|SubID), data = CTET_Behaviour, REML = TRUE)
+lm.FA1 <- lmer(FA ~ 1 + Treatment + (1|SubID), data = CTET_Behaviour, REML = TRUE)
+summary(lm.FA)
+confint(lme.FA, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals - TA: Try to plot QQ plots
+hist(residuals(lm.FA))
+boxplot(residuals(lm.FA))
+
+```
+
+To examine the association of treatment and false alarms, a linear mixed model was fit. The final model included 290,699 datapoints from 37 participants. 
+The standard deviation for the random intercept was small (0.005) indicating that there are minute individual differences in false alarms. 
+Using Satterthwaite's approximation for degrees of freedom revealed that all treatments had a significant effect (p < .001) on false alarms. 
+All treatments, except atomoxetine had a negative relationship on false alarm. 
+
+
+```{r}
+##Effects of treatment on misses
+lm.Miss <- lmer(Miss ~ 1 + Treatment + (1|SubID), data =  CTET_Behaviour, REML = TRUE)
+summary(lm.Miss)
+confint(lm.Miss, method = "Wald", oldNames = FALSE)
+
+##Normality plot of residuals 
+hist(residuals(lm.Miss))
+boxplot(residuals(lm.Miss))
+
+```
+To examine the association of treatment and missed targets, a linear mixed model was fit. The final model included 28,238 datapoints from 37 participants. 
+The standard deviation for the random intercept was relatively small (0.20) indicating that, although minor, there are individual differences in the mean missed targets. 
+Using Satterthwaite's approximation for degrees of freedom revealed that MPH, ATM and CIT had a significant effect (p < .001) on missed targets. Placebo also had a significant effect (p = .029). 
+All treatments, except MPH had a positive relationship on missed targets.
+
+
+
+```{r}
+##Effects of treatment on hit rate 
+lm.HR <- lmer(Hit_RT ~ 1 + Treatment + (1|SubID), data = CTET_Behaviour, REML = TRUE)
+summary(lm.HR)
+confint(lm.HR, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals 
+hist(residuals(lm.HR))
+boxplot(residuals(lm.HR))
+
+```
+
+To examine the association of treatment and hit rates, a linear mixed model was fit. The final model included 18,539 datapoints from 37 participants. 
+The standard deviation for the random intercept was small (0.0876) indicating that, although minor, there are individual differences in the mean hit rates. 
+Using Satterthwaite's approximation for degrees of freedom revealed that ATM and MPH had a significant effects (p < .001) on missed targets. Placebo also had a significant effect (p = .031). 
+All treatments, except ATM had a negative relationship on missed targets.
+
+
+
+
+#CHECKING THE EFFECTS OF ADDING BLOCK NUMBER 
+
+```{r}
+#Added effects of block number on false alarm
+lm.FA2 <- lmer(FA ~ 1 + Treatment + BlockN + (1|SubID), data = CTET_Behaviour, REML = TRUE)
+lm.FA3 <- lmer(FA ~ 1 + Treatment * BlockN + (1|SubID), data = CTET_Behaviour, REML = TRUE)
+anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3)
+summary(lm.FA3)
+confint(lm.FA2, method = "Wald", oldNames = FALSE)
+
+##Normality plot of residuals 
+hist(residuals(lm.FA1))
+boxplot(residuals(lm.FA1))
+
+
+```
+To examine the association of treatment, block number and false alarms, a linear mixed model was fit. The final model included 290,699 datapoints from 37 participants. 
+The standard deviation for the random intercept was the same as before adding block number (0.005).
+Using Satterthwaite's approximation for degrees of freedom revealed that all treatments had a significant effects (p < .01) on false alarms. However, it should be noted that ATM's significance has now decreased from before. 
+Blocks 8 to 12 are also significant (p < .05).
+All treatments, except ATM had a negative relationship on false alarm. All singificant blocks also had a negative relationship except for block 11.
+
+
+```{r}
+##Added effects of block number on misses 
+lm.Miss1 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data =  CTET_Behaviour, REML = TRUE)
+summary(lm.Miss1)
+confint(lm.Miss1, method = "Wald", oldNames = FALSE)
+
+##Normality plot of residuals 
+hist(residuals(lm.Miss1))
+boxplot(residuals(lm.Miss1))
+
+```
+To examine the association of treatment, block number and missed targets, a linear mixed model was fit. The final model included 28,238 datapoints from 37 participants. 
+The standard deviation for the random intercept is smaller than before adding block number (0.197), indicating less individual differences in missed targets.
+Using Satterthwaite's approximation for degrees of freedom revealed that all treatments, except placebo had a significant effects (p < .001) on missed targets. 
+All blocks are also significxant (p < .001).
+All treatments, except MPH had a positive relationship on missed targets. All blocks also had a negative relationship.
+
+```{r}
+##Added effects of block number on hit rate  
+lm.HR1 <- lmer(Hit_RT ~ 1 + Treatment + BlockN + (1|SubID), data = CTET_Behaviour, REML = TRUE)
+summary(lm.HR1)
+confint(lm.HR1, method = "Wald", oldNames = FALSE)
+
+##Normality plot of residuals 
+hist(residuals(lm.HR1))
+boxplot(residuals(lm.HR1))
+
+
+```
+To examine the association of treatment, block number and hit rates, a linear mixed model was fit. The final model included 18,539 datapoints from 37 participants. 
+The standard deviation for the random intercept remains almost the same than before adding block number (0.874) (previously it was .876).
+Using Satterthwaite's approximation for degrees of freedom revealed that all treatments, except citalopram had a significant effects (p < .05) on hit rates. This is the same as before adding the block number (smaller p value for placebo though).
+Block 12 is also significant (p < .01).
+All treatments, except ATM had a negative relationship on hit rates. Block 12 had a positive relationship.
+
+
+#CHECKING THE EFFECTS OF ADDING BLOCK NUMBER AS INTERACTIONS
+
+```{r}
+#Added effects of block number as an interaction on false alarm
+lm.FA2 <- lmer(FA ~ 1 + Treatment*BlockN + (1|SubID), data = CTET_Behaviour, REML = TRUE)
+summary(lm.FA2)
+confint(lm.FA2, method = "Wald", oldNames = FALSE)
+
+##Normality plot of residuals 
+hist(residuals(lm.FA2))
+boxplot(residuals(lm.FA2))
+
+
+```
+To examine the association of treatment and its interaction with block number and false alarms, a linear mixed model was fit. The final model included 290,699 datapoints from 37 participants. 
+The standard deviation for the random intercept was the same as before adding block number as an interaction (0.005).
+Using Satterthwaite's approximation for degrees of freedom revealed that all treatments interacting with block number had a non-significant effects on false alarms. It should be noted that this differs from previous results of just adding block number into the equation. 
+Blocks 11 and 12 are significant (p < .05).
+
+
+```{r}
+##Added effects of block number as an interaction on misses 
+lm.Miss2 <- lmer(Miss ~ 1 + Treatment*BlockN + (1|SubID), data =  CTET_Behaviour, REML = TRUE)
+summary(lm.Miss2)
+confint(lm.Miss2, method = "Wald", oldNames = FALSE)
+
+##Normality plot of residuals 
+hist(residuals(lm.Miss2))
+boxplot(residuals(lm.Miss2))
+
+```
+To examine the association of treatment and its interaction with block number on missed targets, a linear mixed model was fit. The final model included 28,238 datapoints from 37 participants. 
+The standard deviation for the random intercept is the same as adding block number (0.197).
+Using Satterthwaite's approximation for degrees of freedom revealed that ATM and MPH had significant effects (p < .05) on missed targets. 
+MPH had significant positive effects on missed targets for all blocks (1-10) (p <.05).
+
+
+```{r}
+##Added effects of block number as an interaction on hit rate  
+lm.HR2 <- lmer(Hit_RT ~ 1 + Treatment*BlockN + (1|SubID), data = CTET_Behaviour, REML = TRUE)
+summary(lm.HR2)
+confint(lm.HR2, method = "Wald", oldNames = FALSE)
+
+##Normality plot of residuals 
+hist(residuals(lm.HR2))
+boxplot(residuals(lm.HR2))
+
+```
+To examine the association of treatment and its interaction with block number and hit rates, a linear mixed model was fit. The final model included 18,539 datapoints from 37 participants. 
+The standard deviation for the random intercept remains the same as just adding block number (0.874).
+Using Satterthwaite's approximation for degrees of freedom revealed that ATM and MPH (p < .001) on hit rates. This is a different result to just adding block number into the equation. 
+MPH in block 1 and 3 had a positive significant effect on hit rate (p < .01).

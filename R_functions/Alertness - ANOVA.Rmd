@@ -16,7 +16,7 @@ library(tidyr)
 library(reshape2)
 library(rstatix)
 
-VAS_alertness_exclusions <- read_excel("/Users/elaine/Desktop/PSY4100/Data /VAS_alertness_exclusions.xlsx")
+VAS_alertness_exclusions <- read_excel("../Tables/VAS_alertness_exclusions.xlsx")
 VAS_alertness_exclusions <- select(VAS_alertness_exclusions, -c(1,...15, ...16))
 names(VAS_alertness_exclusions) <- c("Participant","MPH_1", "MPH_2", "MPH_3", "ATM_1", "ATM_2", "ATM_3", "CIT_1", "CIT_2", "CIT_3", "PLA_1", "PLA_2", "PLA_3")
 VAS_alertness_exclusions$Participant <- as.factor(VAS_alertness_exclusions$Participant)
