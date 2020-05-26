@@ -24,45 +24,57 @@ library(JWileymisc)
 library(lme4)
 library(lmerTest)
 library(multilevelTools)
+library(tidyverse)
 
 
 SWS_data <- read.table("/Users/elaine/Desktop/PSY4100/LS_NeuroM/Tables/CTET_SWdetection_thr90_allE_P2P_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
+names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
+
+SWS_data$Treatment<-as.factor(SWS_data$Treatment)
+
+SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 ```
 
 ```{r}
 ##Summary descriptive statistics (mean/SD, or number/frequency)
-egltable(c("Drug", "SWdens", "Elec"), data = SWS_data, strict=FALSE)
+egltable(c("Treatment", "SWdens", "Elec"), data = SWS_data, strict=FALSE)
 ```
 
 
 ```{r}
+##Slow wave density 
+lm.sw0 <- lmer(SWdens ~ 1 + (1|SubID), data = SWS_data, REML = TRUE)
+
 ##Effects of drug on slow wave density
-lm.sw <- lmer(SWdens  ~ 1 + Drug + (1|SubID), data = SWS_data, REML = TRUE)
-summary(lm.sw)
-confint(lm.sw, oldNames = FALSE)
+lm.sw1 <- lmer(SWdens  ~ 1 + Treatment + (1|SubID), data = SWS_data, REML = TRUE)
+
+
+##Effects of drug and electrode interaction on slow wave density
+lm.sw2 <- lmer(SWdens  ~ 1 + Treatment * Elec + (1|SubID), data = SWS_data, REML = TRUE)
+
+
+##Anova to see which one has the most interaction
+anova(lm.sw0,lm.sw1,lm.sw2)
+summary(lm.sw2)
+confint(lm.sw2, method = "Wald", oldNames = FALSE)
 
 ## Normality plot of residuals 
-hist(residuals(lm.sw))
-boxplot(residuals(lm.sw))
-```
-To examine the association of treatment and slow wave density, a linear mixed model was fit. The final model included 9,216 datapoints from 37 participants. 
-The standard deviation for the random intercept was 1.28 (what does this indicate about between individual differences?).
-Using Satterthwaite's approximation for degrees of freedom revealed that all treatments, except MPH had a significant effect (p < .001) on false alarms. Placebo also had a significant effect (p < .05).
+hist(residuals(lm.sw2))
+boxplot(residuals(lm.sw2))
+qqnorm(resid(lm.sw2))
+qqline(resid(lm.sw2))
+plot(lm.sw2)
+plot(fitted(lm.sw2), resid(lm.sw2))
 
+```
 
 ```{r}
-##Effects of drug and electrode interaction on slow wave density
-lm.swi <- lmer(SWdens  ~ 1 + Drug * Elec + (1|SubID), data = SWS_data, REML = TRUE)
-summary(lm.swi)
-confint(lm.swi, oldNames = FALSE)
+##Graph of the interaction between treatment and electrodes on slow wave density
 
-## Normality plot of residuals 
-hist(residuals(lm.swi))
-boxplot(residuals(lm.swi))
+ggplot(SWS_data, aes(x = Elec, y = SWdens, colour = Treatment, group = SubID)) + geom_point() + geom_jitter(alpha = 0.25, width = .25) + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Slow wave density according to electrodes and treatment") + ylab("Slow Wave Density") + xlab("Electrode") + xlim(c("C3", "C5", "F7", "F8","FC3","FC5","FC6" ))
+
 
 ```
-To examine the association of treatment and its interaction with electrodes on slow wave density, a linear mixed model was fit. The final model included 9,216 datapoints from 37 participants. 
-The standard deviation for the random intercept was 1.30 (what does this indicate about between individual differences?).
-Using Satterthwaite's approximation for degrees of freedom revealed that placebo and its interactions with a variety of electrodes had a significant effect on slow wave density(p < .05).
+
 

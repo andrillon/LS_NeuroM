@@ -1,0 +1,171 @@
+---
+title: "VAS_Contentedness"
+author: "Elaine P."
+date: "26/05/2020"
+output: html_document
+---
+---
+title: "VAS_Calmness"
+author: "Elaine P."
+date: "26/05/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(reshape)
+library(rstatix)
+library(readxl)
+
+VAS_content_exclusions <- read_excel("../Tables/VAS_contentedness_exclusions.xlsx")
+
+VAS_content_exclusions <- select(VAS_content_exclusions, -c(1,...15, ...16))
+
+names(VAS_content_exclusions) <- c("Participant","MPH_1", "MPH_2", "MPH_3", "ATM_1", "ATM_2", "ATM_3", "CIT_1", "CIT_2", "CIT_3", "PLA_1", "PLA_2", "PLA_3")
+
+VAS_content_exclusions$Participant <- as.factor(VAS_content_exclusions$Participant)
+
+content.long <- melt(as.data.frame(VAS_content_exclusions), id.vars = "Participant", variable.name = "treatment", value.name = "rating")
+
+names(content.long)[names(content.long) == "variable"] <- "treatment"
+names(content.long)[names(content.long) == "value"] <- "rating"
+
+## separate treatment and time into two different columns
+content.long <- separate(content.long, "treatment", c("treatment", "time"), sep = "_")
+ 
+##change treatment and time to factors 
+content.long$time <- as.factor(content.long$time)
+content.long$treatment <- as.factor(content.long$treatment)
+
+```
+
+```{r}
+##mean and SD
+content.long%>% group_by(treatment) %>% get_summary_stats(rating, type = "mean_sd")
+content.mean <- ggplot(content.long, aes(treatment, rating)) +
+    stat_summary(fun.data = mean_cl_normal) +
+    theme_pubr()
+print(content.mean)
+
+##outliers
+content.long %>% group_by(treatment) %>% identify_outliers(rating)
+
+##normality 
+content.long %>%
+  group_by(treatment) %>%
+  shapiro_test(rating)
+ggqqplot(content.long, "rating", facet.by = "treatment")
+
+## linearity assumption 
+library(GGally)
+linearity.content <- content.long %>%
+  select(rating, treatment) %>%
+  group_by(treatment) %>%
+  doo(~ggpairs(.) + theme_bw(), result = "plots")
+linearity.content
+
+linearity.content$plots
+
+## homogeneity of variance 
+leveneTest(rating ~ treatment, data = content.long)
+```
+No outliers were found.
+Only citalopram (p = .29) and atomoxetine (p = 0.20) were found to be normally distributed according to the Shapiro-Whilk test but upon inspection of the qqplots, none of the treatments differed significantly from the expected distirbution.
+Insignificant results were obtained for Levene's test (p = .98) and thus, homogeneity of variance was not violated.
+
+```{r}
+##One-Way ANOVA Test
+content.anova <- anova_test(content.long, rating ~ treatment, dv = rating, wid = Participant)
+get_anova_table(content.anova)
+
+##boxplot
+bxp.content <- ggboxplot(
+  content.long, x = "treatment", y = "rating",
+  color = "time", palette = "jco")
+bxp.content
+
+##Pair-wise T-test
+pwc.content <- content.long %>% pairwise_t_test(rating ~ treatment, paired = FALSE, p.adjust.method = "bonferroni")
+pwc.content
+
+```
+No significance was found in the ANOVA and pair-wise t-test
+
+
+```{r}
+## summary statistics 
+sum.content <- content.long %>%
+  group_by(treatment, time) %>%
+  get_summary_stats(rating, type = "mean_sd")
+sum.content
+
+##two-way repeated measures ANOVA 
+content.aov <- anova_test(
+  data = content.long, dv = rating, wid = Participant,
+  within = c(treatment, time))
+get_anova_table(content.aov)
+
+## Effect of treatment at each time point
+one.way.content<- content.long %>%
+  group_by(time) %>%
+  anova_test(dv = rating, wid = Participant, within = treatment) %>%
+  get_anova_table() %>%
+  adjust_pvalue(method = "bonferroni")
+one.way.content
+
+# Pairwise comparisons between treatment groups
+pwc.content1 <-content.long %>%
+  group_by(time) %>%
+  pairwise_t_test(
+    rating ~ treatment, paired = FALSE,
+    p.adjust.method = "bonferroni")
+pwc.content1
+
+# Effect of time at each level of treatment
+one.way.content1 <- content.long %>%
+  group_by(treatment) %>%
+  anova_test(dv = rating, wid = Participant, within = time) %>%
+  get_anova_table() %>%
+  adjust_pvalue(method = "bonferroni")
+one.way.content1
+
+# Pairwise comparisons between time points
+pwc.content2 <- content.long %>%
+  group_by(treatment) %>%
+  pairwise_t_test(
+    rating ~ time, paired = TRUE,
+    p.adjust.method = "bonferroni"
+    )
+pwc.content2
+```
+
+-Anova table showed that time had a significant effect (p = .026) on contentedness.
+-Treatment had a nonsignificant effect on contentedness at all time points.
+-No significant differences in rating were found between treatment groups 
+- Time had a significant effect on ATM (p <.05), CIT (p < .05) and placebo (p<.05).
+-Significant results were found between contentedness for ATM at times 1 and 3 (p <.01) and 2 and 3 (p <.05), CIT at times 1 and 3 (p < .001) and 2 and 3 (p < .001), and placebo at times 1 and 3 (p <.001) and 2 and 3 (p< .01).
+
+```{r}
+content.graph <- ggplot(content.long, aes(x = time, y = rating, fill = treatment)) +
+  geom_flat_violin(aes(fill = treatment), position = position_nudge(x = .13, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) +
+  geom_point(aes(x = as.numeric(time)-.225, y = rating, colour = treatment), position = position_jitter(width = .05), size = .25, shape = 20)  + geom_boxplot(aes(x = time, y = rating, fill = treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = sum.content, aes(x = as.numeric(time)+.1, y = mean, group = treatment, colour = treatment), linetype = 3, size = .6) + geom_point(data = sum.content, aes(x = as.numeric(time)+.1, y = mean, group = treatment, colour = treatment), shape = 18) +
+  scale_colour_brewer(palette = "Dark2")+
+  scale_fill_brewer(palette = "Dark2")+
+  ggtitle("Reported levels of contentedness across time and treatment")
+
+content.graph
+```
+*** if probem occurs in geom_flat_violin : type in console: source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R")
