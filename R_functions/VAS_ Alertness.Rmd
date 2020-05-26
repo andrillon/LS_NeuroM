@@ -14,14 +14,22 @@ library(visreg)
 library(dplyr)
 library(tidyr)
 library(reshape2)
+library(reshape)
 library(rstatix)
+library(readxl)
 
 VAS_alertness_exclusions <- read_excel("../Tables/VAS_alertness_exclusions.xlsx")
-VAS_alertness_exclusions <- select(VAS_alertness_exclusions, -c(1,...15, ...16))
-names(VAS_alertness_exclusions) <- c("Participant","MPH_1", "MPH_2", "MPH_3", "ATM_1", "ATM_2", "ATM_3", "CIT_1", "CIT_2", "CIT_3", "PLA_1", "PLA_2", "PLA_3")
-VAS_alertness_exclusions$Participant <- as.factor(VAS_alertness_exclusions$Participant)
-alertness.long <- melt(VAS_alertness_exclusions, id.vars = "Participant", variable.name = "condition", value.name = "score")
 
+VAS_alertness_exclusions <- select(VAS_alertness_exclusions, -c(1,...15, ...16))
+
+names(VAS_alertness_exclusions) <- c("Participant","MPH_1", "MPH_2", "MPH_3", "ATM_1", "ATM_2", "ATM_3", "CIT_1", "CIT_2", "CIT_3", "PLA_1", "PLA_2", "PLA_3")
+
+VAS_alertness_exclusions$Participant <- as.factor(VAS_alertness_exclusions$Participant)
+
+alertness.long <- melt(as.data.frame(VAS_alertness_exclusions), id.vars = "Participant", variable.name = "condition", value.name = "score")
+
+names(alertness.long)[names(alertness.long) == "variable"] <- "condition"
+names(alertness.long)[names(alertness.long) == "value"] <- "score"
 ```
 
 ``` {r}
@@ -189,6 +197,8 @@ one.way2 <- alertness.long.NoNA %>%
   anova_test(dv = score, wid = Participant, within = time) %>%
   get_anova_table() %>%
   adjust_pvalue(method = "bonferroni")
+one.way2
+
 # Pairwise comparisons between time points
 pwc2 <- alertness.long.NoNA %>%
   group_by(condition) %>%
@@ -220,4 +230,4 @@ alertness.graph
 **took out error_bar
 
 
-*** if probem occurs in geom_flat_violin : type in console: source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R"))
+*** if probem occurs in geom_flat_violin : type in console: source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R") )
