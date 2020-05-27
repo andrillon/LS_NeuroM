@@ -1,0 +1,91 @@
+---
+title: "SWS_Treatment"
+author: "Elaine P."
+date: "19/05/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+library(tidyverse)
+
+
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
+
+SWS_data$Treatment<-as.factor(SWS_data$Treatment)
+
+SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
+```
+
+```{r}
+##Summary descriptive statistics (mean/SD, or number/frequency)
+egltable(c("Treatment", "SWdens", "Elec"), data = SWS_data, strict=FALSE)
+```
+
+
+```{r}
+##Slow wave density 
+
+lm.sw0 <- lmer(SWdens ~ 1 + (1|SubID), data = SWS_data, REML = TRUE)
+
+##Effects of drug on slow wave density
+lm.sw1 <- lmer(SWdens  ~ 1 + Treatment + (1|SubID), data = SWS_data, REML = TRUE)
+
+
+##Effects of drug and electrode interaction on slow wave density
+lm.sw2 <- lmer(SWdens  ~ 1 + Treatment * Elec + (1|SubID), data = SWS_data, REML = TRUE)
+
+
+##Anova to see which one has the most interaction
+anova(lm.sw0,lm.sw1,lm.sw2)
+summary(lm.sw2)
+confint(lm.sw2, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals 
+hist(residuals(lm.sw2))
+boxplot(residuals(lm.sw2))
+qqnorm(resid(lm.sw2))
+qqline(resid(lm.sw2))
+plot(lm.sw2)
+plot(fitted(lm.sw2), resid(lm.sw2))
+
+```
+
+```{r}
+##Graph of the interaction between treatment and electrodes on slow wave density
+aggdata_SW <- aggregate(SWS_data$SWdens,
+    by = list(Treatment = SWS_data$Treatment),
+    FUN = function(x) c(mean = mean(x), sd = sd(x),
+                        n = length(x)))
+aggdata_SW <- do.call(data.frame, aggdata_SW)
+aggdata_SW$se <- aggdata_SW$x.sd / sqrt(aggdata_SW$x.n)
+
+ggplot(aggdata_SW) +
+    geom_bar( aes(x=Treatment, y=x.mean, fill = Treatment), stat="identity", alpha=0.7) +
+    geom_errorbar( aes(x=Treatment, ymin=x.mean-se, ymax=x.mean+se), width=0.1, colour="black", alpha=0.9, size=1.3)
+
+ggplot(aggdata_SW, aes(x = Elec, y = SWdens, colour = Treatment)) + geom_line() + geom_point() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Slow wave density according to electrodes and treatment") + ylab("Slow Wave Density") + xlab("Electrode") + xlim(unique(aggdata_SW$Elec))
+
+
+```
+
+
