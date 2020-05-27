@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(ggplot2)
-linralibrary(ggpubr)
+library(ggpubr)
 library(car)
 library(haven)
 library(data.table)

@@ -1,0 +1,183 @@
+---
+title: "CTET_Behaviour_Results"
+author: "Elaine P."
+date: "17/05/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+
+library(ggstance)
+library(jtools)
+library(broom.mixed)
+library(sjPlot)
+library(glmmTMB)
+
+library(lattice)
+
+library(arm)
+
+CTET_Behaviour <- read.table("../Tables/CTET_behav_res.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+CTET_Behaviour$SubID<-as.factor(CTET_Behaviour$SubID)
+CTET_Behaviour$Treatment<-as.factor(CTET_Behaviour$Treatment)
+CTET_Behaviour<-CTET_Behaviour[as.numeric(CTET_Behaviour$BlockN)<11,]
+CTET_Behaviour$BlockN<-as.numeric(CTET_Behaviour$BlockN)
+CTET_Behaviour$Treatment<-relevel(CTET_Behaviour$Treatment,"PLA")
+CTET_Behaviour<-CTET_Behaviour[!is.na(CTET_Behaviour$BlockN),]
+```
+
+
+```{r}
+##Summary descriptive statistics (mean/SD, or number/frequency)
+egltable(c("Treatment", "FA", "Hit_RT", "Miss"), data = CTET_Behaviour, strict=FALSE)
+```
+
+```{r}
+##False Alarm
+aggdata_FA<-aggregate(CTET_Behaviour$FA, list(SubID=CTET_Behaviour$SubID,BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+colnames(aggdata_FA) = c("SubID","BlockN", "Treatment","FA")
+
+
+lm.FA0 <- lmer(FA ~ 1 + (1|SubID), data = aggdata_FA, REML = TRUE)
+
+##Effects of treatment on false alarms 
+lm.FA1 <- lmer(FA ~ 1 + Treatment + (1|SubID), data = aggdata_FA, REML = TRUE)
+
+#Added effects of block number on false alarm
+lm.FA2 <- lmer(FA ~ 1 + Treatment + BlockN + (1|SubID), data = aggdata_FA, REML = TRUE)
+
+#Added effects of block number as an interaction on false alarm
+lm.FA3 <- lmer(FA ~ 1 + Treatment * BlockN + (1|SubID), data = aggdata_FA, REML = TRUE)
+
+##Anova to see which one has the most interaction
+anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3)
+summary(lm.FA2)
+confint(lm.FA2, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals - TA: Try to plot QQ plots
+hist(residuals(lm.FA2))
+qqnorm(resid(lm.FA2))
+qqline(resid(lm.FA2))
+plot(lm.FA2)
+plot(fitted(lm.FA2), resid(lm.FA2))
+
+```
+
+```{r}
+##Graph of the interaction between treatment and block number on false alarms
+aggdata<-aggregate(CTET_Behaviour$FA, list(BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+
+ggplot(aggdata, aes(x = BlockN, y = x, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.01)
+
+```
+
+
+```{r}
+
+aggdata_MISS<-aggregate(CTET_Behaviour$Miss, list(SubID=CTET_Behaviour$SubID,BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+colnames(aggdata_MISS) = c("SubID","BlockN", "Treatment","Miss")
+##Misses 
+lm.Miss0 <- lmer(Miss ~ 1 + (1|SubID), data = aggdata_MISS, REML = TRUE)
+
+##Effects of treatment on misses
+lm.Miss1 <- lmer(Miss ~ 1 + Treatment + (1|SubID), data =  aggdata_MISS, REML = TRUE)
+
+##Added effects of block number on misses 
+lm.Miss2 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data =  aggdata_MISS, REML = TRUE)
+
+##Added effects of block number as an interaction on misses 
+lm.Miss3 <- lmer(Miss ~ 1 + Treatment*BlockN + (1|SubID), data =  aggdata_MISS, REML = TRUE)
+
+##Anova to see which one has the most interaction
+anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3)
+summary(lm.Miss3)
+confint(lm.Miss3, method = "Wald", oldNames = FALSE)
+
+##Normality plot of residuals 
+hist(residuals(lm.Miss3))
+boxplot(residuals(lm.Miss3))
+qqnorm(resid(lm.Miss3))
+qqline(resid(lm.Miss3))
+plot(lm.Miss3)
+plot(fitted(lm.Miss3), resid(lm.Miss3))
+
+#binnedplot(fitted(lm.Miss3),resid(lm.Miss3))
+
+```
+
+
+```{r}
+##Graph of the interaction between treatment and block number on missed targets
+aggdata<-aggregate(CTET_Behaviour$Miss, list(BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+
+ggplot(aggdata, aes(x = BlockN, y = x, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("Missed Target") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.5)
+
+ggplot(data=aggdata, aes(x=Treatment, y=x, fill = Treatment)) +
+  geom_bar(stat="identity")
+
+```
+
+
+```{r}
+##Hit Rate  
+aggdata_RT<-aggregate(CTET_Behaviour$Hit_RT, list(SubID=CTET_Behaviour$SubID,BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+colnames(aggdata_RT) = c("SubID","BlockN", "Treatment","Hit_RT")
+
+#CTET_Behaviour$Inv_RT<-1/CTET_Behaviour$Hit_RT
+lm.HR0 <- lmer(Hit_RT ~ 1 + (1|SubID), data = aggdata_RT, REML = TRUE)
+
+##Effects of treatment on hit rate 
+lm.HR1 <- lmer(Hit_RT ~ 1 + Treatment + (1|SubID), data = aggdata_RT, REML = TRUE)
+
+##Added effects of block number on hit rate  
+lm.HR2 <- lmer(Hit_RT ~ 1 + Treatment + BlockN + (1|SubID), data = aggdata_RT, REML = TRUE)
+
+##Added effects of block number as an interaction on hit rate  
+lm.HR3 <- lmer(Hit_RT ~ 1 + Treatment*BlockN + (1|SubID), data = aggdata_RT, REML = TRUE)
+
+##Anova to see which one has the most interaction
+anova(lm.HR0,lm.HR1,lm.HR2,lm.HR3)
+summary(lm.HR1)
+confint(lm.HR3, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals 
+hist(residuals(lm.HR3))
+boxplot(residuals(lm.HR3))
+qqnorm(residuals(lm.HR3))
+qqline(resid(lm.HR3))
+plot(lm.HR3)
+plot(fitted(lm.HR3), resid(lm.HR3))
+
+```
+
+```{r}
+##Graph of the interaction between treatment and block number on hit rates
+aggdata<-aggregate(CTET_Behaviour$Hit_RT, list(BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+
+ggplot(aggdata, aes(x = BlockN, y = x, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("Hit RT") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5)
+
+
+
+
+```
+
+
