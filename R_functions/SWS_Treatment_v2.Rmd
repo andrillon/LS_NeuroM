@@ -57,7 +57,7 @@ lm.sw2 <- lmer(SWdens  ~ 1 + Treatment * Elec + (1|SubID), data = SWS_data, REML
 
 ##Anova to see which one has the most interaction
 anova(lm.sw0,lm.sw1,lm.sw2)
-summary(lm.sw2)
+summary(lm.sw1)
 confint(lm.sw2, method = "Wald", oldNames = FALSE)
 
 ## Normality plot of residuals 
@@ -83,7 +83,14 @@ ggplot(aggdata_SW) +
     geom_bar( aes(x=Treatment, y=x.mean, fill = Treatment), stat="identity", alpha=0.7) +
     geom_errorbar( aes(x=Treatment, ymin=x.mean-se, ymax=x.mean+se), width=0.1, colour="black", alpha=0.9, size=1.3)
 
-ggplot(aggdata_SW, aes(x = Elec, y = SWdens, colour = Treatment)) + geom_line() + geom_point() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Slow wave density according to electrodes and treatment") + ylab("Slow Wave Density") + xlab("Electrode") + xlim(unique(aggdata_SW$Elec))
+
+aggdata_SW2 <- aggregate(SWS_data$SWdens,
+    by = list(Elec = SWS_data$Elec, Treatment = SWS_data$Treatment),
+    FUN = function(x) c(mean = mean(x), sd = sd(x),
+                        n = length(x)))
+aggdata_SW2 <- do.call(data.frame, aggdata_SW2)
+
+ggplot(aggdata_SW2, aes(x = Elec, y = x.mean, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Slow wave density according to electrodes and treatment") + ylab("Slow Wave Density") + xlab("Electrode")
 
 
 ```
