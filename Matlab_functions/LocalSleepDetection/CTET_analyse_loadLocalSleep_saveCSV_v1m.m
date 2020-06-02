@@ -17,6 +17,8 @@ save_path='/Users/tand0009/Data/CTET_Dockree/';
 files=dir([data_path filesep '*.bdf']);
 filesPLA=dir([data_path filesep '*PLA.bdf']);
 
+table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
+
 %% Get the thresholds
 sw_thr=[];
 for nF=1:length(filesPLA)
@@ -111,11 +113,20 @@ for nF=1:length(files)
         slow_Waves=[slow_Waves ; thisE_Waves(temp_p2p>thr_Wave,:)];
     end
     %     save([save_path filesep 'SW_detection' filesep 'PH_CTET_SW_' File_Name(1:end-4)],'slow_Waves','hdr','paramSW')
-    nout=histc(slow_Waves(:,3),1:64);
-    all_slow_Waves=[all_slow_Waves ; [nF SubN SessN nout'/(hdr.nSamples/hdr.Fs/60)]];
-    all_drug_types=[all_drug_types ; {DrugC}];
-    all_slow_Waves_vec=[all_slow_Waves_vec ; [repmat([nF SubN SessN],64,1) (1:64)' nout/(hdr.nSamples/hdr.Fs/60)]];
-    all_drug_types_vec=[all_drug_types_vec ; repmat({DrugC},64,1)];
+    for nbl=1:10
+        temp_table=table(table.SubID==SubN & table.SessN==SessN & ismember(table.BlockN,num2str(nbl)),:);
+        if isempty(temp_table)
+            continue;
+        end
+        min_sample=min(temp_table.Sample);
+        max_sample=max(temp_table.Sample);
+        temp_slow_Waves=slow_Waves(slow_Waves(:,5)>min_sample & slow_Waves(:,5)<max_sample,:);
+        nout=histc(temp_slow_Waves(:,3),1:64);
+        all_slow_Waves=[all_slow_Waves ; [nF SubN SessN nbl nout'/((max_sample-min_sample)/hdr.Fs/60)]];
+        all_drug_types=[all_drug_types ; {DrugC}];
+        all_slow_Waves_vec=[all_slow_Waves_vec ; [repmat([nF SubN SessN nbl],64,1) (1:64)' nout/((max_sample-min_sample)/hdr.Fs/60)]];
+        all_drug_types_vec=[all_drug_types_vec ; repmat({DrugC},64,1)];
+    end
 end
 
 %%
@@ -130,9 +141,10 @@ end
 set(gca,'XTick',1:4,'XTickLabel',Drugs)
 ylim([5 7])
 %%
-table_SW=array2table(all_slow_Waves_vec,'VariableNames',{'FileN','SubID','SessN','Elec','SWdens'});
+table_SW=array2table(all_slow_Waves_vec,'VariableNames',{'FileN','SubID','SessN','BlockN','Elec','SWdens'});
 table_SW.SubID=categorical(table_SW.SubID);
-table_SW.SessN=ordinal(table_SW.SessN);
+table_SW.SessN=categorical(table_SW.SessN);
+table_SW.BlockN=ordinal(table_SW.BlockN);
 table_SW.Elec=categorical(table_SW.Elec);
 for nE=1:64
     table_SW.Elec(table_SW.Elec==num2str(nE))=hdr.label{nE};
@@ -143,7 +155,7 @@ table_SW.Drug=categorical(table_SW.Drug);
 table_SW.Drug=reordercats(table_SW.Drug,[4 1 2 3]);
 mdl0=fitlme(table_SW,'SWdens~1+(1|SubID)');
 mdl1=fitlme(table_SW,'SWdens~1+Elec+(1|SubID)');
-mdl2=fitlme(table_SW,'SWdens~1+Elec+Drug+(1|SubID)');
+mdl2=fitlme(table_SW,'SWdens~1+Elec+BlockN+(1|SubID)');
 mdl3=fitlme(table_SW,'SWdens~1+Elec*Drug+(1|SubID)');
 
 writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_vec.txt');
@@ -181,4 +193,27 @@ for nDrug2=2:4
     caxis([-1 1]*max(abs(temp_topo)))
     h=colorbar;
     format_fig;
+end
+
+%%
+cmap=cbrewer('seq','YlOrRd',64);
+
+figure;
+temp_topo=[];
+for nE=1:64
+    temp_topo(nE)=mean(table_SW.SWdens(match_str(table_SW.Elec,layout.label{nE})));
+end
+simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+title(Drugs{nDrug}); h=colorbar;  ylabel(h, 'waves/min')
+caxis([0 1]*limMax)
+h=colorbar;
+colormap(cmap);
+%     set(h,'Position',[0.85 0.7 0.04 0.2])
+format_fig;
+
+OrderEl={'AF3','AF4','AF7','AF8','AFz','C1','C2','C3','C4','C5','C6','CP1','CP2','CP3','CP4','CP5','CP6','CPz','Cz','F1','F2','F3','F4','F5','F6','F7','F8','FC1','FC2','FC3','FC4','FC5','FC6',...
+'FCz','Fp1','Fp2','Fpz','FT7','FT8','Fz','Iz','O1','O2','Oz','P1','P10','P2','P3','P4','P5','P6','P7','P8','P9','PO3','PO4','PO7','PO8','POz','Pz','T7','T8','TP7','TP8'};
+Pos=[];
+for nE=1:64
+    Pos(:,nE)=layout.pos(match_str(layout.label,OrderEl{nE}),:)';
 end
