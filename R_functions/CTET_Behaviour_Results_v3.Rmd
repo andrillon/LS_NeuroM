@@ -36,6 +36,8 @@ library(lattice)
 
 library(arm)
 
+library(plyr)
+
 CTET_Behaviour <- read.table("../Tables/CTET_behav_res.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 CTET_Behaviour$SubID<-as.factor(CTET_Behaviour$SubID)
 CTET_Behaviour$Treatment<-as.factor(CTET_Behaviour$Treatment)
@@ -84,10 +86,22 @@ plot(fitted(lm.FA2), resid(lm.FA2))
 
 ```{r}
 ##Graph of the interaction between treatment and block number on false alarms
-aggdata<-aggregate(CTET_Behaviour$FA, list(BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+aggdata.fa<-aggregate(CTET_Behaviour$FA, list(BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+colnames(aggdata.fa) = c("BlockN", "Treatment","FA")
 
-ggplot(aggdata, aes(x = BlockN, y = x, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.01)
 
+fa.graph <- summarySE(aggdata_FA, measurevar = "FA", groupvars = c("BlockN", "Treatment"))
+
+##REFERENCE GRAPH            
+ggplot(aggdata.fa, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.01) +
+
+##Graph with Standard Error 
+ggplot(fa.graph, aes(x = BlockN, y = FA_mean, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.01) + geom_errorbar(aes(ymin = FA_mean-se, ymax = FA_mean+se), size = .4, width = .5, alpha = .3) + scale_colour_discrete(name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate"))
+
+
+##Barplot 
+ggplot(data=fa.graph, aes(x=Treatment, y=FA_mean, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA_mean-se, ymax = FA_mean+se), width = .2, size = .3) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate")) + ylab("Mean False Alarm")
 ```
 
 
@@ -95,6 +109,8 @@ ggplot(aggdata, aes(x = BlockN, y = x, colour = Treatment)) + geom_point() + geo
 
 aggdata_MISS<-aggregate(CTET_Behaviour$Miss, list(SubID=CTET_Behaviour$SubID,BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
 colnames(aggdata_MISS) = c("SubID","BlockN", "Treatment","Miss")
+
+
 ##Misses 
 lm.Miss0 <- lmer(Miss ~ 1 + (1|SubID), data = aggdata_MISS, REML = TRUE)
 
@@ -120,20 +136,34 @@ qqline(resid(lm.Miss3))
 plot(lm.Miss3)
 plot(fitted(lm.Miss3), resid(lm.Miss3))
 
-#binnedplot(fitted(lm.Miss3),resid(lm.Miss3))
+binnedplot(fitted(lm.Miss3),resid(lm.Miss3))
 
 ```
 
 
 ```{r}
 ##Graph of the interaction between treatment and block number on missed targets
-aggdata<-aggregate(CTET_Behaviour$Miss, list(BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+aggdata.miss<-aggregate(CTET_Behaviour$Miss, list(BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+colnames(aggdata.miss) = c("BlockN", "Treatment","Miss")
 
-ggplot(aggdata, aes(x = BlockN, y = x, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("Missed Target") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.5)
+miss.graph <- summarySE(aggdata_MISS, measurevar = "Miss", groupvars = c("BlockN", "Treatment"), na.rm = TRUE)
+#check if it's okay that you removed NAs
 
-ggplot(data=aggdata, aes(x=Treatment, y=x, fill = Treatment)) +
+##Reference graph 
+ggplot(aggdata.miss, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Missed targets according to block number and treatment") + ylab("Missed Target") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.5)
+
+
+##Graph with Standard Error 
+ggplot(miss.graph, aes(x = BlockN, y = Miss_mean, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Missed targets according to block number and treatment") + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11) + ylim(0.1, 0.5) + geom_errorbar(aes(ymin = Miss_mean-se, ymax = Miss_mean+se), size = .4, width = .5, alpha = .3) + scale_colour_discrete(name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate"))
+
+
+##Barplot 
+ggplot(data=aggdata.miss, aes(x=Treatment, y=Miss, fill = Treatment)) +
   geom_bar(stat="identity")
 
+
+ggplot(data= miss.graph, aes(x=Treatment, y=Miss_mean, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Miss_mean-se, ymax = Miss_mean+se), width = .2, size = .3) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate")) + ylab("Mean Missed Targets")
 ```
 
 
@@ -157,26 +187,45 @@ lm.HR3 <- lmer(Hit_RT ~ 1 + Treatment*BlockN + (1|SubID), data = aggdata_RT, REM
 ##Anova to see which one has the most interaction
 anova(lm.HR0,lm.HR1,lm.HR2,lm.HR3)
 summary(lm.HR1)
-confint(lm.HR3, method = "Wald", oldNames = FALSE)
+confint(lm.HR1, method = "Wald", oldNames = FALSE)
 
 ## Normality plot of residuals 
-hist(residuals(lm.HR3))
-boxplot(residuals(lm.HR3))
-qqnorm(residuals(lm.HR3))
-qqline(resid(lm.HR3))
+hist(residuals(lm.HR1))
+boxplot(residuals(lm.HR1))
+qqnorm(residuals(lm.HR1))
+qqline(resid(lm.HR1))
 plot(lm.HR3)
-plot(fitted(lm.HR3), resid(lm.HR3))
+plot(fitted(lm.HR1), resid(lm.HR1))
 
 ```
 
+
+
+
+** few notes to ask: 
+since we're using the first HR equation (just the effects of treatment and not block no.), does this change our graph or does block number continue to be the x-axis?
+--> graph has changed from the reference graph from the last meeting 
+
+
 ```{r}
 ##Graph of the interaction between treatment and block number on hit rates
-aggdata<-aggregate(CTET_Behaviour$Hit_RT, list(BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+aggdata.rt<-aggregate(CTET_Behaviour$Hit_RT, list(BlockN=CTET_Behaviour$BlockN,Treatment=CTET_Behaviour$Treatment), mean,na.rm=TRUE)
+colnames(aggdata.rt) = c("BlockN", "Treatment","ReactionTime")
 
-ggplot(aggdata, aes(x = BlockN, y = x, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("Hit RT") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5)
+rt.graph <- summarySE(aggdata_RT, measurevar = "Hit_RT", groupvars = c("BlockN", "Treatment"), na.rm = TRUE)
 
+##Reference graph
+ggplot(aggdata.rt, aes(x = BlockN, y = ReactionTime, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("Hit Rate") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5)
 
+##Graph with Standard Error 
+ggplot(rt.graph, aes(x = BlockN, y = Hit_RT_mean, colour = Treatment)) + geom_point() + geom_line(alpha = .7) + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Hit rate according to block number and treatment") + ylab("Mean Hit Rate") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5) + geom_errorbar(aes(ymin = Hit_RT_mean-se, ymax = Hit_RT_mean+se), size = .5, width = .5, alpha = .3) + scale_colour_discrete(name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate"))
 
+##Bar plot 
+ggplot(data=aggdata.rt, aes(x=Treatment, y=ReactionTime, fill = Treatment)) +
+  geom_bar(stat="identity") 
+
+ggplot(data= rt.graph, aes(x=Treatment, y=Hit_RT_mean, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Hit_RT_mean-se, ymax = Hit_RT_mean+se), width = .2, size = .3) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate")) + ylab("Mean Hit Rate")
 
 ```
 
