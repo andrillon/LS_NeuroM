@@ -37,6 +37,7 @@ library(lattice)
 library(arm)
 
 library(plyr)
+library(Rmisc)
 
 CTET_Behaviour <- read.table("../Tables/CTET_behav_res.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 CTET_Behaviour$SubID<-as.factor(CTET_Behaviour$SubID)
@@ -91,17 +92,22 @@ colnames(aggdata.fa) = c("BlockN", "Treatment","FA")
 
 
 fa.graph <- summarySE(aggdata_FA, measurevar = "FA", groupvars = c("BlockN", "Treatment"))
-
+fa.graph$FA_mean<-fa.graph$FA
+fa.graph$Treatment<-ordered(fa.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 ##REFERENCE GRAPH            
-ggplot(aggdata.fa, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.01) +
+ggplot(aggdata.fa, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.01)
 
 ##Graph with Standard Error 
-ggplot(fa.graph, aes(x = BlockN, y = FA_mean, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.01) + geom_errorbar(aes(ymin = FA_mean-se, ymax = FA_mean+se), size = .4, width = .5, alpha = .3) + scale_colour_discrete(name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate"))
+ggplot(fa.graph, aes(x = BlockN, y = FA_mean, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.01) + geom_errorbar(aes(ymin = FA_mean-se, ymax = FA_mean+se), size = .4, width = .5, alpha = 1) + scale_colour_discrete(name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram"))
 
 
 ##Barplot 
-ggplot(data=fa.graph, aes(x=Treatment, y=FA_mean, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA_mean-se, ymax = FA_mean+se), width = .2, size = .3) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate")) + ylab("Mean False Alarm")
+fa2.graph <- summarySE(aggdata_FA, measurevar = "FA", groupvars = c( "Treatment"))
+fa2.graph$FA_mean<-fa2.graph$FA
+fa2.graph$Treatment<-ordered(fa2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data=fa2.graph, aes(x=Treatment, y=FA_mean, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA_mean-se, ymax = FA_mean+se), width = .2, size = .3) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean False Alarm")
 ```
 
 
@@ -147,6 +153,9 @@ aggdata.miss<-aggregate(CTET_Behaviour$Miss, list(BlockN=CTET_Behaviour$BlockN,T
 colnames(aggdata.miss) = c("BlockN", "Treatment","Miss")
 
 miss.graph <- summarySE(aggdata_MISS, measurevar = "Miss", groupvars = c("BlockN", "Treatment"), na.rm = TRUE)
+miss.graph$Miss_mean<-miss.graph$Miss
+miss.graph$Treatment<-ordered(miss.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
 #check if it's okay that you removed NAs
 
 ##Reference graph 
@@ -154,16 +163,21 @@ ggplot(aggdata.miss, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point
 
 
 ##Graph with Standard Error 
-ggplot(miss.graph, aes(x = BlockN, y = Miss_mean, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Missed targets according to block number and treatment") + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11) + ylim(0.1, 0.5) + geom_errorbar(aes(ymin = Miss_mean-se, ymax = Miss_mean+se), size = .4, width = .5, alpha = .3) + scale_colour_discrete(name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate"))
+ggplot(miss.graph, aes(x = BlockN, y = Miss_mean, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Missed targets according to block number and treatment") + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11) + ylim(0.1, 0.5) + geom_errorbar(aes(ymin = Miss_mean-se, ymax = Miss_mean+se), size = .4, width = .5, alpha = 1) + scale_colour_discrete(name = "Treatment", breaks = c("PLA","MPH","ATM","CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram"))
 
 
 ##Barplot 
+miss2.graph <- summarySE(aggdata_MISS, measurevar = "Miss", groupvars = c("Treatment"), na.rm = TRUE)
+miss2.graph$Miss_mean<-miss2.graph$Miss
+miss2.graph$Treatment<-ordered(miss2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+
 ggplot(data=aggdata.miss, aes(x=Treatment, y=Miss, fill = Treatment)) +
   geom_bar(stat="identity")
 
 
-ggplot(data= miss.graph, aes(x=Treatment, y=Miss_mean, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Miss_mean-se, ymax = Miss_mean+se), width = .2, size = .3) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "ATM", "CIT", "MPH"), labels = c("Placebo", "Atomoxetine", "Citalopram", "Methylphenidate")) + ylab("Mean Missed Targets")
+ggplot(data= miss2.graph, aes(x=Treatment, y=Miss_mean, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Miss_mean-se, ymax = Miss_mean+se), width = .2, size = .3) + scale_fill_discrete( name = "Treatment", breaks = c("PLA","MPH","ATM","CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Missed Targets")
 ```
 
 
