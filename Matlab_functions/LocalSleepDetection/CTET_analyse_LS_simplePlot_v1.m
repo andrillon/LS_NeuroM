@@ -26,7 +26,7 @@ for nE=1:64
     temp_topo(nE)=mean(table_SW.SWdens(~cellfun(@isempty,regexp(table_SW.Elec,layout.label{nE}))));
 end
 simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
-title('All'); h=colorbar;
+title('All'); 
 caxis([0 1]*limMax)
 h=colorbar;
 colormap(cmap);
@@ -73,13 +73,18 @@ end
 % end
 
 %% Models
-table_SW.SubID=categorical(table_SW.SubID);
-table_SW.SessN=categorical(table_SW.SessN);
-table_SW.Elec=categorical(table_SW.Elec);
-table_SW.Drug=categorical(table_SW.Drug);
-table_SW.Drug=reordercats(table_SW.Drug,[4 1 2 3]);
+table_SW2=table_SW;
+table_SW2.SubID=categorical(table_SW2.SubID);
+table_SW2.SessN=categorical(table_SW2.SessN);
+table_SW2.Elec=categorical(table_SW2.Elec);
+table_SW2.Drug=categorical(table_SW2.Drug);
+table_SW2.Drug=reordercats(table_SW2.Drug,[4 1 2 3]);
 
-mdl0=fitlme(table_SW,'SWdens~1+(1|SubID)');
-mdl1=fitlme(table_SW,'SWdens~1+BlockN+(1|SubID)');
-mdl2=fitlme(table_SW,'SWdens~1+BlockN+Drug+(1|SubID)');
-mdl3=fitlme(table_SW,'SWdens~1+BlockN*Drug+(1|SubID)');
+mdl0=fitlme(table_SW2,'SWdens~1+(1|SubID)');
+mdl1=fitlme(table_SW2,'SWdens~1+Elec+(1|SubID)');
+mdl2=fitlme(table_SW2,'SWdens~1+Elec+BlockN+(1|SubID)');
+mdl3=fitlme(table_SW2,'SWdens~1+Elec+BlockN+Drug+(1|SubID)');
+mdl4=fitlme(table_SW2,'SWdens~1+Elec*(BlockN+Drug)+(1|SubID)');
+mdl5=fitlme(table_SW2,'SWdens~1+Elec*BlockN*Drug+(1|SubID)');
+
+compare(mdl4,mdl5)
