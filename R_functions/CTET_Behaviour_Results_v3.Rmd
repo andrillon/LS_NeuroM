@@ -227,6 +227,7 @@ aggdata.rt<-aggregate(CTET_Behaviour$Hit_RT, list(BlockN=CTET_Behaviour$BlockN,T
 colnames(aggdata.rt) = c("BlockN", "Treatment","ReactionTime")
 
 rt.graph <- summarySE(aggdata_RT, measurevar = "Hit_RT", groupvars = c("BlockN", "Treatment"), na.rm = TRUE)
+rt.graph$Hit_RT_mean<-rt.graph$Hit_RT
 
 ##Reference graph
 ggplot(aggdata.rt, aes(x = BlockN, y = ReactionTime, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("Hit Rate") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5)

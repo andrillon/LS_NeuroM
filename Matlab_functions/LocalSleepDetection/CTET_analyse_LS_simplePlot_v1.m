@@ -72,6 +72,26 @@ end
 %     end
 % end
 
+%% By Block 
+figure; hold on; set(gcf,'Position',[201         428        1135         500]);
+for nD=1:10
+    subplot(1,10,nD);
+    sub_table_SW=table_SW(ismember(table_SW.BlockN,BlockN{nD}),:);
+    temp_topo=[];
+    for nE=1:64
+        temp_topo(nE)=mean(sub_table_SW.SWdens(~cellfun(@isempty,regexp(sub_table_SW.Elec,layout.label{nE}))));
+    end
+    simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+    format_fig;
+    caxis([0 1]*limMax)
+    if nD==10
+        h=colorbar;
+        set(h,'Position',[0.93 0.4 0.02 0.2])
+    end
+    colormap(cmap);
+    title(BlockNumber{nD})
+end
+
 %% Models
 table_SW2=table_SW;
 table_SW2.SubID=categorical(table_SW2.SubID);
