@@ -105,25 +105,6 @@ end
 %     end
 % end
 
-%% By Block 
-figure; hold on; set(gcf,'Position',[201         428        1135         500]);
-for nD=1:10
-    subplot(1,10,nD);
-    sub_table_SW=table_SW(ismember(table_SW.BlockN,BlockN{nD}),:);
-    temp_topo=[];
-    for nE=1:64
-        temp_topo(nE)=mean(sub_table_SW.SWdens(~cellfun(@isempty,regexp(sub_table_SW.Elec,layout.label{nE}))));
-    end
-    simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
-    format_fig;
-    caxis([0 1]*limMax)
-    if nD==10
-        h=colorbar;
-        set(h,'Position',[0.93 0.4 0.02 0.2])
-    end
-    colormap(cmap);
-    title(BlockNumber{nD})
-end
 
 %% Models
 table_SW2=table_SW;
@@ -144,17 +125,19 @@ compare(mdl4,mdl5)
 
 %%
 temp_topo_tval=[];
+temp_topo_pval=[];
 for nE=1:64
-    sub_table_SW2=table_SW2(find_trials(sub_table_SW.Elec,layout.label{nE}),:);
+    sub_table_SW2=table_SW2(find_trials(table_SW.Elec,layout.label{nE}),:);
     mdl_byEle{nE}=fitlme(sub_table_SW2,'SWdens~1+Drug+(1|SubID)');
     temp_topo_tval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:4,4));
+    temp_topo_pval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:4,6));
 end
 
 %%
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap2=flipud(cmap2);
 
-limMax=8.2;
+limMax=max(max(abs(temp_topo_tval)));
 figure;
 for nDrug=1:3
     subplot(1,3,nDrug)
