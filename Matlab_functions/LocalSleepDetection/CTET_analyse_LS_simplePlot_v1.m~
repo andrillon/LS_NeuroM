@@ -84,7 +84,7 @@ for nD=1:10
     simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
     format_fig;
     caxis([0 1]*limMax)
-    if nD==10
+    if nD==
         h=colorbar;
         set(h,'Position',[0.93 0.4 0.02 0.2])
     end
