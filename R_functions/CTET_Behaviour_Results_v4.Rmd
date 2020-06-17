@@ -149,7 +149,7 @@ fa.graph$Treatment<-ordered(fa.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.01)
 
 ##Graph with Standard Error 
-ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() +  ggtitle("False alarms according to block number and treatment") + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.011) + geom_ribbon(aes(ymin = FA-se, ymax = FA+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() +  ggtitle("False alarms according to block number and treatment") + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.011) + geom_ribbon(aes(ymin = FA-se, ymax = FA+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))
 
 ##Barplot 
 fa2.graph <- summarySE(CTET_Behaviour1, measurevar = "FA", groupvars = c( "Treatment"))
@@ -157,7 +157,7 @@ fa2.graph$FA<-fa2.graph$FA
 fa2.graph$Treatment<-ordered(fa2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data=fa2.graph, aes(x=Treatment, y=FA, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA-se, ymax = FA+se), width = .4, size = .45) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean False Alarm")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA-se, ymax = FA+se), width = .4, size = .45) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean False Alarm")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) 
 ```
 
 ```{r}
@@ -170,14 +170,14 @@ ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point()
 
 
 ##Graph with Standard Error 
-ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + ggtitle("Missed targets according to block number and treatment") + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11) + ylim(0.1, 0.5) + geom_ribbon(aes(ymin = Miss-se, ymax = Miss+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#990000", "#CC0000", "#000099")) + scale_colour_manual(values = c("#666666", "#990000", "#FF0000", "#000099"))
+ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + ggtitle("Missed targets according to block number and treatment") + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11) + ylim(0.1, 0.5) + geom_ribbon(aes(ymin = Miss-se, ymax = Miss+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))+ scale_x_continuous(breaks = c(1:10))
 
 ##Barplot 
 miss2.graph <- summarySE(CTET_Behaviour1, measurevar = "Miss", groupvars = c("Treatment"), na.rm = TRUE)
 miss2.graph$Treatment<-ordered(miss2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data= miss2.graph, aes(x=Treatment, y=Miss, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Miss-se, ymax = Miss+se), width = .35, size = .6)  + scale_fill_manual(values = c("#666666", "#990000", "#CC0000", "#000099")) + labs (title = "Bar Plot of The Mean Misses Per Treatment", y = "Mean Misses")
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Miss-se, ymax = Miss+se), width = .35, size = .6)  + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + labs (title = "Bar Plot of The Mean Misses Per Treatment", y = "Mean Misses")
 
 ```
 
@@ -190,12 +190,11 @@ rt.graph$Treatment<-ordered(rt.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Mean RT for Hits according to block number and treatment") + ylab("Hit Rate") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5)
 
 ##Graph with Standard Error 
-ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ggtitle("Mean RT for Hits according to block number and treatment") + ylab("Mean RT Hit") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5) + geom_ribbon(aes(ymin = Hit_RT-se, ymax = Hit_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#990000", "#CC0000", "#000099")) + scale_colour_manual(values = c("#666666", "#990000", "#FF0000", "#000099"))
+ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ggtitle("Mean RT for Hits according to block number and treatment") + ylab("Mean RT Hit") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5) + geom_ribbon(aes(ymin = Hit_RT-se, ymax = Hit_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))+ scale_x_continuous(breaks = c(1:10))
 
-##Bar plot 
 rt2.graph <- summarySE(CTET_Behaviour1, measurevar = "Hit_RT", groupvars = c("Treatment"), na.rm = TRUE)
 rt2.graph$Treatment<-ordered(rt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data= rt2.graph, aes(x=Treatment, y=Hit_RT, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Hit_RT-se, ymax = Hit_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#990000", "#CC0000", "#000099")) + ylim(0, 2) + labs(title = "Bar Plot of The Mean RT for Hits Per Treatment", y = "Mean RT Hit") + coord_cartesian(ylim =c(1.35, 1.45))
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Hit_RT-se, ymax = Hit_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + ylim(0, 2) + labs(title = "Bar Plot of The Mean RT for Hits Per Treatment", y = "Mean RT Hit") + coord_cartesian(ylim =c(1.35, 1.45))
 ```

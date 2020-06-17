@@ -1,0 +1,93 @@
+---
+title: "SWS_Treatment_v3"
+author: "Elaine P."
+date: "16/06/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+library(tidyverse)
+
+
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
+
+SWS_data$Treatment<-as.factor(SWS_data$Treatment)
+
+SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
+```
+
+
+```{r}
+##Slow wave density 
+
+lm.sw0 <- lmer(SWdens ~ 1 + (1|SubID), data = SWS_data, REML =FALSE)
+
+##Effects of electrode placement on slow wave density
+lm.sw1 <- lmer(SWdens  ~ 1 + Elec + (1|SubID), data = SWS_data, REML = FALSE)
+
+
+##Effects of electrode placement and block number on slow wave density
+lm.sw2 <- lmer(SWdens  ~ 1 + Elec + BlockN + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Effects of electrode placement, block number and drug on slow wave density
+lm.sw3 <- lmer(SWdens  ~ 1 + Elec + BlockN + Treatment + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Effects of electrode placement interacting between block number and drug on slow wave density
+lm.sw4 <- lmer(SWdens  ~ 1 + Elec*(BlockN + Treatment) + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Effects of the interaction between electrode placement, block number and drug on slow wave density
+lm.sw5 <- lmer(SWdens  ~ 1 + Elec*BlockN*Treatment + (1|SubID), data = SWS_data, REML = FALSE)
+
+
+##Anova to see which one has the most interaction
+anova(lm.sw0,lm.sw1,lm.sw2, lm.sw3, lm.sw4, lm.sw5)
+
+lm.sw4 <- lmer(SWdens  ~ 1 + Elec*(BlockN + Treatment) + (1|SubID), data = SWS_data, REML = TRUE)
+summary(lm.sw4)
+confint(lm.sw4, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals 
+hist(residuals(lm.sw4))
+boxplot(residuals(lm.sw4))
+qqnorm(resid(lm.sw4))
+qqline(resid(lm.sw4))
+plot(lm.sw4)
+plot(fitted(lm.sw4), resid(lm.sw4))
+
+```
+```{r}
+##Graph of the effects of block number and drug on slow wave density
+sw.graph <- summarySE(SWS_data, measurevar = "SWdens", groupvars = c("BlockN", "Treatment"))
+sw.graph$Treatment<-ordered(sw.graph$Treatment, c("PLA","MPH","ATM","CIT"))
+
+
+##Graph with Standard Error 
+ggplot(sw.graph, aes(x = BlockN, y = SWdens, colour = Treatment)) + geom_point() + geom_line() +  ggtitle("Mean Slow Wave Density According To Block Number and Treatment") + ylab("Mean Slow Wave Density") + xlab("Block Number")+ geom_ribbon(aes(ymin = SWdens-se, ymax = SWdens+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))
+
+##Barplot 
+sw2.graph <- summarySE(SWS_data, measurevar = "SWdens", groupvars = c( "Treatment"))
+sw2.graph$Treatment<-ordered(sw2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data=sw2.graph, aes(x=Treatment, y=SWdens, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Slow Wave Density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(4, 5)) + ggtitle("Mean Slow Wave Density For Each Treatment")
+```
