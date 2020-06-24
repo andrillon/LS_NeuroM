@@ -128,7 +128,7 @@ temp_topo_tval=[];
 temp_topo_pval=[];
 for nE=1:64
     sub_table_SW2=table_SW2(find_trials(table_SW.Elec,layout.label{nE}),:);
-    mdl_byEle{nE}=fitlme(sub_table_SW2,'SWdens~1+Drug+(1|SubID)');
+    mdl_byEle{nE}=fitlme(sub_table_SW2,'SWdens~1+BlockN+Drug+(1|SubID)');
     temp_topo_tval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:4,4));
     temp_topo_pval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:4,6));
 end
@@ -141,7 +141,10 @@ limMax=max(max(abs(temp_topo_tval)));
 figure;
 for nDrug=1:3
     subplot(1,3,nDrug)
-    simpleTopoPlot_ft(temp_topo_tval(:,nDrug), layout,'on',[],0,1);
+    temp_topo=temp_topo_tval(:,nDrug);
+    temp_pV=temp_topo_pval(:,nDrug);
+    temp_topo(temp_pV>= fdr(temp_pV,0.05))=0;
+    simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
     format_fig;
     caxis([-1 1]*limMax)
     if nDrug==3
