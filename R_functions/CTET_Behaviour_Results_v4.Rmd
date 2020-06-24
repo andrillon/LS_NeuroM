@@ -149,15 +149,26 @@ fa.graph$Treatment<-ordered(fa.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.01)
 
 ##Graph with Standard Error 
-ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() +  ggtitle("False alarms according to block number and treatment") + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.011) + geom_ribbon(aes(ymin = FA-se, ymax = FA+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))
+ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.011) + geom_ribbon(aes(ymin = FA-se, ymax = FA+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::percent_format(accuracy = .01))+ theme_bw() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14))
+
+ggsave(file="../Figures/CTET_LinePlot_FA.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))
 
 ##Barplot 
 fa2.graph <- summarySE(CTET_Behaviour1, measurevar = "FA", groupvars = c( "Treatment"))
 fa2.graph$FA<-fa2.graph$FA
 fa2.graph$Treatment<-ordered(fa2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+marks <- c(0,20000,40000,60000,80000,100000)
+
 
 ggplot(data=fa2.graph, aes(x=Treatment, y=FA, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA-se, ymax = FA+se), width = .4, size = .45) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean False Alarm")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) 
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA-se, ymax = FA+se), width = .4, size = .45) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean False Alarms")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_y_continuous(labels = scales::percent_format(accuracy = .01)) +theme_classic() +theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14)) + coord_cartesian(ylim =c(0.001, .008)) 
+ggsave(file="../Figures/CTET_BarPlot_FA.png", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
 ```
 
 ```{r}
@@ -166,18 +177,27 @@ miss.graph <- summarySE(CTET_Behaviour1, measurevar = "Miss", groupvars = c("Blo
 miss.graph$Treatment<-ordered(miss.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ##Reference graph 
-ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Missed targets according to block number and treatment") + ylab("Missed Target") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.5)
+ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ylab("Missed Target") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.5)
 
 
 ##Graph with Standard Error 
-ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + ggtitle("Missed targets according to block number and treatment") + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11) + ylim(0.1, 0.5) + geom_ribbon(aes(ymin = Miss-se, ymax = Miss+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))+ scale_x_continuous(breaks = c(1:10))
+ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11)  + geom_ribbon(aes(ymin = Miss-se, ymax = Miss+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))+ scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::percent_format(accuracy = 1))+ theme_bw() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14))
+
+ggsave(file="../Figures/CTET_LinePlot_Misses.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))
 
 ##Barplot 
 miss2.graph <- summarySE(CTET_Behaviour1, measurevar = "Miss", groupvars = c("Treatment"), na.rm = TRUE)
 miss2.graph$Treatment<-ordered(miss2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data= miss2.graph, aes(x=Treatment, y=Miss, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Miss-se, ymax = Miss+se), width = .35, size = .6)  + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + labs (title = "Bar Plot of The Mean Misses Per Treatment", y = "Mean Misses")
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Miss-se, ymax = Miss+se), width = .35, size = .6)  + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + labs (y = "Mean Missed Targets") + scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + coord_cartesian(ylim =c(0, 0.45))+theme_classic() + theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14))+ coord_cartesian(ylim =c(0.02, .45)) 
+ggsave(file="../Figures/CTET_BarPlot_Misses.png", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
 
 ```
 
@@ -190,9 +210,9 @@ rt.graph$Treatment<-ordered(rt.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Mean RT for Hits according to block number and treatment") + ylab("Hit Rate") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5)
 
 ##Graph with Standard Error 
-ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ylab("Mean RT Hit") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5) + geom_ribbon(aes(ymin = Hit_RT-se, ymax = Hit_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))+
-  theme(legend.position = "none",axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  scale_x_continuous(breaks = c(1:10))
+ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ylab("Mean Reaction Time (seconds)") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5) + geom_ribbon(aes(ymin = Hit_RT-se, ymax = Hit_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +
+  scale_x_continuous(breaks = c(1:10)) + theme_bw() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14))
+
 ggsave(file="../Figures/CTET_LinePlot_RThits.png", 
        width = 30/2,
       height = 18/2,
@@ -202,8 +222,8 @@ rt2.graph <- summarySE(CTET_Behaviour1, measurevar = "Hit_RT", groupvars = c("Tr
 rt2.graph$Treatment<-ordered(rt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data= rt2.graph, aes(x=Treatment, y=Hit_RT, fill = Treatment)) +
-  theme(legend.position = "none",axis.title=element_text(size=14,face="bold"),axis.text=element_text(size=14,face="bold")) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Hit_RT-se, ymax = Hit_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + ylim(0, 2) + labs(y = "Mean RT Hit") + coord_cartesian(ylim =c(1.35, 1.45))
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Hit_RT-se, ymax = Hit_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + ylim(0, 2) + labs(y = "Mean Reaction Time (seconds)") + coord_cartesian(ylim =c(1.35, 1.45)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14)) 
+  
 ggsave(file="../Figures/CTET_BarPlot_RThits.eps", dpi = 600, 
        width = 15/2,
       height = 18/2,
