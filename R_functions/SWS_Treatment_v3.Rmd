@@ -82,19 +82,20 @@ plot(fitted(lm.sw4), resid(lm.sw4))
 
 lm.sw0 <- lmer(SWdens ~ 1 + (1|SubID), data = SWS_data2, REML =FALSE)
 
-##Effects of electrode placement and block number on slow wave density
+##Effects of block number on slow wave density
 lm.sw1 <- lmer(SWdens  ~ 1  + BlockN + (1|SubID), data = SWS_data2, REML = FALSE)
 
-##Effects of electrode placement, block number and drug on slow wave density
+##Effects of block number and drug on slow wave density
 lm.sw2 <- lmer(SWdens  ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data2, REML = FALSE)
 
-##Effects of the interaction between electrode placement, block number and drug on slow wave density
+##Effects of the interaction between block number and drug on slow wave density
 lm.sw3 <- lmer(SWdens  ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data2, REML = FALSE)
 
 
 ##Anova to see which one has the most interaction
 anova(lm.sw0,lm.sw1,lm.sw2, lm.sw3)
 
+lm.sw2 <- lmer(SWdens  ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data2, REML = TRUE)
 summary(lm.sw2)
 confint(lm.sw2, method = "Wald", oldNames = FALSE)
 
@@ -132,12 +133,24 @@ sw.graph$Treatment<-ordered(sw.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 
 
 ##Graph with Standard Error 
-ggplot(sw.graph, aes(x = BlockN, y = SWdens, colour = Treatment)) + geom_point() + geom_line() +  ggtitle("Mean Slow Wave Density According To Block Number and Treatment") + ylab("Mean Slow Wave Density") + xlab("Block Number")+ geom_ribbon(aes(ymin = SWdens-se, ymax = SWdens+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))
+ggplot(sw.graph, aes(x = BlockN, y = SWdens, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = SWdens-se, ymax = SWdens+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank()) 
+
+ggsave(file="../Figures/CTET_LinePlot_SWD.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))
 
 ##Barplot 
 sw2.graph <- summarySE(SWS_data2, measurevar = "SWdens", groupvars = c( "Treatment"))
 sw2.graph$Treatment<-ordered(sw2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data=sw2.graph, aes(x=Treatment, y=SWdens, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Slow Wave Density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(4, 5)) + ggtitle("Mean Slow Wave Density For Each Treatment")
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Slow Wave Density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(3.25, 5.5)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+
+ 
+  
+ggsave(file="../Figures/CTET_BarPlot_SWD.png", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
 ```
