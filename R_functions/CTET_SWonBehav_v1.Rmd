@@ -115,7 +115,13 @@ anova(lm.HR0,lm.HR1,lm.HR2,lm.HR3, lm.HR4, lm.HR5)
 ```{r}
 SWS_data$Treatment<-ordered(SWS_data$Treatment, c("PLA","MPH","ATM","CIT"))
 
+aggdata.fa <- aggregate(SWS_data[, 2], list( BlockN = SWS_data$BlockN, Treatment = SWS_data$Treatment, FA = SWS_data$FA, SWdens = SWS_data$SWdens), mean)
+colnames(aggdata.fa) = c("BlockN", "Treatment","FA", "SWdens", "SubID")
+
+
 ##Scatterplot of slow wave density and false alarm 
+ggplot(aggdata.fa, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+
 ggplot(SWS_data, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
 
 
