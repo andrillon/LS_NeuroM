@@ -25,6 +25,7 @@ library(lme4)
 library(lmerTest)
 library(multilevelTools)
 library(tidyverse)
+library(Rmisc)
 
 
 SWS_data <- read.table("../Tables/CTET_SWdetection_avDens_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
@@ -47,13 +48,14 @@ lm.FA1 <- lmer(FA ~ 1 + Treatment + (1|SubID), data = SWS_data, REML = FALSE)
 #Added effects of block number on false alarm
 lm.FA2 <- lmer(FA ~ 1 + Treatment + BlockN + (1|SubID), data = SWS_data, REML = FALSE)
 
-#Added effects of block number as an interaction on false alarm
+#Added effects of slow wave density on false alarm on the winning model
 lm.FA3 <- lmer(FA ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
+#Effects of just slow wave density and block number on false alarm
 lm.FA4 <- lmer(FA ~ 1 + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
 ##Anova to see which one has the most interaction
-anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3,lm.FA4)
+anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3, lm.FA4)
 
 ```
 
@@ -61,21 +63,66 @@ anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3,lm.FA4)
 #detach("package:multilevelTools", unload=TRUE)
 #detach("package:lmerTest", unload=TRUE)
 
+##Misses 
 lm.Miss0 <- lmer(Miss ~ 1 + (1|SubID), data = SWS_data, REML = FALSE)
 
-##Effects of treatment on false alarms 
+##Effects of treatment on misses 
 lm.Miss1 <- lmer(Miss ~ 1 + Treatment + (1|SubID), data = SWS_data, REML = FALSE)
 
-#Added effects of block number on false alarm
+#Added effects of block number on misses
 lm.Miss2 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data = SWS_data, REML = FALSE)
 
-#Added effects of block number as an interaction on false alarm
-lm.Miss3 <- lmer(Miss ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
+##Added effects of block number as an interaction on misses 
+lm.Miss3 <- lmer(Miss ~ 1 + Treatment*BlockN + (1|SubID), data = SWS_data, REML = FALSE)
 
-lm.Miss4 <- lmer(Miss ~ 1  + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
+##Added effects of slow wave density on misses on the winning model
+lm.Miss4 <- lmer(Miss ~ 1 + Treatment*BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Effects of just slow wave density and block number on misses
+lm.Miss5 <- lmer(Miss ~ 1  + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
+
 ##Anova to see which one has the most interaction
-anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3,lm.Miss4)
+anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3,lm.Miss4,lm.Miss5)
+
+```
+
+```{r}
+##Hit Rate  
+lm.HR0 <- lmer(Hit_RT ~ 1 + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Effects of treatment on hit rate 
+lm.HR1 <- lmer(Hit_RT ~ 1 + Treatment + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Added effects of block number on hit rate  
+lm.HR2 <- lmer(Hit_RT ~ 1 + Treatment + BlockN + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Added effects of block number as an interaction on hit rate  
+lm.HR3 <- lmer(Hit_RT ~ 1 + Treatment*BlockN + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Added effects of slow wave density on hit rate on the winning model
+lm.HR4 <- lmer(Hit_RT ~ 1 + Treatment + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Effects of just slow wave density and block number on hit rate
+lm.HR5 <- lmer(Hit_RT ~ 1  + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
+
+
+##Anova to see which one has the most interaction
+anova(lm.HR0,lm.HR1,lm.HR2,lm.HR3, lm.HR4, lm.HR5)
 
 ```
 
 
+```{r}
+SWS_data$Treatment<-ordered(SWS_data$Treatment, c("PLA","MPH","ATM","CIT"))
+
+##Scatterplot of slow wave density and false alarm 
+ggplot(SWS_data, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+
+
+##Scatterplot of slow wave density and misses
+ggplot(SWS_data, aes (x = SWdens, y = Miss, colour = Treatment)) + geom_point(alpha = .7)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+
+##Scatterplot of slow wave density and hit rate
+ggplot(SWS_data, aes (x = SWdens, y = Hit_RT, colour = Treatment)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+
+```
