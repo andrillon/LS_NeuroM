@@ -25,18 +25,15 @@ library(lme4)
 library(lmerTest)
 library(multilevelTools)
 library(tidyverse)
-library(mediation)
 
 
-SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data <- read.table("../Tables/CTET_SWdetection_avDens_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
 SWS_data$Treatment<-as.factor(SWS_data$Treatment)
 
 SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
-
-SWS_data2<-aggregate(SWdens ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
 ```
 ```{r}
 #detach("package:multilevelTools", unload=TRUE)
@@ -53,8 +50,10 @@ lm.FA2 <- lmer(FA ~ 1 + Treatment + BlockN + (1|SubID), data = SWS_data, REML = 
 #Added effects of block number as an interaction on false alarm
 lm.FA3 <- lmer(FA ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
+lm.FA4 <- lmer(FA ~ 1 + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
+
 ##Anova to see which one has the most interaction
-anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3)
+anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3,lm.FA4)
 
 ```
 
@@ -73,26 +72,10 @@ lm.Miss2 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data = SWS_data, REM
 #Added effects of block number as an interaction on false alarm
 lm.Miss3 <- lmer(Miss ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
+lm.Miss4 <- lmer(Miss ~ 1  + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 ##Anova to see which one has the most interaction
-anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3)
+anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3,lm.Miss4)
 
 ```
 
-
-```{r}
-#detach("package:multilevelTools", unload=TRUE)
-#detach("package:lmerTest", unload=TRUE)
-
-SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="CIT",]
-SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
-S
-WS_data3$treat[SWS_data$Treatment]<-SWS_data3$Treatment=="CIT"
-SWS_data3$treat<-as.integer(SWS_data3$treat)
-
-med.fit <- lm(SWdens  ~ 1 + treat, data = SWS_data3)
-out.fit <- lm(Miss  ~ 1 + SWdens + treat, data = SWS_data3)
-
-med.out <- mediate(med.fit, out.fit, treat = "treat", mediator = "SWdens",robustSE = TRUE, sims = 100)
-
-```
 

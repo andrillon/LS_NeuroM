@@ -73,6 +73,8 @@ all_slow_Waves=[];
 all_drug_types=[];
 all_slow_Waves_vec=[];
 all_drug_types_vec=[];
+all_slow_Waves_vec2=[];
+all_drug_types_vec2=[];
 for nF=1:length(files)
     File_Name=files(nF).name;
     fprintf('... processing %s\n',File_Name);
@@ -128,6 +130,8 @@ for nF=1:length(files)
         all_drug_types=[all_drug_types ; {DrugC}];
         all_slow_Waves_vec=[all_slow_Waves_vec ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:8))],64,1) (1:64)' nout/((max_sample-min_sample)/hdr.Fs/60)]];
         all_drug_types_vec=[all_drug_types_vec ; repmat({DrugC},64,1)];
+        all_slow_Waves_vec2=[all_slow_Waves_vec2 ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:8))],1,1) 0 mean(nout/((max_sample-min_sample)/hdr.Fs/60))]];
+        all_drug_types_vec2=[all_drug_types_vec2 ; repmat({DrugC},1,1)];
     end
 end
 
@@ -161,6 +165,26 @@ mdl2=fitlme(table_SW,'SWdens~1+Elec+BlockN+(1|SubID)');
 mdl3=fitlme(table_SW,'SWdens~1+Elec*Drug+(1|SubID)');
 
 writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec.txt');
+
+%%
+table_SW=array2table(all_slow_Waves_vec2,'VariableNames',{'FileN','SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','Elec','SWdens'});
+table_SW.SubID=categorical(table_SW.SubID);
+table_SW.SessN=categorical(table_SW.SessN);
+table_SW.BlockN=ordinal(table_SW.BlockN);
+table_SW.Elec=categorical(table_SW.Elec);
+for nE=1:64
+    table_SW.Elec(table_SW.Elec==num2str(nE))=hdr.label{nE};
+end
+table_SW.Elec=removecats(table_SW.Elec);
+table_SW.Drug=all_drug_types_vec2;
+table_SW.Drug=categorical(table_SW.Drug);
+table_SW.Drug=reordercats(table_SW.Drug,[4 1 2 3]);
+mdl0=fitlme(table_SW,'SWdens~1+(1|SubID)');
+mdl1=fitlme(table_SW,'SWdens~1+Elec+(1|SubID)');
+mdl2=fitlme(table_SW,'SWdens~1+Elec+BlockN+(1|SubID)');
+mdl3=fitlme(table_SW,'SWdens~1+Elec*Drug+(1|SubID)');
+
+writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_avDens_behav_vec.txt');
 
 %%
 path_fieldtrip='/Users/tand0009/Work/local/fieldtrip/';
