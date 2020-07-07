@@ -28,29 +28,27 @@ table_SW2.Drug=categorical(table_SW2.Drug);
 table_SW2.Drug=reordercats(table_SW2.Drug,[4 1 2 3]);
 
 %%
-redo=0;
-    totperm=1000;
+redo=1;
+    totperm=10;
 if redo==1
     temp_topo_tval=[];
     temp_topo_pval=[];
     % fprintf('%2.0f/%2.0f\n',0,64)
-    SWdens_est=cell(1,2);
+    Miss_est=cell(1,2);
     for nE=1:64
         fprintf('%2.0f/%2.0f\n',nE,64)
         sub_table_SW2=table_SW2(find_trials(table_SW.Elec,layout.label{nE}),:);
-        mdl_byEle{nE}=fitlme(sub_table_SW2,'SWdens~1+BlockN+Drug+(1|SubID)');
+        mdl_byEle{nE}=fitlme(sub_table_SW2,'Miss~1+BlockN+SWdens+(1|SubID)');
         temp_topo_tval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:end,4));
         temp_topo_pval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:end,6));
         
-        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'Drug','SWdens~1+pred+BlockN+(1|SubID)',totperm);
-        SWdens_est{1}=[SWdens_est{1} ; [nE*ones(3,1) real_out]];
-        for nDrug=1:3
-            SWdens_est{2}=[SWdens_est{2} ; [nE*ones(totperm,1) perm_out{nDrug} nDrug*ones(totperm,1)]];
-        end
+        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Miss~1+pred+BlockN+(1|SubID)',totperm);
+        Miss_est{1}=[Miss_est{1} ; [nE real_out]];
+            Miss_est{2}=[Miss_est{2} ; [nE*ones(totperm,1) perm_out]];
     end
-    save('../../Tables/model_SWdens_est','SWdens_est');
+    save('../../Tables/model_Miss_est','Miss_est');
 else
-    load('../../Tables/model_SWdens_est');
+    load('../../Tables/model_Miss_est');
 end
 %% Filter clusters
 clus_alpha=0.01;
