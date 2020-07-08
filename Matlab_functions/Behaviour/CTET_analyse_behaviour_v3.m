@@ -155,6 +155,17 @@ mdl3=fitlme(table,'Miss~1+Treatment+(1|SubID)');
 
 writetable(table,'/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
 
+myS=unique(table.SubID);
+myD=unique(table.Treatment);
+for nS=1:length(myS)
+    for nD=1:length(myD)
+        nSession(nS,nD)=sum(table.SubID==myS(nS) & table.Treatment==myD(nD))~=0;
+    end
+end
+FullSubID=myS(sum(nSession,2)==4);
+table2=table(ismember(table.SubID,FullSubID),:);
+writetable(table2,'/Users/tand0009/Data/CTET_Dockree/CTET_behav_res_full.txt');
+
 %%
 table2=array2table(resblock_mat,'VariableNames',{'SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT'});
 table2.Treatment=drugblock_cond;
@@ -170,6 +181,17 @@ mdl2=fitlme(table2,'FA~1+Treatment+(1|SubID)');
 mdl3=fitlme(table2,'Miss~1+Treatment+(1|SubID)');
 
 writetable(table2,'/Users/tand0009/Data/CTET_Dockree/CTET_behav_resblock.txt');
+
+myS=unique(table2.SubID);
+myD=unique(table2.Treatment);
+for nS=1:length(myS)
+    for nD=1:length(myD)
+        nSession(nS,nD)=sum(table2.SubID==myS(nS) & table2.Treatment==myD(nD))~=0;
+    end
+end
+FullSubID=myS(sum(nSession,2)==4);
+table3=table2(ismember(table2.SubID,FullSubID),:);
+writetable(table3,'/Users/tand0009/Data/CTET_Dockree/CTET_behav_resblock_full.txt');
 %%
 uniqueIDs=unique(table.SubID);
 uniqueDrugs=unique(table.Treatment);

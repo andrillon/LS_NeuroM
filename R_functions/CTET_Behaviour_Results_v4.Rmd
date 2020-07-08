@@ -42,7 +42,7 @@ library(plotly)
 
 ##NOT WORKING:  CTET_Behaviour1 <- read.table("../Tables/CTET_behav_resblock.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
-CTET_Behaviour1 <- read.csv("../Tables/CTET_behav_resblock.txt")
+CTET_Behaviour1 <- read.csv("../Tables/CTET_behav_resblock_full.txt")
 
 CTET_Behaviour1$SubID<-as.factor(CTET_Behaviour1$SubID)
 CTET_Behaviour1$Treatment<-as.factor(CTET_Behaviour1$Treatment)

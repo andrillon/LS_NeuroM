@@ -160,6 +160,17 @@ mdl3=fitlme(table_SW,'SWdens~1+Elec*Drug+(1|SubID)');
 
 writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_vec.txt');
 
+myS=unique(table_SW.SubID);
+myD=unique(table_SW.Drug);
+for nS=1:length(myS)
+    for nD=1:length(myD)
+        nSession(nS,nD)=sum(table_SW.SubID==myS(nS) & table_SW.Drug==myD(nD))~=0;
+    end
+end
+FullSubID=myS(sum(nSession,2)==4);
+table_SW2=table_SW(ismember(table_SW.SubID,FullSubID),:);
+writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_vec_full.txt');
+
 %%
 path_fieldtrip='/Users/tand0009/Work/local/fieldtrip/';
 addpath(path_fieldtrip);

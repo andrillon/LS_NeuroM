@@ -53,8 +53,8 @@ else
     load('../../Tables/model_SWdens_est');
 end
 %% Filter clusters
-clus_alpha=0.01;
-montecarlo_alpha=0.05/3;
+clus_alpha=0.05;
+montecarlo_alpha=0.05;
 
 cfg_neighb=[];
 cfg_neighb.method = 'template';
@@ -110,7 +110,7 @@ for nDrug=1:3
     
     title(Drugs{nDrug+1})
 end
-print('-dpng', '-r300', '../../Figures/Topo_LME_DrugEffect.png')
+% print('-dpng', '-r300', '../../Figures/Topo_LME_DrugEffect.png')
 % figure;
 % for nDrug=1:3
 %     subplot(1,3,nDrug)

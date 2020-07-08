@@ -29,51 +29,71 @@ table_SW2.Drug=reordercats(table_SW2.Drug,[4 1 2 3]);
 
 %%
 redo=1;
-    totperm=10;
+totperm=1000;
 if redo==1
-    temp_topo_tval=[];
-    temp_topo_pval=[];
     % fprintf('%2.0f/%2.0f\n',0,64)
     Miss_est=cell(1,2);
+    FA_est=cell(1,2);
+    Hit_RT_est=cell(1,2);
     for nE=1:64
         fprintf('%2.0f/%2.0f\n',nE,64)
         sub_table_SW2=table_SW2(find_trials(table_SW.Elec,layout.label{nE}),:);
-        mdl_byEle{nE}=fitlme(sub_table_SW2,'Miss~1+BlockN+SWdens+(1|SubID)');
-        temp_topo_tval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:end,4));
-        temp_topo_pval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:end,6));
         
+        %%%% FA
+        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','FA~1+pred+BlockN+(1|SubID)',totperm);
+        FA_est{1}=[FA_est{1} ; [nE real_out]];
+        FA_est{2}=[FA_est{2} ; [nE*ones(totperm,1) perm_out]];
+        
+        %%%% MISS
         [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Miss~1+pred+BlockN+(1|SubID)',totperm);
         Miss_est{1}=[Miss_est{1} ; [nE real_out]];
-            Miss_est{2}=[Miss_est{2} ; [nE*ones(totperm,1) perm_out]];
+        Miss_est{2}=[Miss_est{2} ; [nE*ones(totperm,1) perm_out]];
+        
+        %%%% RT
+        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Hit_RT~1+pred+BlockN+(1|SubID)',totperm);
+        Hit_RT_est{1}=[Hit_RT_est{1} ; [nE real_out]];
+        Hit_RT_est{2}=[Hit_RT_est{2} ; [nE*ones(totperm,1) perm_out]];
     end
-    save('../../Tables/model_Miss_est','Miss_est');
+    save('../../Tables/model_Behav_est','Miss_est','Hit_RT_est','FA_est');
 else
-    load('../../Tables/model_Miss_est');
+    load('../../Tables/model_Behav_est');
 end
 %% Filter clusters
-clus_alpha=0.01;
-montecarlo_alpha=0.05/3;
+clus_alpha=0.05;
+montecarlo_alpha=0.05;
 
 cfg_neighb=[];
 cfg_neighb.method = 'template';
 cfg_neighb.layout='biosemi64.lay';
 neighbours = ft_prepare_neighbours(cfg_neighb);
 
-[SWdens_clus]=get_clusterperm_lme_lsneurom(SWdens_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
+[FA_clus]=get_clusterperm_lme_lsneurom(FA_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
+[Miss_clus]=get_clusterperm_lme_lsneurom(Miss_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
+[Hit_RT_clus]=get_clusterperm_lme_lsneurom(Hit_RT_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
 
 %%
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap2=flipud(cmap2);
-limNumClus=0;
+limNumClus=2;
 limMax=10;%max(max(abs(temp_topo_tval)));
 figure; set(gcf,'Position',[213         173        1027         805]);
-for nDrug=1:3
-    subplot(1,3,nDrug)
+PlotTitles={'FA','Miss','Hit_RT'};
+for nPlot=1:3
     
-    temp_topo=SWdens_est{1}(SWdens_est{1}(:,5)==nDrug,3);
+    subplot(1,3,nPlot)
+    switch nPlot
+        case 1
+            temp_topo=FA_est{1}(:,3);
+            temp_clus=FA_clus;
+        case 2
+            temp_topo=Miss_est{1}(:,3);
+            temp_clus=Miss_clus;
+        case 3
+            temp_topo=Hit_RT_est{1}(:,3);
+            temp_clus=Hit_RT_clus;
+    end
     temp_topo2=zeros(size(temp_topo));
     temp_topo3=zeros(size(temp_topo));
-    temp_clus=SWdens_clus{nDrug};
     %     temp_topo(temp_pV>= fdr(temp_pV,0.05))=0;
     
     
@@ -100,15 +120,15 @@ for nDrug=1:3
             ft_plot_lay_me(layout, 'chanindx',match_str(layout.label,temp_clus{nclus}{2}),'pointsymbol','o','pointcolor','k','pointsize',12,'box','no','label','no')
         end
     end
-    if nDrug==3
+    if nPlot==3
         h=colorbar;
         set(h,'Position',[0.93 0.4 0.02 0.2])
     end
     colormap(cmap2);
     
-    title(Drugs{nDrug+1})
+    title(PlotTitles{nPlot})
 end
-print('-dpng', '-r300', '../../Figures/Topo_LME_DrugEffect.png')
+print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect.png')
 % figure;
 % for nDrug=1:3
 %     subplot(1,3,nDrug)

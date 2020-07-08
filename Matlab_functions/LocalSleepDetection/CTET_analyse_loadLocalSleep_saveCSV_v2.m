@@ -135,17 +135,17 @@ for nF=1:length(files)
     end
 end
 
-%%
-figure;
-Drugs={'PLA','ATM','CIT','MPH'};
-for nDrug=1:4
-    
-    tempSess=(nanmean(all_slow_Waves(ismember(all_drug_types,Drugs{nDrug}),4:67),2));
-    
-    simpleBarPlot(nDrug,tempSess,'k',0.9,'r',[],3);
-end
-set(gca,'XTick',1:4,'XTickLabel',Drugs)
-ylim([5 7])
+% %%
+% figure;
+% Drugs={'PLA','ATM','CIT','MPH'};
+% for nDrug=1:4
+%     
+%     tempSess=(nanmean(all_slow_Waves(ismember(all_drug_types,Drugs{nDrug}),4:67),2));
+%     
+%     simpleBarPlot(nDrug,tempSess,'k',0.9,'r',[],3);
+% end
+% set(gca,'XTick',1:4,'XTickLabel',Drugs)
+% ylim([5 7])
 %%
 table_SW=array2table(all_slow_Waves_vec,'VariableNames',{'FileN','SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','Elec','SWdens'});
 table_SW.SubID=categorical(table_SW.SubID);
@@ -164,7 +164,17 @@ mdl1=fitlme(table_SW,'SWdens~1+Elec+(1|SubID)');
 mdl2=fitlme(table_SW,'SWdens~1+Elec+BlockN+(1|SubID)');
 mdl3=fitlme(table_SW,'SWdens~1+Elec*Drug+(1|SubID)');
 
+myS=unique(table_SW.SubID);
+myD=unique(table_SW.Drug);
+for nS=1:length(myS)
+    for nD=1:length(myD)
+        nSession(nS,nD)=sum(table_SW.SubID==myS(nS) & table_SW.Drug==myD(nD))~=0;
+    end
+end
+FullSubID=myS(sum(nSession,2)==4);
 writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec.txt');
+table_SW2=table_SW(ismember(table_SW.SubID,FullSubID),:);
+writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_full.txt');
 
 %%
 table_SW=array2table(all_slow_Waves_vec2,'VariableNames',{'FileN','SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','Elec','SWdens'});
@@ -185,6 +195,10 @@ mdl2=fitlme(table_SW,'SWdens~1+Elec+BlockN+(1|SubID)');
 mdl3=fitlme(table_SW,'SWdens~1+Elec*Drug+(1|SubID)');
 
 writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_avDens_behav_vec.txt');
+
+table_SW2=table_SW(ismember(table_SW.SubID,FullSubID),:);
+writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_avDens_behav_vec_full.txt');
+
 
 %%
 path_fieldtrip='/Users/tand0009/Work/local/fieldtrip/';

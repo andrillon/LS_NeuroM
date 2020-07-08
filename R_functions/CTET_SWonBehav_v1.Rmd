@@ -27,8 +27,11 @@ library(multilevelTools)
 library(tidyverse)
 library(Rmisc)
 
+SWS_data_perElec <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
-SWS_data <- read.table("../Tables/CTET_SWdetection_avDens_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+#SWS_data <- read.table("../Tables/CTET_SWdetection_avDens_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+SWS_data<-SWS_data_perElec[SWS_data_perElec$Elec=='Fpz',]
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
@@ -55,7 +58,7 @@ lm.FA3 <- lmer(FA ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_data
 lm.FA4 <- lmer(FA ~ 1 + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
 ##Anova to see which one has the most interaction
-anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3, lm.FA4)
+anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3)
 
 ```
 
@@ -73,7 +76,7 @@ lm.Miss1 <- lmer(Miss ~ 1 + Treatment + (1|SubID), data = SWS_data, REML = FALSE
 lm.Miss2 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data = SWS_data, REML = FALSE)
 
 ##Added effects of block number as an interaction on misses 
-lm.Miss3 <- lmer(Miss ~ 1 + Treatment*BlockN + (1|SubID), data = SWS_data, REML = FALSE)
+lm.Miss3 <- lmer(Miss ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
 ##Added effects of slow wave density on misses on the winning model
 lm.Miss4 <- lmer(Miss ~ 1 + Treatment*BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
@@ -82,7 +85,7 @@ lm.Miss4 <- lmer(Miss ~ 1 + Treatment*BlockN + SWdens + (1|SubID), data = SWS_da
 lm.Miss5 <- lmer(Miss ~ 1  + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
 ##Anova to see which one has the most interaction
-anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3,lm.Miss4,lm.Miss5)
+anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3)
 
 ```
 
@@ -97,7 +100,7 @@ lm.HR1 <- lmer(Hit_RT ~ 1 + Treatment + (1|SubID), data = SWS_data, REML = FALSE
 lm.HR2 <- lmer(Hit_RT ~ 1 + Treatment + BlockN + (1|SubID), data = SWS_data, REML = FALSE)
 
 ##Added effects of block number as an interaction on hit rate  
-lm.HR3 <- lmer(Hit_RT ~ 1 + Treatment*BlockN + (1|SubID), data = SWS_data, REML = FALSE)
+lm.HR3 <- lmer(Hit_RT ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
 ##Added effects of slow wave density on hit rate on the winning model
 lm.HR4 <- lmer(Hit_RT ~ 1 + Treatment + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
@@ -107,7 +110,7 @@ lm.HR5 <- lmer(Hit_RT ~ 1  + BlockN + SWdens + (1|SubID), data = SWS_data, REML 
 
 
 ##Anova to see which one has the most interaction
-anova(lm.HR0,lm.HR1,lm.HR2,lm.HR3, lm.HR4, lm.HR5)
+anova(lm.HR0,lm.HR1,lm.HR2,lm.HR3)
 
 ```
 
@@ -115,20 +118,21 @@ anova(lm.HR0,lm.HR1,lm.HR2,lm.HR3, lm.HR4, lm.HR5)
 ```{r}
 SWS_data$Treatment<-ordered(SWS_data$Treatment, c("PLA","MPH","ATM","CIT"))
 
-aggdata.fa <- aggregate(SWS_data[, 2], list( BlockN = SWS_data$BlockN, Treatment = SWS_data$Treatment, FA = SWS_data$FA, SWdens = SWS_data$SWdens), mean)
-colnames(aggdata.fa) = c("BlockN", "Treatment","FA", "SWdens", "SubID")
-
+#aggdata.fa <- aggregate(SWS_data[, 2], list( Treatment = SWS_data$Treatment, FA = SWS_data$FA, SWdens = SWS_data$SWdens), mean)
+#colnames(aggdata.fa) = c("Treatment","FA", "SWdens","SubID")
+SWS_data$Elec<-0
+agg_SWS_data<-aggregate(. ~ SubID+Treatment, data = SWS_data, FUN = mean)
 
 ##Scatterplot of slow wave density and false alarm 
-ggplot(aggdata.fa, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
-
-ggplot(SWS_data, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
-
+ggplot(agg_SWS_data, aes (x = SWdens, y = FA)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+cor.test(agg_SWS_data$SWdens, agg_SWS_data$FA)
 
 ##Scatterplot of slow wave density and misses
-ggplot(SWS_data, aes (x = SWdens, y = Miss, colour = Treatment)) + geom_point(alpha = .7)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+ggplot(agg_SWS_data, aes (x = SWdens, y = Miss)) + geom_point(alpha = .7)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+cor.test(agg_SWS_data$SWdens, agg_SWS_data$Miss)
 
 ##Scatterplot of slow wave density and hit rate
-ggplot(SWS_data, aes (x = SWdens, y = Hit_RT, colour = Treatment)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+ggplot(agg_SWS_data, aes (x = SWdens, y = Hit_RT)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+cor.test(agg_SWS_data$SWdens, agg_SWS_data$Hit_RT)
 
 ```
