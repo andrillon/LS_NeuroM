@@ -27,7 +27,7 @@ library(multilevelTools)
 library(tidyverse)
 
 
-SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_vec_full.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
@@ -39,7 +39,8 @@ SWS_data2<-aggregate(SWdens ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
 ```
 
 
-```{r}
+#```{r}  DRAFT 
+
 ##Slow wave density 
 
 lm.sw0 <- lmer(SWdens ~ 1 + (1|SubID), data = SWS_data, REML =FALSE)
@@ -74,9 +75,9 @@ boxplot(residuals(lm.sw4))
 qqnorm(resid(lm.sw4))
 qqline(resid(lm.sw4))
 plot(lm.sw4)
-plot(fitted(lm.sw4), resid(lm.sw4))
+plot(fitted(lm.sw4), resid(lm.sw4)) 
 
-```
+
 ```{r}
 ##Slow wave density 
 
@@ -110,6 +111,7 @@ plot(fitted(lm.sw2), resid(lm.sw2))
 ```
 
 ```{r}
+#DRAFT 
 ##Graph of the effects of block number and drug on slow wave density
 sw.graph <- summarySE(SWS_data, measurevar = "SWdens", groupvars = c("BlockN", "Treatment"))
 sw.graph$Treatment<-ordered(sw.graph$Treatment, c("PLA","MPH","ATM","CIT"))

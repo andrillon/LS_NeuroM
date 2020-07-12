@@ -27,11 +27,14 @@ library(multilevelTools)
 library(tidyverse)
 library(Rmisc)
 
-SWS_data_perElec <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data_perElec <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_behav_vec_full.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 #SWS_data <- read.table("../Tables/CTET_SWdetection_avDens_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
-SWS_data<-SWS_data_perElec[SWS_data_perElec$Elec=='Fpz',]
+##until you get data on which electrodes to use: 
+SWS_data <- SWS_data_perElec
+
+#SWS_data<-SWS_data_perElec[SWS_data_perElec$Elec=='Fpz',]
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
@@ -39,6 +42,7 @@ SWS_data$Treatment<-as.factor(SWS_data$Treatment)
 
 SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 ```
+
 ```{r}
 #detach("package:multilevelTools", unload=TRUE)
 #detach("package:lmerTest", unload=TRUE)
@@ -105,7 +109,7 @@ lm.HR3 <- lmer(Hit_RT ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_
 ##Added effects of slow wave density on hit rate on the winning model
 lm.HR4 <- lmer(Hit_RT ~ 1 + Treatment + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
-##Effects of just slow wave density and block number on hit rate
+##Effects of just slow wave density and block number on reaction time
 lm.HR5 <- lmer(Hit_RT ~ 1  + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
 
 
@@ -116,6 +120,8 @@ anova(lm.HR0,lm.HR1,lm.HR2,lm.HR3)
 
 
 ```{r}
+#GRAPHS WITH DATA ON PARTICULAR POINTS 
+
 SWS_data$Treatment<-ordered(SWS_data$Treatment, c("PLA","MPH","ATM","CIT"))
 
 #aggdata.fa <- aggregate(SWS_data[, 2], list( Treatment = SWS_data$Treatment, FA = SWS_data$FA, SWdens = SWS_data$SWdens), mean)
@@ -131,8 +137,96 @@ cor.test(agg_SWS_data$SWdens, agg_SWS_data$FA)
 ggplot(agg_SWS_data, aes (x = SWdens, y = Miss)) + geom_point(alpha = .7)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
 cor.test(agg_SWS_data$SWdens, agg_SWS_data$Miss)
 
-##Scatterplot of slow wave density and hit rate
+##Scatterplot of slow wave density and reaction time
 ggplot(agg_SWS_data, aes (x = SWdens, y = Hit_RT)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
 cor.test(agg_SWS_data$SWdens, agg_SWS_data$Hit_RT)
 
+```
+```{r}
+# GRAPHS WITH COLOUR 
+SWS_data$Treatment<-ordered(SWS_data$Treatment, c("PLA","MPH","ATM","CIT"))
+
+#aggdata.fa <- aggregate(SWS_data[, 2], list( Treatment = SWS_data$Treatment, FA = SWS_data$FA, SWdens = SWS_data$SWdens), mean)
+#colnames(aggdata.fa) = c("Treatment","FA", "SWdens","SubID")
+SWS_data$Elec<-0
+agg_SWS_data1<-aggregate(. ~ SubID+Treatment+FA+Miss+Hit_RT, data = SWS_data, FUN = mean)
+
+##Scatterplot of slow wave density and false alarm 
+ggplot(agg_SWS_data1, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+cor.test(agg_SWS_data$SWdens, agg_SWS_data$FA)
+
+##Scatterplot of slow wave density and misses
+ggplot(agg_SWS_data1, aes (x = SWdens, y = Miss, colour = Treatment)) + geom_point(alpha = .7)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+cor.test(agg_SWS_data$SWdens, agg_SWS_data$Miss)
+
+##Scatterplot of slow wave density and reaction time
+ggplot(agg_SWS_data1, aes (x = SWdens, y = Hit_RT, colour = Treatment)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
+cor.test(agg_SWS_data$SWdens, agg_SWS_data$Hit_RT)
+
+```
+
+```{r}
+#Subsetting Data
+
+##false alarm
+fa.data <- c("SubID","Treatment", "FA", "SWdens")
+fa.dataset <- SWS_data[fa.data]
+
+fa.mph <- fa.dataset[which(fa.dataset$Treatment == c('PLA', 'MPH')), ]
+fa.atm <- fa.dataset[which(fa.dataset$Treatment == c('PLA', 'ATM')), ]
+fa.cit <-fa.dataset[which(fa.dataset$Treatment == c('PLA', 'CIT')), ]
+  
+##misses 
+miss.data <- c("SubID","Treatment", "Miss", "SWdens")
+miss.dataset <- SWS_data[miss.data]
+
+miss.mph <- fa.dataset[which(miss.dataset$Treatment == c('PLA', 'MPH')), ]
+miss.atm <- fa.dataset[which(miss.dataset$Treatment == c('PLA', 'ATM')), ]
+miss.cit <-fa.dataset[which(miss.dataset$Treatment == c('PLA', 'CIT')), ]
+
+##reaction time 
+hr.data <- c("SubID","Treatment", "Miss", "SWdens")
+hr.dataset <- SWS_data[miss.data]
+
+hr.mph <- fa.dataset[which(hr.dataset$Treatment == c('PLA', 'MPH')), ]
+hr.atm <- fa.dataset[which(hr.dataset$Treatment == c('PLA', 'ATM')), ]
+hr.cit <-fa.dataset[which(hr.dataset$Treatment == c('PLA', 'CIT')), ]
+   
+##agregates
+fa.aggM <- aggregate(. ~ SubID+Treatment, data = fa.mph, FUN = mean)
+fa.aggA <- aggregate(. ~ SubID+Treatment, data = fa.atm, FUN = mean)
+fa.aggC <- aggregate(. ~ SubID+Treatment, data = fa.cit, FUN = mean)
+
+miss.aggM <- aggregate(. ~ SubID+Treatment, data = miss.mph, FUN = mean)
+miss.aggA <- aggregate(. ~ SubID+Treatment, data = miss.atm, FUN = mean)
+miss.aggC <- aggregate(. ~ SubID+Treatment, data = miss.cit, FUN = mean)
+
+hr.aggM <- aggregate(. ~ SubID+Treatment, data = hr.mph, FUN = mean)
+hr.aggA <- aggregate(. ~ SubID+Treatment, data = hr.atm, FUN = mean)
+hr.aggC <- aggregate(. ~ SubID+Treatment, data = hr.cit, FUN = mean)
+```
+
+```{r}
+#GRAPH FOR EACH TREATMENT 
+
+##Scatterplot of slow wave density and false alarm per treatment 
+ggplot(fa.aggM, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .6, size = 2.7)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02"))
+
+ggplot(fa.aggA, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .65, size = 2.7)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#7570b3"))
+
+ggplot(fa.aggC, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .65, size = 2.7)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#1b9e77"))
+
+##Scatterplot of slow wave density and misses per treatmenr 
+ggplot(miss.aggM, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .6, size = 2.7)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02"))
+
+ggplot(miss.aggA, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .65, size = 2.7)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#7570b3"))
+
+ggplot(miss.aggC, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .65, size = 2.7)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#1b9e77"))
+
+##Scatterplot of slow wave density and reaction time per treatment 
+ggplot(hr.aggM, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .6, size = 2.7)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#d95f02"))
+
+ggplot(hr.aggA, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .65, size = 2.7)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#7570b3"))
+
+ggplot(hr.aggC, aes (x = SWdens, y = FA, colour = Treatment)) + geom_point(alpha = .65, size = 2.7)+ geom_smooth(method=lm, se = FALSE)+ scale_colour_manual(values = c("#666666", "#1b9e77"))
 ```
