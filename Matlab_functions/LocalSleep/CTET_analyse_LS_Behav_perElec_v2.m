@@ -9,11 +9,12 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath([pwd filesep '..']));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec.txt']);
+table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_v2.txt']);
 
 %%
 cfg = [];
 cfg.layout = 'biosemi64.lay';
+cfg.channel=unique(table_SW.Elec);
 layout=ft_prepare_layout(cfg);
 
 cmap=cbrewer('seq','YlOrRd',64); % select a sequential colorscale from yellow to red (64)
@@ -29,7 +30,7 @@ table_SW2.Drug=reordercats(table_SW2.Drug,[4 1 2 3]);
 
 %%
 redo=1;
-totperm=1000;
+totperm=1;
 Contrasts={{'MPH','PLA'},{'CIT','PLA'},{'ATM','PLA'}};
 if redo==1
     for nC=1:3
@@ -37,7 +38,7 @@ if redo==1
         Miss_est{nC}=cell(1,2);
         FA_est{nC}=cell(1,2);
         Hit_RT_est{nC}=cell(1,2);
-        for nE=1:64
+        for nE=1:length(layout.label)-2
             fprintf('%2.0f/%2.0f\n',nE,64)
             sub_table_SW2=table_SW2(ismember(table_SW.Elec,layout.label{nE}) & ismember(table_SW.Drug,Contrasts{nC}),:);
             
@@ -57,10 +58,10 @@ if redo==1
             Hit_RT_est{nC}{2}=[Hit_RT_est{nC}{2} ; [nE*ones(totperm,1) perm_out]];
         end
     end
-    save('../../Tables/model_Behav_perDrug_est','Miss_est','Hit_RT_est','FA_est');
+%     save('../../Tables/model_Behav_perDrug_est','Miss_est','Hit_RT_est','FA_est');
     
 else
-    load('../../Tables/model_Behav_perDrug_est');
+%     load('../../Tables/model_Behav_perDrug_est');
 end
 %% Filter clusters
 clus_alpha=0.05;
@@ -69,8 +70,9 @@ montecarlo_alpha=0.05/9;
 cfg_neighb=[];
 cfg_neighb.method = 'template';
 cfg_neighb.layout='biosemi64.lay';
+cfg.channel=unique(table_SW.Elec);
 neighbours = ft_prepare_neighbours(cfg_neighb);
-
+neighbours(ismember({neighbours.label},'Iz'))=[];
 for nC=1:3
 [FA_clus{nC}]=get_clusterperm_lme_lsneurom(FA_est{nC},clus_alpha,montecarlo_alpha,totperm,neighbours);
 [Miss_clus{nC}]=get_clusterperm_lme_lsneurom(Miss_est{nC},clus_alpha,montecarlo_alpha,totperm,neighbours);
@@ -115,7 +117,7 @@ for nPlot=1:3
             fprintf('... ... found %s cluster (%g) of %g electrodes (tval cluster=%g, Pmc=%g)\n',temp_clus{nclus}{1},nclus,length(temp_clus{nclus}{2}),temp_clus{nclus}{3},temp_clus{nclus}{4})
         end
     end
-    simpleTopoPlot_ft(temp_topo2, layout,'on',[],0,1);
+    simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
     ft_plot_lay_me(layout, 'chanindx',1:64,'pointsymbol','o','pointcolor',[1 1 1]*0.7,'pointsize',6,'box','no','label','no')
     format_fig;
         caxis([-1 1]*limMax)

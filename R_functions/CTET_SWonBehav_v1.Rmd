@@ -27,7 +27,7 @@ library(multilevelTools)
 library(tidyverse)
 library(Rmisc)
 
-SWS_data_perElec <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_behav_vec_full.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data_perElec <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v2.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 #SWS_data <- read.table("../Tables/CTET_SWdetection_avDens_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 

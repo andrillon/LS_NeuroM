@@ -43,6 +43,7 @@ for nF=1:length(filesPLA)
     paramSW.art_ampl=150;
     paramSW.max_posampl=75;
     paramSW.max_Freq=7;
+    paramSW.byElec=0;
     
     all_Waves=double(all_Waves);
     all_freq=1./(abs((all_Waves(:,5)-all_Waves(:,7)))./hdr.Fs);
@@ -59,7 +60,11 @@ for nF=1:length(filesPLA)
         if ~isempty(paramSW.fixThr)
             thr_Wave=paramSW.fixThr;
         else
-            thr_Wave=prctile(all_Waves(:,paramSW.AmpCriterionIdx),paramSW.prticle_Thr);
+            if paramSW.byElec
+                thr_Wave=prctile(thisE_Waves(:,paramSW.AmpCriterionIdx),paramSW.prticle_Thr);
+            else
+                thr_Wave=prctile(all_Waves(:,paramSW.AmpCriterionIdx),paramSW.prticle_Thr);
+            end
         end
         sw_thr=[sw_thr ; [SubN thr_Wave nE]];
         
@@ -134,11 +139,16 @@ for nF=1:length(files)
             temp_NegSl(nE)=nanmean(temp_slow_Waves(temp_slow_Waves(:,3)==nE,12));
             temp_PosSl(nE)=nanmean(temp_slow_Waves(temp_slow_Waves(:,3)==nE,13));
         end
+        nout(match_str(hdr.label,'Iz'))=NaN;
+        temp_P2P(match_str(hdr.label,'Iz'))=NaN;
+        temp_NegSl(match_str(hdr.label,'Iz'))=NaN;
+        temp_PosSl(match_str(hdr.label,'Iz'))=NaN;
+        
         all_slow_Waves=[all_slow_Waves ; [nF SubN SessN nbl nout'/((max_sample-min_sample)/hdr.Fs/60)]];
         all_drug_types=[all_drug_types ; {DrugC}];
         all_slow_Waves_vec=[all_slow_Waves_vec ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:8))],64,1) (1:64)' nout/((max_sample-min_sample)/hdr.Fs/60) temp_P2P' temp_NegSl' temp_PosSl']];
         all_drug_types_vec=[all_drug_types_vec ; repmat({DrugC},64,1)];
-        all_slow_Waves_vec2=[all_slow_Waves_vec2 ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:8))],1,1) 0 mean(nout/((max_sample-min_sample)/hdr.Fs/60)) nanmean(temp_P2P) nanmean(temp_NegSl) nanmean(temp_PosSl)]];
+        all_slow_Waves_vec2=[all_slow_Waves_vec2 ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:8))],1,1) 0 nanmean(nout/((max_sample-min_sample)/hdr.Fs/60)) nanmean(temp_P2P) nanmean(temp_NegSl) nanmean(temp_PosSl)]];
         all_drug_types_vec2=[all_drug_types_vec2 ; repmat({DrugC},1,1)];
     end
 end
@@ -147,9 +157,9 @@ end
 % figure;
 % Drugs={'PLA','ATM','CIT','MPH'};
 % for nDrug=1:4
-%     
+%
 %     tempSess=(nanmean(all_slow_Waves(ismember(all_drug_types,Drugs{nDrug}),4:67),2));
-%     
+%
 %     simpleBarPlot(nDrug,tempSess,'k',0.9,'r',[],3);
 % end
 % set(gca,'XTick',1:4,'XTickLabel',Drugs)
@@ -163,8 +173,9 @@ table_SW.Elec=categorical(table_SW.Elec);
 for nE=1:64
     table_SW.Elec(table_SW.Elec==num2str(nE))=hdr.label{nE};
 end
-table_SW.Elec=removecats(table_SW.Elec);
 table_SW.Drug=all_drug_types_vec;
+table_SW(table_SW.Elec=='Iz',:)=[];
+table_SW.Elec=removecats(table_SW.Elec);
 table_SW.Drug=categorical(table_SW.Drug);
 table_SW.Drug=reordercats(table_SW.Drug,[4 1 2 3]);
 mdl0=fitlme(table_SW,'SWdens~1+(1|SubID)');
@@ -180,10 +191,14 @@ for nS=1:length(myS)
     end
 end
 FullSubID=myS(sum(nSession,2)==4);
-writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_v2.txt');
 table_SW2=table_SW(ismember(table_SW.SubID,FullSubID),:);
-writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v2.txt');
-
+if paramSW.byElec
+    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_behav_vec_v2.txt');
+    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v2.txt');
+else
+    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_v2.txt');
+    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v2.txt');
+end
 table_allSW=table_SW;
 %%
 table_SW=array2table(all_slow_Waves_vec2,'VariableNames',{'FileN','SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','Elec','SWdens','P2P','NegSlope','PosSlope'});
@@ -194,20 +209,24 @@ table_SW.Elec=categorical(table_SW.Elec);
 for nE=1:64
     table_SW.Elec(table_SW.Elec==num2str(nE))=hdr.label{nE};
 end
-table_SW.Elec=removecats(table_SW.Elec);
 table_SW.Drug=all_drug_types_vec2;
+table_SW(table_SW.Elec=='Iz',:)=[];
+table_SW.Elec=removecats(table_SW.Elec);
 table_SW.Drug=categorical(table_SW.Drug);
 table_SW.Drug=reordercats(table_SW.Drug,[4 1 2 3]);
 mdl0=fitlme(table_SW,'SWdens~1+(1|SubID)');
 mdl1=fitlme(table_SW,'SWdens~1+Elec+(1|SubID)');
 mdl2=fitlme(table_SW,'SWdens~1+Elec+BlockN+(1|SubID)');
 mdl3=fitlme(table_SW,'SWdens~1+Elec*Drug+(1|SubID)');
-
-writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_v2.txt');
-
 table_SW2=table_SW(ismember(table_SW.SubID,FullSubID),:);
-writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v2.txt');
-
+if paramSW.byElec
+    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_v2.txt');
+    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v2.txt');
+    
+else
+    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_v2.txt');
+    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v2.txt');
+end
 
 %%
 path_fieldtrip='/Users/tand0009/Work/local/fieldtrip/';
@@ -226,7 +245,7 @@ for nDrug=1:4
     subplot(1,4,nDrug);
     temp_topo=[];
     for nE=1:63
-    temp_topo(nE)=nanmean(table_allSW.SWdens(table_allSW.Drug==Drugs{nDrug} & table_allSW.Elec==layout.label{nE}),1);
+        temp_topo(nE)=nanmean(table_allSW.SWdens(table_allSW.Drug==Drugs{nDrug} & table_allSW.Elec==layout.label{nE}),1);
     end
     %     temp_topo=(nanmean(all_slow_Waves(:,4:67),1));
     simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
@@ -256,7 +275,7 @@ temp_topo=[];
 for nE=1:64
     temp_topo(nE)=mean(table_SW.SWdens(match_str(table_SW.Elec,layout.label{nE})));
 end
-simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
 title(Drugs{nDrug}); h=colorbar;  ylabel(h, 'waves/min')
 caxis([0 1]*limMax)
 h=colorbar;
@@ -327,23 +346,41 @@ simpleTopoPlot_ft(EffectSW_Hit_RT', layout,'on',[],0,1);
 colorbar; caxis([0 1])
 
 %%
-clear X Y M
-nc=0;
-Subs=unique(table_SW.SubID);
-sub_table_SW=table_SW((table_SW.Drug=='MPH' | table_SW.Drug=='PLA'),:);
-sub_table_SW.Drug=removecats(sub_table_SW.Drug);
-% for nS=1:length(Subs)
-%     if length(unique(sub_table_SW.Drug(sub_table_SW.SubID==Subs(nS))))==2
-%         nc=nc+1;
-%         X{nc}={sub_table_SW.Miss(sub_table_SW.Elec=='Fz' & sub_table_SW.SubID==Subs(nS))};
-%         Y{nc}={sub_table_SW.Drug(sub_table_SW.Elec=='Fz' & sub_table_SW.SubID==Subs(nS))=='MPH'};
-%         M{nc}={sub_table_SW.SWdens(sub_table_SW.Elec=='Fz' & sub_table_SW.SubID==Subs(nS))};
-        
-        for nBl=1:10
-            X(:,nBl)=sub_table_SW.Miss(sub_table_SW.Elec=='Fz'  & double(sub_table_SW.BlockN)==nBl);
-            Y(:,nBl)=sub_table_SW.Drug(sub_table_SW.Elec=='Fz'  & double(sub_table_SW.BlockN)==nBl)=='MPH';
-            M(:,nBl)=sub_table_SW.SWdens(sub_table_SW.Elec=='Fz'  & double(sub_table_SW.BlockN)==nBl);
-        end
-%     end
-% end
-[paths, stats2] = mediation(X', Y', M', 'plots',[],'verbose');
+table_SW.SubID=categorical(table_SW.SubID);
+table_SW.SessN=categorical(table_SW.SessN);
+table_SW.Elec=categorical(table_SW.Elec);
+table_SW.Drug=categorical(table_SW.Drug);
+
+Drugs={'PLA','CIT','MPH','ATM'};
+uniqueS=unique(table_SW.SubID);
+figure; set(gcf,'Position',[114         579        1126         399])
+subplot(1,3,1);
+for nD=1:4
+    temp=[];
+    for nS=1:length(uniqueS)
+        temp(nS)=nanmean(table_SW.SWdens(table_SW.Drug==Drugs{nD} & table_SW.SubID==uniqueS(nS)));
+    end
+    simpleBarPlot(nD,temp,'k',.85,'r',[],3)
+end
+set(gca,'XTick',1:4,'XTickLabel',Drugs);
+
+
+subplot(1,3,2);
+for nD=1:4
+    temp=[];
+    for nS=1:length(uniqueS)
+        temp(nS)=nanmean(table_SW.P2P(table_SW.Drug==Drugs{nD} & table_SW.SubID==uniqueS(nS)));
+    end
+    simpleBarPlot(nD,temp,'k',.85,'r',[],3)
+end
+set(gca,'XTick',1:4,'XTickLabel',Drugs);
+
+subplot(1,3,3);
+for nD=1:4
+    temp=[];
+    for nS=1:length(uniqueS)
+        temp(nS)=nanmean(table_SW.NegSlope(table_SW.Drug==Drugs{nD} & table_SW.SubID==uniqueS(nS)));
+    end
+    simpleBarPlot(nD,temp,'k',.85,'r',[],3)
+end
+set(gca,'XTick',1:4,'XTickLabel',Drugs);

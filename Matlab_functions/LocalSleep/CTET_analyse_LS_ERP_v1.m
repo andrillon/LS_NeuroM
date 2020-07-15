@@ -59,7 +59,7 @@ for nF=1:length(filesPLA)
         if ~isempty(paramSW.fixThr)
             thr_Wave=paramSW.fixThr;
         else
-%             thr_Wave=prctile(all_Waves(:,paramSW.AmpCriterionIdx),paramSW.prticle_Thr);
+            %             thr_Wave=prctile(all_Waves(:,paramSW.AmpCriterionIdx),paramSW.prticle_Thr);
             thr_Wave=prctile(thisE_Waves(:,paramSW.AmpCriterionIdx),paramSW.prticle_Thr);
         end
         sw_thr=[sw_thr ; [SubN thr_Wave nE]];
@@ -149,6 +149,8 @@ for nF=1:length(files)
         else
             mean_ERP_SW(nFc,nChan,:)=nanmean(ERP_SW{nChan},1);
         end
+        mean_ERP_Drugs{nFc}={DrugC};
+        
     end
     
 end
@@ -157,7 +159,7 @@ end
 xTime=-0.25:1/hdr.Fs:1;
 figure; hold on;
 for nCh=1:4
-%     subplot(2,2,nCh); format_fig;
+    %     subplot(2,2,nCh); format_fig;
     plot(xTime,squeeze(nanmean(mean_ERP_SW(:,nCh,:),1)));
     title(EOI{nCh});
     format_fig;
