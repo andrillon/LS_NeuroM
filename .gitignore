@@ -3,3 +3,4 @@ localdef.m
 */.DS_Store
 R_functions/.RData
 *.m~
+R_functions/.Rhistory
