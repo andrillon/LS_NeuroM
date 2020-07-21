@@ -27,7 +27,7 @@ library(multilevelTools)
 library(tidyverse)
 
 
-SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_vec_full.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v2.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
