@@ -28,7 +28,7 @@ library(tidyverse)
 library(mediation)
 
 
-SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_behav_vec.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v2.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
@@ -83,10 +83,9 @@ anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3)
 #detach("package:multilevelTools", unload=TRUE)
 #detach("package:lmerTest", unload=TRUE)
 
-SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="CIT",]
+SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="MPH",]
 SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
-S
-WS_data3$treat[SWS_data$Treatment]<-SWS_data3$Treatment=="CIT"
+SWS_data3$treat[SWS_data$Treatment]<-SWS_data3$Treatment=="MPH"
 SWS_data3$treat<-as.integer(SWS_data3$treat)
 
 med.fit <- lm(SWdens  ~ 1 + treat, data = SWS_data3)
