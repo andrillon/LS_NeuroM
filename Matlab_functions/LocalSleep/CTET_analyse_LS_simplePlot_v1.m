@@ -63,7 +63,7 @@ for nBl=1:10
  end
     format_fig;
 end
-print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens_byDrug.png')
+print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens_byBlock.png')
 
 figure;
 temp_plot=[];
