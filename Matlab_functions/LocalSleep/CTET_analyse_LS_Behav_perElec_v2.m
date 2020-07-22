@@ -9,12 +9,13 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath([pwd filesep '..']));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_v2.txt']);
+table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v3.txt']);
 
 %%
 cfg = [];
 cfg.layout = 'biosemi64.lay';
 cfg.channel=unique(table_SW.Elec);
+cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
 cmap=cbrewer('seq','YlOrRd',64); % select a sequential colorscale from yellow to red (64)

@@ -1,0 +1,107 @@
+---
+title: "sub_table_SW"
+author: "Thomas A."
+date: "30/06/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+library(tidyverse)
+library(mediation)
+
+
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v2.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
+
+SWS_data$Treatment<-as.factor(SWS_data$Treatment)
+
+SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
+
+SWS_data2<-aggregate(SWdens ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
+```
+```{r}
+#detach("package:multilevelTools", unload=TRUE)
+#detach("package:lmerTest", unload=TRUE)
+
+lm.FA0 <- lmer(FA ~ 1 + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Effects of treatment on false alarms 
+lm.FA1 <- lmer(FA ~ 1 + Treatment + (1|SubID), data = SWS_data, REML = FALSE)
+
+#Added effects of block number on false alarm
+lm.FA2 <- lmer(FA ~ 1 + Treatment + BlockN + (1|SubID), data = SWS_data, REML = FALSE)
+
+#Added effects of block number as an interaction on false alarm
+lm.FA3 <- lmer(FA ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Anova to see which one has the most interaction
+anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3)
+
+```
+
+```{r}
+#detach("package:multilevelTools", unload=TRUE)
+#detach("package:lmerTest", unload=TRUE)
+
+lm.Miss0 <- lmer(Miss ~ 1 + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Effects of treatment on false alarms 
+lm.Miss1 <- lmer(Miss ~ 1 + Treatment + (1|SubID), data = SWS_data, REML = FALSE)
+
+#Added effects of block number on false alarm
+lm.Miss2 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data = SWS_data, REML = FALSE)
+
+#Added effects of block number as an interaction on false alarm
+lm.Miss3 <- lmer(Miss ~ 1 + Treatment + BlockN + SWdens + (1|SubID), data = SWS_data, REML = FALSE)
+
+##Anova to see which one has the most interaction
+anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3)
+
+```
+
+
+```{r}
+#detach("package:multilevelTools", unload=TRUE)
+#detach("package:lmerTest", unload=TRUE)
+
+SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="MPH",]
+SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
+SWS_data3$treat[SWS_data$Treatment]<-SWS_data3$Treatment=="MPH"
+SWS_data3$treat<-as.integer(SWS_data3$treat)
+
+#### Dummy data with mediation
+X = runif(100, min=0, max=1); M = X + runif(100, min=0, max=1); Y = M + runif(100, min=0, max=1);
+dummy <- data.frame(X, Y, M)
+med.fit1 <- lm(M  ~ 1 + X, data = dummy)
+out.fit1 <- lm(Y  ~ 1 + M + X, data = dummy)
+med.out1 <- mediate(med.fit1, out.fit1, treat = "X", mediator = "M",robustSE = TRUE, sims = 100)
+
+#### Dummy data without mediation
+X = runif(100, min=0, max=1); M = X + runif(100, min=0, max=1); Y = X + runif(100, min=0, max=1);
+dummy <- data.frame(X, Y, M)
+med.fit2 <- lm(M  ~ 1 + X, data = dummy)
+out.fit2 <- lm(Y  ~ 1 + M + X, data = dummy)
+med.out2 <- mediate(med.fit2, out.fit2, treat = "X", mediator = "M",robustSE = TRUE, sims = 100)
+
+
+```
+

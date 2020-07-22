@@ -9,64 +9,78 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath([pwd filesep '..']));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_vec.txt']);
+table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v3.txt']);
 
+% prctile(table_SW.SWdens,99)
 %%
 cfg = [];
 cfg.layout = 'biosemi64.lay';
+cfg.channel=unique(table_SW.Elec);
+cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
 cmap=cbrewer('seq','YlOrRd',64); % select a sequential colorscale from yellow to red (64)
 Drugs={'PLA','ATM','CIT','MPH'};
 
-limMax=13;
+limMax=[3.5 5.5];
 
 figure;
 temp_topo=[];
-for nE=1:64
-    temp_topo(nE)=mean(table_SW.SWdens(find_trials(table_SW.Elec,layout.label{nE})));
+for nE=1:length(layout.label)-2
+    temp_topo(nE)=nanmean(table_SW.SWdens(find_trials(table_SW.Elec,layout.label{nE})));
 end
 simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
 title('All');
-caxis([0 1]*limMax)
+caxis(limMax)
 h=colorbar;
 colormap(cmap);
 ylabel(h, 'waves/min')
 %     set(h,'Position',[0.85 0.7 0.04 0.2])
 format_fig;
+print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens.png')
 
 %% By Block
-limMax=13;
-
-figure;
+figure; set(gcf,'Position',[228         128        1363         828]);
+limMax=[3.5 6];
 for nBl=1:10
     subplot(2,5,nBl)
     sub_table_SW=table_SW(table_SW.BlockN==nBl,:);
     temp_topo=[];
-    for nE=1:64
-        temp_topo(nE)=mean(sub_table_SW.SWdens(find_trials(sub_table_SW.Elec,layout.label{nE})));
+    for nE=1:length(layout.label)-2
+        temp_topo(nE)=nanmean(sub_table_SW.SWdens(find_trials(sub_table_SW.Elec,layout.label{nE})));
     end
-    simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+    simpleTopoPlot_ft(temp_topo', layout,'off',[],0,1);
     title(sprintf('Block %g',nBl));
-    caxis([0 1]*limMax)
+    caxis(limMax)
     %     h=colorbar;
     colormap(cmap);
     %     ylabel(h, 'waves/min')
     %     set(h,'Position',[0.85 0.7 0.04 0.2])
+    if nBl==10
+        h=colorbar;
+        set(h,'Position',[0.9 0.4 0.02 0.2])
+           ylabel(h, 'waves/min')
+ end
     format_fig;
 end
+print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens_byDrug.png')
 
 figure;
 temp_plot=[];
 for nBl=1:10
     sub_table_SW=table_SW(table_SW.BlockN==nBl,:);
-    temp_plot(1,nBl)=mean(sub_table_SW.SWdens);
-    temp_plot(2,nBl)=sem(sub_table_SW.SWdens);
+    temp=grpstats(sub_table_SW.SWdens,sub_table_SW.SubID);
+    temp_plot(1,nBl)=nanmean(temp);
+    temp_plot(2,nBl)=sem(temp);
 end
 plot(1:10,temp_plot(1,:),'Color','k','Marker','o','LineWidth',3)
 hold on;
 errorbar(1:10,temp_plot(1,:),temp_plot(2,:),'Color','k','LineWidth',2)
 format_fig;
+xlabel('Block')
+xlim([0.5 10.5])
+ylabel('waves/min')
+print('-dpng', '-r300', '../../Figures/Line_LS_SWdens_byBlock.png')
 
 %% By Drug
 figure; hold on; set(gcf,'Position',[201         428        1135         500]);
@@ -74,12 +88,12 @@ for nD=1:4
     subplot(1,4,nD);
     sub_table_SW=table_SW(ismember(table_SW.Drug,Drugs{nD}),:);
     temp_topo=[];
-    for nE=1:64
-        temp_topo(nE)=mean(sub_table_SW.SWdens(~cellfun(@isempty,regexp(sub_table_SW.Elec,layout.label{nE}))));
+    for nE=1:length(layout.label)-2
+        temp_topo(nE)=nanmean(sub_table_SW.SWdens(~cellfun(@isempty,regexp(sub_table_SW.Elec,layout.label{nE}))));
     end
-    simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+    simpleTopoPlot_ft(temp_topo', layout,'off',[],0,1);
     format_fig;
-    caxis([0 1]*limMax)
+    caxis(limMax)
     if nD==4
         h=colorbar;
         set(h,'Position',[0.93 0.4 0.02 0.2])
@@ -87,24 +101,26 @@ for nD=1:4
     colormap(cmap);
     title(Drugs{nD})
 end
+print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens_byDrug.png')
 
-% %% By Drug and block
-% figure; hold on;
-% for nD=1:4
-%     for nBl=1:10
-%         subplot(4,10,10*(nD-1)+nBl);
-%         sub_table_SW=table_SW(ismember(table_SW.Drug,Drugs{nD}) & table_SW.BlockN==nBl,:);
-%         temp_topo=[];
-%         for nE=1:64
-%             temp_topo(nE)=mean(sub_table_SW.SWdens(~cellfun(@isempty,regexp(sub_table_SW.Elec,layout.label{nE}))));
-%         end
-%         simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
-%         format_fig;
-%         caxis([0 1]*limMax)
-%         h=colorbar;
-%         colormap(cmap);
-%     end
-% end
+figure;
+for nD=1:4
+    temp_block=[];
+    for nBl=1:10
+        sub_table_SW=table_SW(ismember(table_SW.Drug,Drugs{nD}) & table_SW.BlockN==nBl,:);
+        temp=grpstats(sub_table_SW.SWdens,sub_table_SW.SubID);
+        temp_block(1,nBl)=nanmean(temp);
+        temp_block(2,nBl)=sem(temp);
+    end
+    plot((1:10)+(nD-2.5)/10,temp_block(1,:),'Color',Colors(nD,:),'Marker','o','LineWidth',3)
+    hold on;
+    errorbar((1:10)+(nD-2.5)/10,temp_block(1,:),temp_block(2,:),'Color',Colors(nD,:),'LineWidth',2)
+end
+format_fig;
+xlabel('Block')
+xlim([0.5 10.5])
+ylabel('waves/min')
+print('-dpng', '-r300', '../../Figures/Line_LS_SWdens_byDrugAndBlock.png')
 
 
 %% Models
@@ -125,14 +141,14 @@ mdl5=fitlme(table_SW2,'SWdens~1+Elec*BlockN*Drug+(1|SubID)');
 compare(mdl4,mdl5)
 
 %%
-redo=0;
+redo=1;
 if redo==1
     totperm=1000;
     temp_topo_tval=[];
     temp_topo_pval=[];
     % fprintf('%2.0f/%2.0f\n',0,64)
     SWdens_est=cell(1,2);
-    for nE=1:64
+    for nE=1:length(layout.label)-2
         fprintf('%2.0f/%2.0f\n',nE,64)
         sub_table_SW2=table_SW2(find_trials(table_SW.Elec,layout.label{nE}),:);
         mdl_byEle{nE}=fitlme(sub_table_SW2,'SWdens~1+BlockN+Drug+(1|SubID)');
@@ -145,9 +161,9 @@ if redo==1
             SWdens_est{2}=[SWdens_est{2} ; [nE*ones(totperm,1) perm_out{nDrug} nDrug*ones(totperm,1)]];
         end
     end
-    save('../../Tables/model_SWdens_est','SWdens_est');
+    save('../../Tables/model_SWdens_est_v3','SWdens_est');
 else
-    load('../../Tables/model_SWdens_est');
+    load('../../Tables/model_SWdens_est_v3');
 end
 %% Filter clusters
 clus_alpha=0.01;
@@ -156,8 +172,9 @@ montecarlo_alpha=0.05/3;
 cfg_neighb=[];
 cfg_neighb.method = 'template';
 cfg_neighb.layout='biosemi64.lay';
+cfg.channel=unique(table_SW.Elec);
 neighbours = ft_prepare_neighbours(cfg_neighb);
-
+neighbours(~ismember({neighbours.label},unique(table_SW.Elec)))=[];
 [SWdens_clus]=get_clusterperm_lme_lsneurom(SWdens_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
 %%
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
@@ -187,7 +204,7 @@ for nDrug=1:3
         end
     end
     simpleTopoPlot_ft(temp_topo2, layout,'on',[],0,1);
-    ft_plot_lay_me(layout, 'chanindx',1:64,'pointsymbol','o','pointcolor',[1 1 1]*0.7,'pointsize',6,'box','no','label','no')
+    ft_plot_lay_me(layout, 'chanindx',1:length(layout.label)-2,'pointsymbol','o','pointcolor',[1 1 1]*0.7,'pointsize',6,'box','no','label','no')
     format_fig;
         caxis([-1 1]*limMax)
     if ~isempty(temp_clus)
@@ -206,7 +223,7 @@ for nDrug=1:3
     
     title(Drugs{nDrug+1})
 end
-
+print('-dpng', '-r300', '../../Figures/Topo_LS_LME_DrugEffect_v3.png')
 % figure;
 % for nDrug=1:3
 %     subplot(1,3,nDrug)

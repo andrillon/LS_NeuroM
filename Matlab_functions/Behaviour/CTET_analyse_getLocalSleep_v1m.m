@@ -19,7 +19,7 @@ files=dir([data_path filesep '*.bdf']);
 %%
 res_mat=[];
 drug_cond=[];
-for nF=115:length(files)
+for nF=1:length(files)
     File_Name=files(nF).name;
     fprintf('... processing %s\n',File_Name);
     septag=findstr(File_Name,'_');

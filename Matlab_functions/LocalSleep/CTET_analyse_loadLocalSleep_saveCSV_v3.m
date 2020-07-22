@@ -43,7 +43,7 @@ for nF=1:length(filesPLA)
     paramSW.art_ampl=150;
     paramSW.max_posampl=75;
     paramSW.max_Freq=7;
-    paramSW.byElec=0;
+    paramSW.byElec=1;
     
     all_Waves=double(all_Waves);
     all_freq=1./(abs((all_Waves(:,5)-all_Waves(:,7)))./hdr.Fs);
@@ -165,6 +165,14 @@ end
 % set(gca,'XTick',1:4,'XTickLabel',Drugs)
 % ylim([5 7])
 %%
+table_Thr=array2table(sw_thr,'VariableNames',{'FileN','Thr','Elec'});
+table_Thr.Elec=categorical(table_Thr.Elec);
+for nE=1:64
+    table_Thr.Elec(table_Thr.Elec==num2str(nE))=hdr.label{nE};
+end
+table_Thr(ismember(table_Thr.Elec,{'Iz','TP7','TP8','P9','P10'}),:)=[];
+table_Thr.Elec=removecats(table_Thr.Elec);
+
 table_SW=array2table(all_slow_Waves_vec,'VariableNames',{'FileN','SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','Elec','SWdens','P2P','NegSlope','PosSlope'});
 table_SW.SubID=categorical(table_SW.SubID);
 table_SW.SessN=categorical(table_SW.SessN);
@@ -174,10 +182,14 @@ for nE=1:64
     table_SW.Elec(table_SW.Elec==num2str(nE))=hdr.label{nE};
 end
 table_SW.Drug=all_drug_types_vec;
-table_SW(table_SW.Elec=='Iz',:)=[];
+table_SW(ismember(table_SW.Elec,{'Iz','TP7','TP8','P9','P10'}),:)=[];
 table_SW.Elec=removecats(table_SW.Elec);
 table_SW.Drug=categorical(table_SW.Drug);
 table_SW.Drug=reordercats(table_SW.Drug,[4 1 2 3]);
+
+%%% clean for extreme SWdens values
+table_SW.SWdens(table_SW.SWdens>(mean(table_SW.SWdens)+5*std(table_SW.SWdens)))=NaN;
+
 mdl0=fitlme(table_SW,'SWdens~1+(1|SubID)');
 mdl1=fitlme(table_SW,'SWdens~1+Elec+(1|SubID)');
 mdl2=fitlme(table_SW,'SWdens~1+Elec+BlockN+(1|SubID)');
@@ -193,11 +205,11 @@ end
 FullSubID=myS(sum(nSession,2)==4);
 table_SW2=table_SW(ismember(table_SW.SubID,FullSubID),:);
 if paramSW.byElec
-    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_behav_vec_v2.txt');
-    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v2.txt');
+    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_behav_vec_v3.txt');
+    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v3.txt');
 else
-    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_v2.txt');
-    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v2.txt');
+    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_v3.txt');
+    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v3.txt');
 end
 table_allSW=table_SW;
 %%
@@ -210,22 +222,26 @@ for nE=1:64
     table_SW.Elec(table_SW.Elec==num2str(nE))=hdr.label{nE};
 end
 table_SW.Drug=all_drug_types_vec2;
-table_SW(table_SW.Elec=='Iz',:)=[];
+table_SW(ismember(table_SW.Elec,{'Iz','TP7','TP8','P9','P10'}),:)=[];
 table_SW.Elec=removecats(table_SW.Elec);
 table_SW.Drug=categorical(table_SW.Drug);
 table_SW.Drug=reordercats(table_SW.Drug,[4 1 2 3]);
+
+%%% clean for extreme SWdens values
+table_SW.SWdens(table_SW.SWdens>(mean(table_SW.SWdens)+5*std(table_SW.SWdens)))=NaN;
+
 mdl0=fitlme(table_SW,'SWdens~1+(1|SubID)');
 mdl1=fitlme(table_SW,'SWdens~1+Elec+(1|SubID)');
 mdl2=fitlme(table_SW,'SWdens~1+Elec+BlockN+(1|SubID)');
 mdl3=fitlme(table_SW,'SWdens~1+Elec*Drug+(1|SubID)');
 table_SW2=table_SW(ismember(table_SW.SubID,FullSubID),:);
 if paramSW.byElec
-    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_v2.txt');
-    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v2.txt');
+    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_v3.txt');
+    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3.txt');
     
 else
-    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_v2.txt');
-    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v2.txt');
+    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_v3.txt');
+    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v3.txt');
 end
 
 %%
@@ -235,7 +251,8 @@ ft_defaults;
 
 cfg = [];
 cfg.layout = 'biosemi64.lay';
-cfg.channel=setdiff(hdr.label,{'Iz'});
+cfg.channel={'Fp1','AF7','AF3','F1','F3','F5','F7','FT7','FC5','FC3','FC1','C1','C3','C5','T7','CP5','CP3','CP1','P1','P3','P5','P7','PO7','PO3','O1','Oz','POz','Pz','CPz','Fpz','Fp2','AF8','AF4','AFz','Fz','F2','F4','F6','F8','FT8','FC6','FC4','FC2','FCz','Cz','C2','C4','C6','T8','CP6','CP4','CP2','P2','P4','P6','P8','PO8','PO4','O2'}; %setdiff(hdr.label,{'Iz','TP7','TP8'});
+cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
 Drugs={'PLA','CIT','MPH','ATM'};
@@ -244,7 +261,7 @@ figure;
 for nDrug=1:4
     subplot(1,4,nDrug);
     temp_topo=[];
-    for nE=1:63
+    for nE=1:length(layout.label)-2
         temp_topo(nE)=nanmean(table_allSW.SWdens(table_allSW.Drug==Drugs{nDrug} & table_allSW.Elec==layout.label{nE}),1);
     end
     %     temp_topo=(nanmean(all_slow_Waves(:,4:67),1));
@@ -256,131 +273,16 @@ for nDrug=1:4
     format_fig;
     %     set(h,'FontSize',22);
 end
-% for nDrug2=2:4
-%     subplot(2,4,4+nDrug2);
-%     temp_topo=(nanmean(all_slow_Waves(ismember(all_drug_types,Drugs{nDrug2}),4:67),1))-...
-%         (nanmean(all_slow_Waves(ismember(all_drug_types,Drugs{1}),4:67),1));
-%     simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
-%     title([Drugs{nDrug2} '-' Drugs{1}]); h=colorbar;  ylabel(h, 'waves/min')
-%     caxis([-1 1]*max(abs(temp_topo)))
-%     h=colorbar;
-%     format_fig;
-% end
-
-%%
-cmap=cbrewer('seq','YlOrRd',64);
 
 figure;
 temp_topo=[];
-for nE=1:64
-    temp_topo(nE)=mean(table_SW.SWdens(match_str(table_SW.Elec,layout.label{nE})));
+for nE=1:length(layout.label)-2
+    temp_topo(nE)=nanmean(table_Thr.Thr(table_Thr.Elec==layout.label{nE}),1);
 end
-simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
-title(Drugs{nDrug}); h=colorbar;  ylabel(h, 'waves/min')
-caxis([0 1]*limMax)
+%     temp_topo=(nanmean(all_slow_Waves(:,4:67),1));
+simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+title('Thr'); h=colorbar;  ylabel(h, 'waves/min')
+% caxis([2 6])
 h=colorbar;
-colormap(cmap);
 %     set(h,'Position',[0.85 0.7 0.04 0.2])
 format_fig;
-
-OrderEl={'AF3','AF4','AF7','AF8','AFz','C1','C2','C3','C4','C5','C6','CP1','CP2','CP3','CP4','CP5','CP6','CPz','Cz','F1','F2','F3','F4','F5','F6','F7','F8','FC1','FC2','FC3','FC4','FC5','FC6',...
-    'FCz','Fp1','Fp2','Fpz','FT7','FT8','Fz','Iz','O1','O2','Oz','P1','P10','P2','P3','P4','P5','P6','P7','P8','P9','PO3','PO4','PO7','PO8','POz','Pz','T7','T8','TP7','TP8'};
-Pos=[];
-for nE=1:64
-    Pos(:,nE)=layout.pos(match_str(layout.label,OrderEl{nE}),:)';
-end
-
-%%
-myElecs=unique(table_SW.Elec);
-for nE=1:length(myElecs)
-    fprintf('... %g\n',nE)
-    temp_table=table_SW(table_SW.Elec==myElecs(nE) & (table_SW.Drug=='PLA' | table_SW.Drug=='CIT'),:);
-    temp_table.Drug=removecats(temp_table.Drug);
-    mdl0=fitlme(temp_table,'Miss~1+(1|SubID)');
-    mdl1=fitlme(temp_table,'Miss~1+SWdens+(1|SubID)');
-    mdl2=fitlme(temp_table,'Miss~1+Drug+(1|SubID)');
-    mdl3=fitlme(temp_table,'Miss~1+SWdens+Drug+(1|SubID)');
-    res=compare(mdl0,mdl1);
-    EffectSW_Miss(nE)=res.pValue(2);
-    res=compare(mdl0,mdl2);
-    EffectDrug_Miss(nE)=res.pValue(2);
-    res=compare(mdl1,mdl2);
-    Med_Miss(nE)=res.pValue(2);
-    
-    mdl0=fitlme(temp_table,'FA~1+(1|SubID)');
-    mdl1=fitlme(temp_table,'FA~1+SWdens+(1|SubID)');
-    mdl2=fitlme(temp_table,'FA~1+Drug+(1|SubID)');
-    res=compare(mdl0,mdl1);
-    EffectSW_FA(nE)=res.pValue(2);
-    res=compare(mdl0,mdl2);
-    EffectDrug_FA(nE)=res.pValue(2);
-    res=compare(mdl2,mdl1);
-    Med_FA(nE)=res.pValue(2);
-    
-    
-    mdl0=fitlme(temp_table,'Hit_RT~1+(1|SubID)');
-    mdl1=fitlme(temp_table,'Hit_RT~1+SWdens+(1|SubID)');
-    mdl2=fitlme(temp_table,'Hit_RT~1+Drug+(1|SubID)');
-    res=compare(mdl0,mdl1);
-    EffectSW_Hit_RT(nE)=res.pValue(2);
-    res=compare(mdl0,mdl2);
-    EffectDrug_Hit_RT(nE)=res.pValue(2);
-    res=compare(mdl2,mdl1);
-    Med_Hit_RT(nE)=res.pValue(2);
-end
-
-%%
-cmap=cbrewer('seq','YlOrRd',64);
-
-figure;
-subplot(1,3,1)
-simpleTopoPlot_ft(EffectSW_FA', layout,'on',[],0,1);
-colorbar; caxis([0 1])
-
-subplot(1,3,2)
-simpleTopoPlot_ft(EffectSW_Miss', layout,'on',[],0,1);
-colorbar; caxis([0 1])
-
-subplot(1,3,3)
-simpleTopoPlot_ft(EffectSW_Hit_RT', layout,'on',[],0,1);
-colorbar; caxis([0 1])
-
-%%
-table_SW.SubID=categorical(table_SW.SubID);
-table_SW.SessN=categorical(table_SW.SessN);
-table_SW.Elec=categorical(table_SW.Elec);
-table_SW.Drug=categorical(table_SW.Drug);
-
-Drugs={'PLA','CIT','MPH','ATM'};
-uniqueS=unique(table_SW.SubID);
-figure; set(gcf,'Position',[114         579        1126         399])
-subplot(1,3,1);
-for nD=1:4
-    temp=[];
-    for nS=1:length(uniqueS)
-        temp(nS)=nanmean(table_SW.SWdens(table_SW.Drug==Drugs{nD} & table_SW.SubID==uniqueS(nS)));
-    end
-    simpleBarPlot(nD,temp,'k',.85,'r',[],3)
-end
-set(gca,'XTick',1:4,'XTickLabel',Drugs);
-
-
-subplot(1,3,2);
-for nD=1:4
-    temp=[];
-    for nS=1:length(uniqueS)
-        temp(nS)=nanmean(table_SW.P2P(table_SW.Drug==Drugs{nD} & table_SW.SubID==uniqueS(nS)));
-    end
-    simpleBarPlot(nD,temp,'k',.85,'r',[],3)
-end
-set(gca,'XTick',1:4,'XTickLabel',Drugs);
-
-subplot(1,3,3);
-for nD=1:4
-    temp=[];
-    for nS=1:length(uniqueS)
-        temp(nS)=nanmean(table_SW.NegSlope(table_SW.Drug==Drugs{nD} & table_SW.SubID==uniqueS(nS)));
-    end
-    simpleBarPlot(nD,temp,'k',.85,'r',[],3)
-end
-set(gca,'XTick',1:4,'XTickLabel',Drugs);
