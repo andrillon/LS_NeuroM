@@ -1,0 +1,75 @@
+---
+title: "SWS_Dynamics_v1"
+author: "Elaine P."
+date: "22/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+library(tidyverse)
+library(Rmisc)
+
+SWS_data4 <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+names(SWS_data4)[names(SWS_data4) == "Drug"] <- "Treatment"
+
+SWS_data4$Treatment<-as.factor(SWS_data4$Treatment)
+
+SWS_data4$Treatment<-relevel(SWS_data4$Treatment,"PLA")
+
+```
+
+```{r} 
+blockN <- as.data.frame(SWS_data4[, 4])
+dim(blockN)
+for (i in 1:10) {
+  block <- blockN[, i]
+  lme_block <- lmer(SWdens ~ 1 + Treatment + block + (1|SubID), REML = TRUE, data = SWS_data4)
+  print(summary(lme_block)$Table)
+}
+
+lme.swd <- lmer(SWdens ~ 1 + Treatment + block + (1|SubID), REML = TRUE, data = SWS_data4)
+for (block in seq_along(lme.swd)) {block = SWS_data4[,4]}
+lme.swd
+
+
+##trying to do it through vectorization:
+lme.swd <- lmer(SWdens ~ 1 + Treatment + blockN + (1|SubID), REML = TRUE, data = SWS_data4)
+blockN <- as.data.frame(SWS_data4[,4])
+
+
+##examples from sites 
+  for (year in 2010:2015){
+  print(paste("The year is", year))
+}
+
+##MMore examples 
+lipid <-as.data.frame(cer_data[,c(7:9)])
+dim(lipid)
+for (i in 1:length(lipid)) { 
+  variable <- lipid[,i]
+  lme_cer <- lme(variable ~ factor(Remission) + Time + Age + BMI + SEX, random = ~1 | Lacal.Patient.ID, method = "REML", data = cer_data)
+print(summary(lme_cer)$tTable)
+}
+
+
+```
