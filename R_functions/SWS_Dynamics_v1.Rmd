@@ -39,37 +39,46 @@ SWS_data4$Treatment<-relevel(SWS_data4$Treatment,"PLA")
 ```
 
 ```{r} 
-blockN <- as.data.frame(SWS_data4[, 4])
-dim(blockN)
-for (i in 1:10) {
-  block <- blockN[, i]
-  lme_block <- lmer(SWdens ~ 1 + Treatment + block + (1|SubID), REML = TRUE, data = SWS_data4)
-  print(summary(lme_block)$Table)
-}
+Block <- SWS_data4$BlockN == 1
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
 
-lme.swd <- lmer(SWdens ~ 1 + Treatment + block + (1|SubID), REML = TRUE, data = SWS_data4)
-for (block in seq_along(lme.swd)) {block = SWS_data4[,4]}
-lme.swd
+Block <- SWS_data4$BlockN == 2
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
 
+Block <- SWS_data4$BlockN == 3
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
 
-##trying to do it through vectorization:
-lme.swd <- lmer(SWdens ~ 1 + Treatment + blockN + (1|SubID), REML = TRUE, data = SWS_data4)
-blockN <- as.data.frame(SWS_data4[,4])
+Block <- SWS_data4$BlockN == 4
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
 
+Block <- SWS_data4$BlockN == 5
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
 
-##examples from sites 
-  for (year in 2010:2015){
-  print(paste("The year is", year))
-}
+Block <- SWS_data4$BlockN == 6
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
 
-##MMore examples 
-lipid <-as.data.frame(cer_data[,c(7:9)])
-dim(lipid)
-for (i in 1:length(lipid)) { 
-  variable <- lipid[,i]
-  lme_cer <- lme(variable ~ factor(Remission) + Time + Age + BMI + SEX, random = ~1 | Lacal.Patient.ID, method = "REML", data = cer_data)
-print(summary(lme_cer)$tTable)
-}
+Block <- SWS_data4$BlockN == 7
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 8
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 9
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 10
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
 
 
 ```
