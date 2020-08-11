@@ -1,4 +1,4 @@
-function [all_clus]=get_clusterperm_lme_lsneurom(model_est,clus_alpha,montecarlo_alpha,totperm,neighbours)
+function [all_clus]=get_clusterperm_lme_lsneurom(model_est,clus_alpha,montecarlo_alpha,totperm,neighbours,limSize)
 
 % clus_alpha=0.1;
 % montecarlo_alpha=0.05;
@@ -8,6 +8,9 @@ function [all_clus]=get_clusterperm_lme_lsneurom(model_est,clus_alpha,montecarlo
 % cfg_neighb.method = 'tri';
 % cfg_neighb.layout=path_PsychFTlayout;
 % neighbours = ft_prepare_neighbours(cfg_neighb);
+if nargin<6
+    limSize=[];
+end
 if size(model_est{2},2)==6
     for nDrug=1:3
         real_clus=cell(1,2);
@@ -41,6 +44,15 @@ if size(model_est{2},2)==6
                         real_clus{nsign}{num_clus+1,2}=neighbours(sig_elec(nEl)).neighblabel;
                     end
                 end
+                if ~isempty(limSize)
+                    clus_discard=[];
+                    for m=1:size(real_clus{nsign},1)
+                        if size(real_clus{nsign}{m,1},1)<=limSize
+                            clus_discard=[clus_discard m];
+                        end
+                    end
+                    real_clus{nsign}(clus_discard,:)=[];
+                end
                 clus_merged=[];
                 for nclus=1:size(real_clus{nsign},1)
                     if ismember(nclus,clus_merged)
@@ -50,6 +62,7 @@ if size(model_est{2},2)==6
                         if sum(ismember(real_clus{nsign}{nclus2,1},real_clus{nsign}{nclus,2}))~=0
                             real_clus{nsign}{nclus,3}=[real_clus{nsign}{nclus,3} ; real_clus{nsign}{nclus2,3}(~ismember(real_clus{nsign}{nclus2,1},real_clus{nsign}{nclus,1}))];
                             real_clus{nsign}{nclus,1}=unique([real_clus{nsign}{nclus,1} ; real_clus{nsign}{nclus2,1}]);
+                            real_clus{nsign}{nclus,2}=unique([real_clus{nsign}{nclus,2} ; real_clus{nsign}{nclus2,2}]);
                             clus_merged=[clus_merged nclus2];
                         end
                     end
@@ -90,6 +103,15 @@ if size(model_est{2},2)==6
                             perm_clus{nsign,nperm}{num_clus+1,2}=neighbours(sig_elec(nEl)).neighblabel;
                         end
                     end
+                    if ~isempty(limSize)
+                        clus_discard=[];
+                        for m=1:size(perm_clus{nsign,nperm},1)
+                            if size(perm_clus{nsign,nperm}{m,1},1)<=limSize
+                                clus_discard=[clus_discard m];
+                            end
+                        end
+                        perm_clus{nsign,nperm}(clus_discard,:)=[];
+                    end
                     clus_merged=[];
                     for nclus=1:size(perm_clus{nsign,nperm},1)
                         if ismember(nclus,clus_merged)
@@ -99,6 +121,7 @@ if size(model_est{2},2)==6
                             if sum(ismember(perm_clus{nsign,nperm}{nclus2,1},perm_clus{nsign,nperm}{nclus,2}))~=0
                                 perm_clus{nsign,nperm}{nclus,3}=[perm_clus{nsign,nperm}{nclus,3} ; perm_clus{nsign,nperm}{nclus2,3}(~ismember(perm_clus{nsign,nperm}{nclus2,1},perm_clus{nsign,nperm}{nclus,1}))];
                                 perm_clus{nsign,nperm}{nclus,1}=unique([perm_clus{nsign,nperm}{nclus,1} ; perm_clus{nsign,nperm}{nclus2,1}]);
+                                perm_clus{nsign,nperm}{nclus,2}=unique([perm_clus{nsign,nperm}{nclus,2} ; perm_clus{nsign,nperm}{nclus2,2}]);
                                 clus_merged=[clus_merged nclus2];
                             end
                         end
@@ -116,9 +139,17 @@ if size(model_est{2},2)==6
                     temp_tval=[temp_tval sum(perm_clus{nsign,nperm}{nclus,3})];
                 end
                 if nsign==1
-                    perm_tval{nsign}=[perm_tval{nsign} max(temp_tval)];
+                    if isempty(temp_tval)
+                        perm_tval{nsign}=[perm_tval{nsign} 0];
+                    else
+                        perm_tval{nsign}=[perm_tval{nsign} max(temp_tval)];
+                    end
                 else
-                    perm_tval{nsign}=[perm_tval{nsign} min(temp_tval)];
+                    if isempty(temp_tval)
+                        perm_tval{nsign}=[perm_tval{nsign} 0];
+                    else
+                        perm_tval{nsign}=[perm_tval{nsign} min(temp_tval)];
+                    end
                 end
             end
         end
@@ -173,6 +204,15 @@ else
                     real_clus{nsign}{num_clus+1,2}=neighbours(sig_elec(nEl)).neighblabel;
                 end
             end
+            if ~isempty(limSize)
+                clus_discard=[];
+                for m=1:size(real_clus{nsign},1)
+                    if size(real_clus{nsign}{m,1},1)<=limSize
+                        clus_discard=[clus_discard m];
+                    end
+                end
+                real_clus{nsign}(clus_discard,:)=[];
+            end
             clus_merged=[];
             for nclus=1:size(real_clus{nsign},1)
                 if ismember(nclus,clus_merged)
@@ -182,6 +222,7 @@ else
                     if sum(ismember(real_clus{nsign}{nclus2,1},real_clus{nsign}{nclus,2}))~=0
                         real_clus{nsign}{nclus,3}=[real_clus{nsign}{nclus,3} ; real_clus{nsign}{nclus2,3}(~ismember(real_clus{nsign}{nclus2,1},real_clus{nsign}{nclus,1}))];
                         real_clus{nsign}{nclus,1}=unique([real_clus{nsign}{nclus,1} ; real_clus{nsign}{nclus2,1}]);
+                        real_clus{nsign}{nclus,2}=unique([real_clus{nsign}{nclus,2} ; real_clus{nsign}{nclus2,2}]);
                         clus_merged=[clus_merged nclus2];
                     end
                 end
@@ -222,6 +263,15 @@ else
                         perm_clus{nsign,nperm}{num_clus+1,2}=neighbours(sig_elec(nEl)).neighblabel;
                     end
                 end
+                if ~isempty(limSize)
+                    clus_discard=[];
+                    for m=1:size(perm_clus{nsign,nperm},1)
+                        if size(perm_clus{nsign,nperm}{m,1},1)<=limSize
+                            clus_discard=[clus_discard m];
+                        end
+                    end
+                    perm_clus{nsign,nperm}(clus_discard,:)=[];
+                end
                 clus_merged=[];
                 for nclus=1:size(perm_clus{nsign,nperm},1)
                     if ismember(nclus,clus_merged)
@@ -231,6 +281,7 @@ else
                         if sum(ismember(perm_clus{nsign,nperm}{nclus2,1},perm_clus{nsign,nperm}{nclus,2}))~=0
                             perm_clus{nsign,nperm}{nclus,3}=[perm_clus{nsign,nperm}{nclus,3} ; perm_clus{nsign,nperm}{nclus2,3}(~ismember(perm_clus{nsign,nperm}{nclus2,1},perm_clus{nsign,nperm}{nclus,1}))];
                             perm_clus{nsign,nperm}{nclus,1}=unique([perm_clus{nsign,nperm}{nclus,1} ; perm_clus{nsign,nperm}{nclus2,1}]);
+                            perm_clus{nsign,nperm}{nclus,2}=unique([perm_clus{nsign,nperm}{nclus,2} ; perm_clus{nsign,nperm}{nclus2,2}]);
                             clus_merged=[clus_merged nclus2];
                         end
                     end
@@ -248,9 +299,17 @@ else
                 temp_tval=[temp_tval sum(perm_clus{nsign,nperm}{nclus,3})];
             end
             if nsign==1
-                perm_tval{nsign}=[perm_tval{nsign} max(temp_tval)];
+                if isempty(temp_tval)
+                    perm_tval{nsign}=[perm_tval{nsign} 0];
+                else
+                    perm_tval{nsign}=[perm_tval{nsign} max(temp_tval)];
+                end
             else
-                perm_tval{nsign}=[perm_tval{nsign} min(temp_tval)];
+                if isempty(temp_tval)
+                    perm_tval{nsign}=[perm_tval{nsign} 0];
+                else
+                    perm_tval{nsign}=[perm_tval{nsign} min(temp_tval)];
+                end
             end
         end
     end

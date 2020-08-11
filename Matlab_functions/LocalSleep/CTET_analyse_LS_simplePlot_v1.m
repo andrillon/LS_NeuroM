@@ -10,6 +10,7 @@ addpath(genpath([pwd filesep '..']));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
 table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v3.txt']);
+table_avSW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3.txt']);
 
 % prctile(table_SW.SWdens,99)
 %%
@@ -59,8 +60,8 @@ for nBl=1:10
     if nBl==10
         h=colorbar;
         set(h,'Position',[0.9 0.4 0.02 0.2])
-           ylabel(h, 'waves/min')
- end
+        ylabel(h, 'waves/min')
+    end
     format_fig;
 end
 print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens_byBlock.png')
@@ -175,13 +176,14 @@ cfg_neighb.layout='biosemi64.lay';
 cfg.channel=unique(table_SW.Elec);
 neighbours = ft_prepare_neighbours(cfg_neighb);
 neighbours(~ismember({neighbours.label},unique(table_SW.Elec)))=[];
-[SWdens_clus]=get_clusterperm_lme_lsneurom(SWdens_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
+[SWdens_clus]=get_clusterperm_lme_lsneurom(SWdens_est,clus_alpha,montecarlo_alpha,totperm,neighbours,1);
 %%
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap2=flipud(cmap2);
 limNumClus=0;
 limMax=10;%max(max(abs(temp_topo_tval)));
 figure; set(gcf,'Position',[213         173        1027         805]);
+ClustersByDrugs=cell(2,3);
 for nDrug=1:3
     subplot(1,3,nDrug)
     
@@ -201,12 +203,17 @@ for nDrug=1:3
             temp_topo2(match_str(layout.label,temp_clus{nclus}{2}))=temp_topo(match_str(layout.label,temp_clus{nclus}{2}));
             temp_topo3(match_str(layout.label,temp_clus{nclus}{2}))=1;
             fprintf('... ... found %s cluster (%g) of %g electrodes (tval cluster=%g, Pmc=%g)\n',temp_clus{nclus}{1},nclus,length(temp_clus{nclus}{2}),temp_clus{nclus}{3},temp_clus{nclus}{4})
+            if strcmp(temp_clus{nclus}{1},'pos')
+                ClustersByDrugs{2,nDrug}=[ClustersByDrugs{2,nDrug} ; temp_clus{nclus}{2}];
+            elseif strcmp(temp_clus{nclus}{1},'neg')
+                ClustersByDrugs{1,nDrug}=[ClustersByDrugs{1,nDrug} ; temp_clus{nclus}{2}];
+            end
         end
     end
     simpleTopoPlot_ft(temp_topo2, layout,'on',[],0,1);
     ft_plot_lay_me(layout, 'chanindx',1:length(layout.label)-2,'pointsymbol','o','pointcolor',[1 1 1]*0.7,'pointsize',6,'box','no','label','no')
     format_fig;
-        caxis([-1 1]*limMax)
+    caxis([-1 1]*limMax)
     if ~isempty(temp_clus)
         for nclus=1:length(temp_clus)
             if length(match_str(layout.label,temp_clus{nclus}{2}))<limNumClus
@@ -224,6 +231,51 @@ for nDrug=1:3
     title(Drugs{nDrug+1})
 end
 print('-dpng', '-r300', '../../Figures/Topo_LS_LME_DrugEffect_v3.png')
+
+%% Make new table
+table_avSW.C_Pos_ATM=nan(size(table_avSW,1),1);
+table_avSW.C_Neg_ATM=nan(size(table_avSW,1),1);
+table_avSW.C_Pos_CIT=nan(size(table_avSW,1),1);
+% table_avSW.C_Neg_CIT=nan(size(table_avSW,1),1);
+% table_avSW.C_Pos_MPH=nan(size(table_avSW,1),1);
+table_avSW.C_Neg_MPH=nan(size(table_avSW,1),1);
+
+uS=unique(table_avSW.SubID);
+for nS=1:length(uS)
+    for nB=1:10
+        table_avSW.C_Neg_ATM(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'ATM'))=...
+            nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'ATM') & ismember(table_SW.Elec,ClustersByDrugs{1,1})));
+        table_avSW.C_Neg_ATM(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'PLA'))=...
+            nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'PLA') & ismember(table_SW.Elec,ClustersByDrugs{1,1})));
+        
+        table_avSW.C_Pos_ATM(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'ATM'))=...
+            nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'ATM') & ismember(table_SW.Elec,ClustersByDrugs{2,1})));
+        table_avSW.C_Pos_ATM(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'PLA'))=...
+            nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'PLA') & ismember(table_SW.Elec,ClustersByDrugs{2,1})));
+        
+%         table_avSW.C_Neg_CIT(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'CIT'))=...
+%             nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'CIT') & ismember(table_SW.Elec,ClustersByDrugs{1,2})));
+%         table_avSW.C_Neg_CIT(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'PLA'))=...
+%             nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'PLA') & ismember(table_SW.Elec,ClustersByDrugs{1,2})));
+        
+        table_avSW.C_Pos_CIT(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'CIT'))=...
+            nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'CIT') & ismember(table_SW.Elec,ClustersByDrugs{2,2})));
+        table_avSW.C_Pos_CIT(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'PLA'))=...
+            nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'PLA') & ismember(table_SW.Elec,ClustersByDrugs{2,2})));
+        
+        table_avSW.C_Neg_MPH(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'MPH'))=...
+            nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'MPH') & ismember(table_SW.Elec,ClustersByDrugs{1,3})));
+        table_avSW.C_Neg_MPH(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'PLA'))=...
+            nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'PLA') & ismember(table_SW.Elec,ClustersByDrugs{1,3})));
+        
+%         table_avSW.C_Pos_MPH(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'MPH'))=...
+%             nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'MPH') & ismember(table_SW.Elec,ClustersByDrugs{2,3})));
+%         table_avSW.C_Pos_MPH(ismember(table_avSW.SubID,uS(nS)) & table_avSW.BlockN==nB & ismember(table_avSW.Drug,'PLA'))=...
+%             nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'PLA') & ismember(table_SW.Elec,ClustersByDrugs{2,3})));
+    end
+end
+writetable(table_avSW,[save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3_CLUSTERS.txt']);
+
 % figure;
 % for nDrug=1:3
 %     subplot(1,3,nDrug)
