@@ -1,0 +1,84 @@
+---
+title: "SWS_Dynamics_v1"
+author: "Elaine P."
+date: "22/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+library(tidyverse)
+library(Rmisc)
+
+SWS_data4 <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+names(SWS_data4)[names(SWS_data4) == "Drug"] <- "Treatment"
+
+SWS_data4$Treatment<-as.factor(SWS_data4$Treatment)
+
+SWS_data4$Treatment<-relevel(SWS_data4$Treatment,"PLA")
+
+```
+
+```{r} 
+Block <- SWS_data4$BlockN == 1
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 2
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 3
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 4
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 5
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 6
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 7
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 8
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 9
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+Block <- SWS_data4$BlockN == 10
+lme_block <- lmer(SWdens ~ 1 + Treatment*Block + (1|SubID), REML = TRUE, data = SWS_data4)
+summary(lme_block)
+
+
+
+```

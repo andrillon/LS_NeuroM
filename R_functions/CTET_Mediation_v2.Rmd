@@ -94,6 +94,7 @@ dummy <- data.frame(X, Y, M)
 med.fit1 <- lm(M  ~ 1 + X, data = dummy)
 out.fit1 <- lm(Y  ~ 1 + M + X, data = dummy)
 med.out1 <- mediate(med.fit1, out.fit1, treat = "X", mediator = "M",robustSE = TRUE, sims = 100)
+summary(med.out1)
 
 #### Dummy data without mediation
 X = runif(100, min=0, max=1); M = X + runif(100, min=0, max=1); Y = X + runif(100, min=0, max=1);
@@ -101,7 +102,10 @@ dummy <- data.frame(X, Y, M)
 med.fit2 <- lm(M  ~ 1 + X, data = dummy)
 out.fit2 <- lm(Y  ~ 1 + M + X, data = dummy)
 med.out2 <- mediate(med.fit2, out.fit2, treat = "X", mediator = "M",robustSE = TRUE, sims = 100)
-
+summary(med.out2)
 
 ```
+
+
+
 
