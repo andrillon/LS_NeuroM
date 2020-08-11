@@ -36,124 +36,164 @@ SWS_data$Treatment<-as.factor(SWS_data$Treatment)
 
 SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 
-SWS_data2<-aggregate(SWdens ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
+
 ```
 
 
-#```{r}  DRAFT 
 
-##Slow wave density 
+```{r}
 
-lm.sw0 <- lmer(SWdens ~ 1 + (1|SubID), data = SWS_data, REML =FALSE)
+SWS_data2<-aggregate(P2P ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
+##Peak to Peak 
+lm.pp0 <- lmer(P2P ~ 1 + (1|SubID), data = SWS_data2, REML =FALSE)
 
-##Effects of electrode placement on slow wave density
-lm.sw1 <- lmer(SWdens  ~ 1 + Elec + (1|SubID), data = SWS_data, REML = FALSE)
+##Effects of block number on peak to peak 
+lm.pp1 <- lmer(P2P  ~ 1  + BlockN + (1|SubID), data = SWS_data2, REML = FALSE)
 
+##Effects of block number and drug on peak to peak 
+lm.pp2 <- lmer(P2P  ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data2, REML = FALSE)
 
-##Effects of electrode placement and block number on slow wave density
-lm.sw2 <- lmer(SWdens  ~ 1 + Elec + BlockN + (1|SubID), data = SWS_data, REML = FALSE)
-
-##Effects of electrode placement, block number and drug on slow wave density
-lm.sw3 <- lmer(SWdens  ~ 1 + Elec + BlockN + Treatment + (1|SubID), data = SWS_data, REML = FALSE)
-
-##Effects of electrode placement interacting between block number and drug on slow wave density
-  lm.sw4 <- lmer(SWdens  ~ 1 + Elec*(BlockN + Treatment) + (1|SubID), data = SWS_data, REML = FALSE)
-
-##Effects of the interaction between electrode placement, block number and drug on slow wave density
-#lm.sw5 <- lmer(SWdens  ~ 1 + Elec*BlockN*Treatment + (1|SubID), data = SWS_data, REML = FALSE)
+##Effects of the interaction between block number and drug on peak to peak
+lm.pp3 <- lmer(P2P  ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data2, REML = FALSE)
 
 
 ##Anova to see which one has the most interaction
-anova(lm.sw0,lm.sw1,lm.sw2, lm.sw3, lm.sw4) #, lm.sw5)
+anova(lm.pp0,lm.pp1,lm.pp2, lm.pp3)
 
-lm.sw4 <- lmer(SWdens  ~ 1 + Elec*(BlockN + Treatment) + (1|SubID), data = SWS_data, REML = TRUE)
-summary(lm.sw4)
-confint(lm.sw4, method = "Wald", oldNames = FALSE)
+lm.pp2 <- lmer(P2P  ~ 1 + BlockN + Treatment + (1|SubID), data = SWS_data2, REML = TRUE)
+summary(lm.pp2)
+confint(lm.pp2, method = "Wald", oldNames = FALSE)
 
-## Normality plot of residuals 
-hist(residuals(lm.sw4))
-boxplot(residuals(lm.sw4))
-qqnorm(resid(lm.sw4))
-qqline(resid(lm.sw4))
-plot(lm.sw4)
-plot(fitted(lm.sw4), resid(lm.sw4)) 
-
-
-```{r}
-##Slow wave density 
-
-lm.sw0 <- lmer(SWdens ~ 1 + (1|SubID), data = SWS_data2, REML =FALSE)
-
-##Effects of block number on slow wave density
-lm.sw1 <- lmer(SWdens  ~ 1  + BlockN + (1|SubID), data = SWS_data2, REML = FALSE)
-
-##Effects of block number and drug on slow wave density
-lm.sw2 <- lmer(SWdens  ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data2, REML = FALSE)
-
-##Effects of the interaction between block number and drug on slow wave density
-lm.sw3 <- lmer(SWdens  ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data2, REML = FALSE)
-
-
-##Anova to see which one has the most interaction
-anova(lm.sw0,lm.sw1,lm.sw2, lm.sw3)
-
-lm.sw2 <- lmer(SWdens  ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data2, REML = TRUE)
-summary(lm.sw2)
-confint(lm.sw2, method = "Wald", oldNames = FALSE)
-
-## Normality plot of residuals 
-hist(residuals(lm.sw2))
-boxplot(residuals(lm.sw2))
-qqnorm(resid(lm.sw2))
-qqline(resid(lm.sw2))
-plot(lm.sw2)
-plot(fitted(lm.sw2), resid(lm.sw2))
+lm.pp3 <- lmer(P2P  ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data2, REML = TRUE)
+summary(lm.pp3)
+confint(lm.pp3, method = "Wald", oldNames = FALSE)
 
 ```
-
-```{r}
-#DRAFT 
-##Graph of the effects of block number and drug on slow wave density
-sw.graph <- summarySE(SWS_data, measurevar = "P2P", groupvars = c("BlockN", "Treatment"))
-sw.graph$Treatment<-ordered(sw.graph$Treatment, c("PLA","MPH","ATM","CIT"))
-
-
-##Graph with Standard Error 
-ggplot(sw.graph, aes(x = BlockN, y = P2P, colour = Treatment)) + geom_point() + geom_line() +  ggtitle("Mean Slow Wave Density According To Block Number and Treatment") + ylab("Mean Slow Wave Density") + xlab("Block Number")+ geom_ribbon(aes(ymin = P2P-se, ymax = P2P+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))
-
-##Barplot 
-sw2.graph <- summarySE(SWS_data, measurevar = "NegSlope", groupvars = c( "Treatment"))
-sw2.graph$Treatment<-ordered(sw2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
-
-ggplot(data=sw2.graph, aes(x=Treatment, y=NegSlope, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = NegSlope-se, ymax = NegSlope+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Slow Wave Density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + ggtitle("Mean Slow Wave Density For Each Treatment")
-```
-
-```{r}
-##Graph of the effects of block number and drug on slow wave density
-sw.graph <- summarySE(SWS_data2, measurevar = "SWdens", groupvars = c("BlockN", "Treatment"))
-sw.graph$Treatment<-ordered(sw.graph$Treatment, c("PLA","MPH","ATM","CIT"))
-
-
-##Graph with Standard Error 
-ggplot(sw.graph, aes(x = BlockN, y = SWdens, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = SWdens-se, ymax = SWdens+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank()) 
-
-ggsave(file="../Figures/CTET_LinePlot_SWD.png", 
-       width = 30/2,
-      height = 18/2,
-    units = c("cm"))
-
-##Barplot 
-sw2.graph <- summarySE(SWS_data2, measurevar = "SWdens", groupvars = c( "Treatment"))
-sw2.graph$Treatment<-ordered(sw2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
-
-ggplot(data=sw2.graph, aes(x=Treatment, y=SWdens, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Slow Wave Density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(3.25, 5.5)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
-
- 
+- According to AIC, lm.pp3 is the winning model, whilst BIC says lm.pp2 is the winning model 
+-Showed different results; 
+  -for the non-interaction model (lm.pp2), block number and all the treatments had a significant effect (p <.001) EXCEPT MPH 
+  -for the interaction model (lm.pp3), only MPH was significant (p= .01) and its interaction with block number (p<.001)
   
-ggsave(file="../Figures/CTET_BarPlot_SWD.png", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
+  
+```{r}
+SWS_data3<-aggregate(PosSlope ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
+##Peak to Peak 
+lm.ps0 <- lmer(PosSlope ~ 1 + (1|SubID), data = SWS_data3, REML =FALSE)
+
+##Effects of block number on peak to peak 
+lm.ps1 <- lmer(PosSlope   ~ 1  + BlockN + (1|SubID), data = SWS_data3, REML = FALSE)
+
+##Effects of block number and drug on peak to peak 
+lm.ps2 <- lmer(PosSlope   ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data3, REML = FALSE)
+
+##Effects of the interaction between block number and drug on peak to peak
+lm.ps3 <- lmer(PosSlope   ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data3, REML = FALSE)
+
+
+##Anova to see which one has the most interaction
+anova(lm.ps0,lm.ps1,lm.ps2, lm.ps3)
+
+lm.ps2 <- lmer(PosSlope   ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data3, REML = TRUE)
+summary(lm.ps2)
+confint(lm.ps2, method = "Wald", oldNames = FALSE)
+
+lm.ps3 <- lmer(PosSlope   ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data3, REML = TRUE)
+summary(lm.ps3)
+confint(lm.ps3, method = "Wald", oldNames = FALSE)
+
+
+```
+  - According to AIC, lm.ps3 is the winning model, whilst BIC says lm.ps2 is the winning model 
+-Showed different results; 
+  -for the non-interaction model (lm.ps2), block number and all the treatments had a significant effect (p <.001) EXCEPT CIT 
+  -for the interaction model (lm.ps3), CIT was non-significant (p= .089) and all interactions with block number and treatment were non-signifiant 
+  -model failed to converge for lm.ps2
+  
+  
+```{r}
+SWS_data4<-aggregate(NegSlope ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
+##Peak to Peak 
+lm.ns0 <- lmer(NegSlope ~ 1 + (1|SubID), data = SWS_data4, REML =FALSE)
+
+##Effects of block number on peak to peak 
+lm.ns1 <- lmer(NegSlope   ~ 1  + BlockN + (1|SubID), data = SWS_data4, REML = FALSE)
+
+##Effects of block number and drug on peak to peak 
+lm.ns2 <- lmer(NegSlope   ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data4, REML = FALSE)
+
+##Effects of the interaction between block number and drug on peak to peak
+lm.ns3 <- lmer(NegSlope   ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data4, REML = FALSE)
+
+
+##Anova to see which one has the most interaction
+anova(lm.ns0,lm.ns1,lm.ns2, lm.ns3)
+
+lm.ns2 <- lmer(NegSlope   ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data4, REML = TRUE)
+summary(lm.ns2)
+confint(lm.ns2, method = "Wald", oldNames = FALSE)
+
+```
+- second model was the winning model (lm.ns2) according to AIC and BIC
+-  Block number and treatments except citalopream were significant 
+
+
+```{r}
+##Graph of the effects of block number and drug on peak to peak 
+p2p.graph <- summarySE(SWS_data2, measurevar = "P2P", groupvars = c("BlockN", "Treatment"))
+p2p.graph$Treatment<-ordered(p2p.graph$Treatment, c("PLA","MPH","ATM","CIT"))
+
+
+##Graph with Standard Error 
+ggplot(p2p.graph, aes(x = BlockN, y = P2P, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = P2P-se, ymax = P2P+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(), axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab("Peak to Peak")
+
+
+
+##Barplot 
+p2p2.graph <- summarySE(SWS_data2, measurevar = "P2P", groupvars = c( "Treatment"))
+p2p2.graph$Treatment<-ordered(p2p2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data=p2p2.graph, aes(x=Treatment, y=P2P, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = P2P-se, ymax = P2P+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Peak to Peak")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(35, 40)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+
+```
+
+```{r}
+##Graph of the effects of block number and drug on positive slope 
+ps.graph <- summarySE(SWS_data3, measurevar = "PosSlope", groupvars = c("BlockN", "Treatment"))
+ps.graph$Treatment<-ordered(ps.graph$Treatment, c("PLA","MPH","ATM","CIT"))
+
+
+##Graph with Standard Error 
+ggplot(ps.graph, aes(x = BlockN, y = PosSlope, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = PosSlope-se, ymax = PosSlope+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(), axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab("Positive Slope")
+
+
+
+##Barplot 
+ps2.graph <- summarySE(SWS_data3, measurevar = "PosSlope", groupvars = c( "Treatment"))
+ps2.graph$Treatment<-ordered(ps2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data=ps2.graph, aes(x=Treatment, y=PosSlope, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = PosSlope-se, ymax = PosSlope+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Positive Slope")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(350, 450)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+
+```
+
+
+```{r}
+##Graph of the effects of block number and drug on negative slope 
+ns.graph <- summarySE(SWS_data4, measurevar = "NegSlope", groupvars = c("BlockN", "Treatment"))
+ns.graph$Treatment<-ordered(ns.graph$Treatment, c("PLA","MPH","ATM","CIT"))
+
+
+##Graph with Standard Error 
+ggplot(ns.graph, aes(x = BlockN, y = NegSlope, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = NegSlope-se, ymax = NegSlope+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(), axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab("Negaative Slope")
+
+
+
+##Barplot 
+ns2.graph <- summarySE(SWS_data4, measurevar = "NegSlope", groupvars = c( "Treatment"))
+ns2.graph$Treatment<-ordered(ns2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data=ns2.graph, aes(x=Treatment, y=NegSlope, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = NegSlope-se, ymax = NegSlope+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Negative Slope")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(300, 430)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+
 ```
