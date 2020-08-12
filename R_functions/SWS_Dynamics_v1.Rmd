@@ -58,3 +58,22 @@ summary(all_lme_block[[9]])
 summary(all_lme_block[[10]])
 
 ```
+
+
+```
+
+```{r} 
+
+#lme_treatment <- lmer(SWdens ~ 1 + BlockN + (1|SubID), REML = TRUE, data = SWS_data4[SWS_data4$Treatment == 'PLA',])
+#summary(lme_treatment)
+
+lme_treatment <- lmer(SWdens ~ 1 + Treatment*BlockN + (1|SubID), REML = TRUE, data = SWS_data4[SWS_data4$Treatment == 'CIT' | SWS_data4$Treatment == 'PLA',])
+summary(lme_treatment)
+
+lme_treatment <- lmer(SWdens ~ 1 + Treatment*BlockN + (1|SubID), REML = TRUE, data = SWS_data4[SWS_data4$Treatment == 'ATM' | SWS_data4$Treatment == 'PLA',])
+summary(lme_treatment)
+
+lme_treatment <- lmer(SWdens ~ 1 + Treatment*BlockN + (1|SubID), REML = TRUE, data = SWS_data4[SWS_data4$Treatment == 'MPH' | SWS_data4$Treatment == 'PLA',])
+summary(lme_treatment)
+
+```

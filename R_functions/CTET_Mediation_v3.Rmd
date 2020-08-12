@@ -1,0 +1,66 @@
+---
+title: "sub_table_SW"
+author: "Thomas A."
+date: "30/06/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+library(tidyverse)
+library(mediation)
+
+
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3_CLUSTERS.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
+
+SWS_data$Treatment<-as.factor(SWS_data$Treatment)
+
+SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
+
+SWS_data2<-aggregate(SWdens ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
+
+```
+
+
+
+```{r}
+#detach("package:multilevelTools", unload=TRUE)
+#detach("package:lmerTest", unload=TRUE)
+
+SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="MPH",] #|: . $: and
+SWS_data3<-SWS_data3[is.na(SWS_data3$Hit_RT)==FALSE,]
+SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
+SWS_data3$treat<-SWS_data3$Treatment=="MPH"
+SWS_data3$treat<-as.integer(SWS_data3$treat)
+
+#### Dummy data with mediation
+med.fit1 <- lm(C_Neg_MPH  ~ 1 + treat, data = SWS_data3)
+out.fit1 <- lm(Hit_RT  ~ 1 + C_Neg_MPH + treat, data = SWS_data3)
+med.out1 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Neg_MPH",robustSE = TRUE, sims = 100)
+summary(med.out1)
+
+
+```
+
+
+
+
