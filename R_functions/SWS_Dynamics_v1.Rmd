@@ -60,6 +60,94 @@ summary(all_lme_block[[10]])
 ```
 
 
+``` {r} 
+hist(residuals(all_lme_block[[1]]))
+boxplot(residuals(all_lme_block[[1]]))
+qqnorm(resid(all_lme_block[[1]]))
+qqline(resid(all_lme_block[[1]]))
+plot(all_lme_block[[1]])
+plot(fitted(all_lme_block[[1]]), resid(all_lme_block[[1]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[2]]))
+boxplot(residuals(all_lme_block[[2]]))
+qqnorm(resid(all_lme_block[[2]]))
+qqline(resid(all_lme_block[[2]]))
+plot(all_lme_block[[2]])
+plot(fitted(all_lme_block[[2]]), resid(all_lme_block[[2]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[3]]))
+boxplot(residuals(all_lme_block[[3]]))
+qqnorm(resid(all_lme_block[[3]]))
+qqline(resid(all_lme_block[[3]]))
+plot(all_lme_block[[3]])
+plot(fitted(all_lme_block[[3]]), resid(all_lme_block[[3]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[4]]))
+boxplot(residuals(all_lme_block[[4]]))
+qqnorm(resid(all_lme_block[[4]]))
+qqline(resid(all_lme_block[[4]]))
+plot(all_lme_block[[4]])
+plot(fitted(all_lme_block[[4]]), resid(all_lme_block[[4]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[5]]))
+boxplot(residuals(all_lme_block[[5]]))
+qqnorm(resid(all_lme_block[[5]]))
+qqline(resid(all_lme_block[[5]]))
+plot(all_lme_block[[5]])
+plot(fitted(all_lme_block[[5]]), resid(all_lme_block[[5]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[6]]))
+boxplot(residuals(all_lme_block[[6]]))
+qqnorm(resid(all_lme_block[[6]]))
+qqline(resid(all_lme_block[[6]]))
+plot(all_lme_block[[6]])
+plot(fitted(all_lme_block[[6]]), resid(all_lme_block[[6]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[7]]))
+boxplot(residuals(all_lme_block[[7]]))
+qqnorm(resid(all_lme_block[[7]]))
+qqline(resid(all_lme_block[[7]]))
+plot(all_lme_block[[7]])
+plot(fitted(all_lme_block[[7]]), resid(all_lme_block[[7]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[8]]))
+boxplot(residuals(all_lme_block[[8]]))
+qqnorm(resid(all_lme_block[[8]]))
+qqline(resid(all_lme_block[[8]]))
+plot(all_lme_block[[8]])
+plot(fitted(all_lme_block[[8]]), resid(all_lme_block[[8]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[9]]))
+boxplot(residuals(all_lme_block[[9]]))
+qqnorm(resid(all_lme_block[[9]]))
+qqline(resid(all_lme_block[[9]]))
+plot(all_lme_block[[9]])
+plot(fitted(all_lme_block[[9]]), resid(all_lme_block[[9]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[10]]))
+boxplot(residuals(all_lme_block[[10]]))
+qqnorm(resid(all_lme_block[[10]]))
+qqline(resid(all_lme_block[[10]]))
+plot(all_lme_block[[10]])
+plot(fitted(all_lme_block[[10]]), resid(all_lme_block[[10]]))
 ```
 
 ```{r} 
