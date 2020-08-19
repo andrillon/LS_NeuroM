@@ -30,11 +30,11 @@ library(mediation)
 
 SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3_CLUSTERS.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
-names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatmentment"
+names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
-SWS_data$Treatmentment<-as.factor(SWS_data$Treatmentment)
+SWS_data$Treatment<-as.factor(SWS_data$Treatment)
 
-SWS_data$Treatmentment<-relevel(SWS_data$Treatmentment,"PLA")
+SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 
 
 
