@@ -30,11 +30,11 @@ library(mediation)
 
 SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3_CLUSTERS.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
-names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
+names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatmentment"
 
-SWS_data$Treatment<-as.factor(SWS_data$Treatment)
+SWS_data$Treatmentment<-as.factor(SWS_data$Treatmentment)
 
-SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
+SWS_data$Treatmentment<-relevel(SWS_data$Treatmentment,"PLA")
 
 
 
@@ -49,27 +49,31 @@ SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="MPH",] #|: . $: and
 SWS_data3<-SWS_data3[is.na(SWS_data3$Hit_RT)==FALSE,]
 SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
-SWS_data3$treat<-SWS_data3$Treatment=="MPH"
-SWS_data3$treat<-as.integer(SWS_data3$treat)
 
 ### Neg MPH on RT
-med.fit1 <- lm(C_Neg_MPH  ~ 1 + treat, data = SWS_data3)
-out.fit1 <- lm(Hit_RT  ~ 1 + C_Neg_MPH + treat, data = SWS_data3)
-med.out1 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Neg_MPH",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Neg_MPH  ~ 1 + Treatment, data = SWS_data3)
+out.fit1 <- lm(Hit_RT  ~ 1 + C_Neg_MPH * Treatment, data = SWS_data3)
+med.out1 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_MPH",boot = TRUE, sims = 10000)
+print(' MPH - Hit RT (Negative MPH cluster)')
 summary(med.out1)
 
 ## Neg MPH on misses 
-med.fit1 <- lm(C_Neg_MPH  ~ 1 + treat, data = SWS_data3)
-out.fit1 <- lm(Miss  ~ 1 + C_Neg_MPH + treat, data = SWS_data3)
-med.out2 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Neg_MPH",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Neg_MPH  ~ 1 + Treatment, data = SWS_data3)
+out.fit1 <- lm(Miss  ~ 1 + C_Neg_MPH * Treatment, data = SWS_data3)
+med.out2 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_MPH",robustSE = TRUE, sims = 10000)
+print(' MPH - Miss (Negative MPH cluster)')
 summary(med.out2)
 
 ## Neg MPH on FA
-med.fit1 <- lm(C_Neg_MPH  ~ 1 + treat, data = SWS_data3)
-out.fit1 <- lm(FA  ~ 1 + C_Neg_MPH + treat, data = SWS_data3)
-med.out3 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Neg_MPH",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Neg_MPH  ~ 1 + Treatment, data = SWS_data3)
+out.fit1 <- lm(FA  ~ 1 + C_Neg_MPH * Treatment, data = SWS_data3)
+med.out3 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_MPH",robustSE = TRUE, sims = 10000)
+print(' MPH - FA (Negative MPH cluster)')
 summary(med.out3)
 
+### bmlm package
+#library("bmlm")
+#fit<-mlm(d=SWS_data3,id="SubID",x="Treatment",m="C_Neg_MPH",y="Hit_RT",iter=10000,core=2)
 ```
 NEG MPH ON RT: 
   - significant direct path and total effect (p < .001)
@@ -84,45 +88,50 @@ NEG MPH ON FA:
 SWS_data4<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="ATM",] 
 SWS_data4<-SWS_data4[is.na(SWS_data4$Hit_RT)==FALSE,]
 SWS_data4$Treatment<-droplevels(SWS_data4$Treatment)
-SWS_data4$treat<-SWS_data4$Treatment=="ATM"
-SWS_data4$treat<-as.integer(SWS_data4$treat)
 
 ### Neg ATM on RT
-med.fit1 <- lm(C_Neg_ATM  ~ 1 + treat, data = SWS_data4)
-out.fit1 <- lm(Hit_RT  ~ 1 + C_Neg_ATM + treat, data = SWS_data4)
-med.out4 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Neg_ATM",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Neg_ATM  ~ 1 + Treatment, data = SWS_data4)
+out.fit1 <- lm(Hit_RT  ~ 1 + C_Neg_ATM * Treatment, data = SWS_data4)
+med.out4 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_ATM",robustSE = TRUE, sims = 10000)
+print(' ATM - Hit RT (Negative ATM cluster)')
 summary(med.out4)
 
 ## Neg ATM on misses 
-med.fit1 <- lm(C_Neg_ATM  ~ 1 + treat, data = SWS_data4)
-out.fit1 <- lm(Miss  ~ 1 + C_Neg_ATM + treat, data = SWS_data4)
-med.out5 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Neg_ATM",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Neg_ATM  ~ 1 + Treatment, data = SWS_data4)
+out.fit1 <- lm(Miss  ~ 1 + C_Neg_ATM * Treatment, data = SWS_data4)
+med.out5 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_ATM",robustSE = TRUE, sims = 10000)
+print(' ATM - Miss (Negative ATM cluster)')
 summary(med.out5)
 
 ## Neg ATM on FA
-med.fit1 <- lm(C_Neg_ATM  ~ 1 + treat, data = SWS_data4)
-out.fit1 <- lm(FA  ~ 1 + C_Neg_ATM + treat, data = SWS_data4)
-med.out6 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Neg_ATM",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Neg_ATM  ~ 1 + Treatment, data = SWS_data4)
+out.fit1 <- lm(FA  ~ 1 + C_Neg_ATM * Treatment, data = SWS_data4)
+med.out6 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_ATM",robustSE = TRUE, sims = 10000)
+print(' ATM - FA (Negative ATM cluster)')
 summary(med.out6)
+#fit<-mlm(d=SWS_data4,id="SubID",x="Treatment",m="C_Neg_ATM",y="Miss",iter=1000,core=2)
 
 
 
 ### Pos ATM on RT
-med.fit1 <- lm(C_Pos_ATM  ~ 1 + treat, data = SWS_data4)
-out.fit1 <- lm(Hit_RT  ~ 1 + C_Pos_ATM + treat, data = SWS_data4)
-med.out7 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Pos_ATM",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Pos_ATM  ~ 1 + Treatment, data = SWS_data4)
+out.fit1 <- lm(Hit_RT  ~ 1 + C_Pos_ATM * Treatment, data = SWS_data4)
+med.out7 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_ATM",robustSE = TRUE, sims = 10000)
+print(' ATM - Hit RT (Positive ATM cluster)')
 summary(med.out7)
 
 ## Pos ATM on misses 
-med.fit1 <- lm(C_Pos_ATM  ~ 1 + treat, data = SWS_data4)
-out.fit1 <- lm(Miss  ~ 1 + C_Pos_ATM + treat, data = SWS_data4)
-med.out8 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Pos_ATM",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Pos_ATM  ~ 1 + Treatment, data = SWS_data4)
+out.fit1 <- lm(Miss  ~ 1 + C_Pos_ATM * Treatment, data = SWS_data4)
+med.out8 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_ATM",robustSE = TRUE, sims = 10000)
+print(' ATM - Miss (Positive ATM cluster)')
 summary(med.out8)
 
 ## Pos ATM on FA
-med.fit1 <- lm(C_Pos_ATM  ~ 1 + treat, data = SWS_data4)
-out.fit1 <- lm(FA  ~ 1 + C_Pos_ATM + treat, data = SWS_data4)
-med.out9 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Pos_ATM",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Pos_ATM  ~ 1 + Treatment, data = SWS_data4)
+out.fit1 <- lm(FA  ~ 1 + C_Pos_ATM * Treatment, data = SWS_data4)
+med.out9 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_ATM",robustSE = TRUE, sims = 10000)
+print(' ATM - FA (Positive ATM cluster)')
 summary(med.out9)
 
 
@@ -151,26 +160,27 @@ POS ATM ON FA:
 SWS_data5<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="CIT",] 
 SWS_data5<-SWS_data5[is.na(SWS_data5$Hit_RT)==FALSE,]
 SWS_data5$Treatment<-droplevels(SWS_data5$Treatment)
-SWS_data5$treat<-SWS_data5$Treatment=="CIT"
-SWS_data5$treat<-as.integer(SWS_data5$treat)
 
 
 ### Pos CIT on RT
-med.fit1 <- lm(C_Pos_CIT  ~ 1 + treat, data = SWS_data5)
-out.fit1 <- lm(Hit_RT  ~ 1 + C_Pos_CIT + treat, data = SWS_data5)
-med.out10 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Pos_CIT",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Pos_CIT  ~ 1 + Treatment, data = SWS_data5)
+out.fit1 <- lm(Hit_RT  ~ 1 + C_Pos_CIT * Treatment, data = SWS_data5)
+med.out10 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_CIT",robustSE = TRUE, sims = 10000)
+print(' CIT - Hit RT (Positive ATM cluster)')
 summary(med.out10)
 
 ## Pos CIT on misses 
-med.fit1 <- lm(C_Pos_CIT  ~ 1 + treat, data = SWS_data5)
-out.fit1 <- lm(Miss  ~ 1 + C_Pos_CIT + treat, data = SWS_data5)
-med.out11 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Pos_CIT",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Pos_CIT  ~ 1 + Treatment, data = SWS_data5)
+out.fit1 <- lm(Miss  ~ 1 + C_Pos_CIT * Treatment, data = SWS_data5)
+med.out11 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_CIT",robustSE = TRUE, sims = 10000)
+print(' CIT - Miss (Positive ATM cluster)')
 summary(med.out11)
 
 ## Pos CIT on FA
-med.fit1 <- lm(C_Pos_CIT  ~ 1 + treat, data = SWS_data5)
-out.fit1 <- lm(FA  ~ 1 + C_Pos_CIT + treat, data = SWS_data5)
-med.out12 <- mediate(med.fit1, out.fit1, treat = "treat", mediator = "C_Pos_CIT",robustSE = TRUE, sims = 100)
+med.fit1 <- lm(C_Pos_CIT  ~ 1 + Treatment, data = SWS_data5)
+out.fit1 <- lm(FA  ~ 1 + C_Pos_CIT * Treatment, data = SWS_data5)
+med.out12 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_CIT",robustSE = TRUE, sims = 10000)
+print(' CIT - FA (Positive ATM cluster)')
 summary(med.out12)
 
 
