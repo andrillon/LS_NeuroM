@@ -1,0 +1,475 @@
+---
+title: "sub_table_SW"
+author: "Thomas A."
+date: "30/06/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+library(tidyverse)
+library(mediation)
+
+
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v2.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
+SWS_data$Treatment<-as.factor(SWS_data$Treatment)
+SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
+
+nsims<-10000
+
+
+```
+
+
+
+```{r}
+#detach("package:multilevelTools", unload=TRUE)
+#detach("package:lmerTest", unload=TRUE)
+SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="MPH",] #|: . $: and
+SWS_data3<-SWS_data3[is.na(SWS_data3$Hit_RT)==FALSE,]
+SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
+
+# names of channels
+channels.names <- unique(SWS_data$Elec)
+no.channels <- length(channels.names)
+
+# create a named list to hold the fitted models
+med_RT_MPH <- as.list(1:no.channels)
+names(med_RT_MPH) <- channels.names
+med_Miss_MPH <- as.list(1:no.channels)
+names(med_Miss_MPH) <- channels.names
+med_FA_MPH <- as.list(1:no.channels)
+names(med_FA_MPH) <- channels.names
+
+# loop over channel names
+MPH_RT_Est<-matrix(NA,no.channels,9)
+MPH_RT_pV<-matrix(NA,no.channels,9)
+MPH_Miss_Est<-matrix(NA,no.channels,9)
+MPH_Miss_pV<-matrix(NA,no.channels,9)
+MPH_FA_Est<-matrix(NA,no.channels,9)
+MPH_FA_pV<-matrix(NA,no.channels,9)
+
+count<-0
+for(i in channels.names){ 
+  # print status
+  print(paste("Running channel:", i, "which is", which(channels.names==i), "out of", no.channels))
+  count<-count+1
+
+  # create temporary data matrix and model formula
+  tmp <- SWS_data3[SWS_data3$Elec==i,]
+  med.fit0 <- glmer(SWdens  ~ 1 + Treatment + (1|SubID), data = tmp)
+
+    # run mediation on RT
+  out.fit1 <- glmer(Hit_RT  ~ 1 + SWdens * Treatment + (1|SubID), data = tmp)
+  med.out1 <- mediate(med.fit0, out.fit1, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
+  
+  # run mediation on Miss
+  out.fit2 <- glmer(Miss  ~ 1 + SWdens * Treatment + (1|SubID), data = tmp)
+  med.out2 <- mediate(med.fit0, out.fit2, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
+  
+  # run mediation on FA
+  out.fit3 <- glmer(FA  ~ 1 + SWdens * Treatment + (1|SubID), data = tmp)
+  med.out3 <- mediate(med.fit0, out.fit3, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
+  
+  # assign fit to list by name for RT
+  med_RT_MPH[[i]] <- med.out1
+  sum_med.out1<-summary(med.out1)
+  MPH_RT_Est[count,1]<-sum_med.out1$d0[1]
+  MPH_RT_Est[count,2]<-sum_med.out1$d1[1]
+  MPH_RT_Est[count,3]<-sum_med.out1$z0[1]
+  MPH_RT_Est[count,4]<-sum_med.out1$z1[1]
+  MPH_RT_Est[count,5]<-sum_med.out1$n0[1]
+  MPH_RT_Est[count,6]<-sum_med.out1$n1[1]
+  MPH_RT_Est[count,7]<-sum_med.out1$d.avg[1]
+  MPH_RT_Est[count,8]<-sum_med.out1$z.avg[1]
+  MPH_RT_Est[count,9]<-sum_med.out1$n.avg[1]
+  
+  MPH_RT_pV[count,1]<-sum_med.out1$d0.p[1]
+  MPH_RT_pV[count,2]<-sum_med.out1$d1.p[1]
+  MPH_RT_pV[count,3]<-sum_med.out1$z0.p[1]
+  MPH_RT_pV[count,4]<-sum_med.out1$z1.p[1]
+  MPH_RT_pV[count,5]<-sum_med.out1$n0.p[1]
+  MPH_RT_pV[count,6]<-sum_med.out1$n1.p[1]
+  MPH_RT_pV[count,7]<-sum_med.out1$d.avg.p[1]
+  MPH_RT_pV[count,8]<-sum_med.out1$z.avg.p[1]
+  MPH_RT_pV[count,9]<-sum_med.out1$n.avg.p[1]
+  
+  # assign fit to list by name for Miss
+  med_Miss_MPH[[i]] <- med.out2
+  sum_med.out2<-summary(med.out2)
+  MPH_Miss_Est[count,1]<-sum_med.out2$d0[1]
+  MPH_Miss_Est[count,2]<-sum_med.out2$d1[1]
+  MPH_Miss_Est[count,3]<-sum_med.out2$z0[1]
+  MPH_Miss_Est[count,4]<-sum_med.out2$z1[1]
+  MPH_Miss_Est[count,5]<-sum_med.out2$n0[1]
+  MPH_Miss_Est[count,6]<-sum_med.out2$n1[1]
+  MPH_Miss_Est[count,7]<-sum_med.out2$d.avg[1]
+  MPH_Miss_Est[count,8]<-sum_med.out2$z.avg[1]
+  MPH_Miss_Est[count,9]<-sum_med.out2$n.avg[1]
+  
+  MPH_Miss_pV[count,1]<-sum_med.out2$d0.p[1]
+  MPH_Miss_pV[count,2]<-sum_med.out2$d1.p[1]
+  MPH_Miss_pV[count,3]<-sum_med.out2$z0.p[1]
+  MPH_Miss_pV[count,4]<-sum_med.out2$z1.p[1]
+  MPH_Miss_pV[count,5]<-sum_med.out2$n0.p[1]
+  MPH_Miss_pV[count,6]<-sum_med.out2$n1.p[1]
+  MPH_Miss_pV[count,7]<-sum_med.out2$d.avg.p[1]
+  MPH_Miss_pV[count,8]<-sum_med.out2$z.avg.p[1]
+  MPH_Miss_pV[count,9]<-sum_med.out2$n.avg.p[1]
+  
+  # assign fit to list by name for RT
+  med_RT_MPH[[i]] <- med.out3
+  sum_med.out3<-summary(med.out3)
+  MPH_FA_Est[count,1]<-sum_med.out3$d0[1]
+  MPH_FA_Est[count,2]<-sum_med.out3$d1[1]
+  MPH_FA_Est[count,3]<-sum_med.out3$z0[1]
+  MPH_FA_Est[count,4]<-sum_med.out3$z1[1]
+  MPH_FA_Est[count,5]<-sum_med.out3$n0[1]
+  MPH_FA_Est[count,6]<-sum_med.out3$n1[1]
+  MPH_FA_Est[count,7]<-sum_med.out3$d.avg[1]
+  MPH_FA_Est[count,8]<-sum_med.out3$z.avg[1]
+  MPH_FA_Est[count,9]<-sum_med.out3$n.avg[1]
+  
+  MPH_FA_pV[count,1]<-sum_med.out3$d0.p[1]
+  MPH_FA_pV[count,2]<-sum_med.out3$d1.p[1]
+  MPH_FA_pV[count,3]<-sum_med.out3$z0.p[1]
+  MPH_FA_pV[count,4]<-sum_med.out3$z1.p[1]
+  MPH_FA_pV[count,5]<-sum_med.out3$n0.p[1]
+  MPH_FA_pV[count,6]<-sum_med.out3$n1.p[1]
+  MPH_FA_pV[count,7]<-sum_med.out3$d.avg.p[1]
+  MPH_FA_pV[count,8]<-sum_med.out3$z.avg.p[1]
+  MPH_FA_pV[count,9]<-sum_med.out3$n.avg.p[1]
+}
+output_names<-c("ACME_control","ACME_treated","ADE_control","ADE_treated","Prop_Mediated_control","Prop_Mediated_treated","ACME_average","ADE_average","Prop_Mediated_average")
+rownames(MPH_RT_Est)<-channels.names
+rownames(MPH_RT_pV)<-channels.names
+colnames(MPH_RT_Est)<-output_names
+colnames(MPH_RT_pV)<-output_names
+
+rownames(MPH_Miss_Est)<-channels.names
+rownames(MPH_Miss_pV)<-channels.names
+colnames(MPH_Miss_Est)<-output_names
+colnames(MPH_Miss_pV)<-output_names
+
+rownames(MPH_FA_Est)<-channels.names
+rownames(MPH_FA_pV)<-channels.names
+colnames(MPH_FA_Est)<-output_names
+colnames(MPH_FA_pV)<-output_names
+
+write.table(MPH_RT_Est,file="../Tables/CTET_Mediation_byE_MPH_RT_Est_v2.txt")
+write.table(MPH_RT_pV,file="../Tables/CTET_Mediation_byE_MPH_RT_pV_v2.txt")
+write.table(MPH_Miss_Est,file="../Tables/CTET_Mediation_byE_MPH_Miss_Est_v2.txt")
+write.table(MPH_Miss_pV,file="../Tables/CTET_Mediation_byE_MPH_Miss_pV_v2.txt")
+write.table(MPH_FA_Est,file="../Tables/CTET_Mediation_byE_MPH_FA_Est_v2.txt")
+write.table(MPH_FA_pV,file="../Tables/CTET_Mediation_byE_MPH_FA_pV_v2.txt")
+```
+NEG MPH ON RT: 
+  - significant direct path and total effect (p < .001)
+  -non-significant mediated path 
+NEG MPH ON Misses: 
+  - Significant mediated path, direct path and total effect (p <.001)
+NEG MPH ON FA: 
+  - non-significxant results for everything 
+
+
+```{r}
+#detach("package:multilevelTools", unload=FALSE)
+#detach("package:lmerTest", unload=FALSE)
+SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="ATM",] #|: . $: and
+SWS_data3<-SWS_data3[is.na(SWS_data3$Hit_RT)==FALSE,]
+SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
+
+# names of channels
+channels.names <- unique(SWS_data$Elec)
+no.channels <- length(channels.names)
+
+# create a named list to hold the fitted models
+med_RT_ATM <- as.list(1:no.channels)
+names(med_RT_ATM) <- channels.names
+med_Miss_ATM <- as.list(1:no.channels)
+names(med_Miss_ATM) <- channels.names
+med_FA_ATM <- as.list(1:no.channels)
+names(med_FA_ATM) <- channels.names
+
+# loop over channel names
+ATM_RT_Est<-matrix(NA,no.channels,9)
+ATM_RT_pV<-matrix(NA,no.channels,9)
+ATM_Miss_Est<-matrix(NA,no.channels,9)
+ATM_Miss_pV<-matrix(NA,no.channels,9)
+ATM_FA_Est<-matrix(NA,no.channels,9)
+ATM_FA_pV<-matrix(NA,no.channels,9)
+
+count<-0
+for(i in channels.names){ 
+  # print status
+  print(paste("Running channel:", i, "which is", which(channels.names==i), "out of", no.channels))
+  count<-count+1
+
+  # create temporary data matrix and model formula
+  tmp <- SWS_data3[SWS_data3$Elec==i,]
+  med.fit0 <- glmer(SWdens  ~ 1 + Treatment + (1|SubID), data = tmp)
+
+    # run mediation on RT
+  out.fit1 <- glmer(Hit_RT  ~ 1 + SWdens * Treatment + (1|SubID), data = tmp)
+  med.out1 <- mediate(med.fit0, out.fit1, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
+  
+  # run mediation on Miss
+  out.fit2 <- glmer(Miss  ~ 1 + SWdens * Treatment + (1|SubID), data = tmp)
+  med.out2 <- mediate(med.fit0, out.fit2, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
+  
+  # run mediation on FA
+  out.fit3 <- glmer(FA  ~ 1 + SWdens * Treatment + (1|SubID), data = tmp)
+  med.out3 <- mediate(med.fit0, out.fit3, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
+  
+  # assign fit to list by name for RT
+  med_RT_ATM[[i]] <- med.out1
+  sum_med.out1<-summary(med.out1)
+  ATM_RT_Est[count,1]<-sum_med.out1$d0[1]
+  ATM_RT_Est[count,2]<-sum_med.out1$d1[1]
+  ATM_RT_Est[count,3]<-sum_med.out1$z0[1]
+  ATM_RT_Est[count,4]<-sum_med.out1$z1[1]
+  ATM_RT_Est[count,5]<-sum_med.out1$n0[1]
+  ATM_RT_Est[count,6]<-sum_med.out1$n1[1]
+  ATM_RT_Est[count,7]<-sum_med.out1$d.avg[1]
+  ATM_RT_Est[count,8]<-sum_med.out1$z.avg[1]
+  ATM_RT_Est[count,9]<-sum_med.out1$n.avg[1]
+  
+  ATM_RT_pV[count,1]<-sum_med.out1$d0.p[1]
+  ATM_RT_pV[count,2]<-sum_med.out1$d1.p[1]
+  ATM_RT_pV[count,3]<-sum_med.out1$z0.p[1]
+  ATM_RT_pV[count,4]<-sum_med.out1$z1.p[1]
+  ATM_RT_pV[count,5]<-sum_med.out1$n0.p[1]
+  ATM_RT_pV[count,6]<-sum_med.out1$n1.p[1]
+  ATM_RT_pV[count,7]<-sum_med.out1$d.avg.p[1]
+  ATM_RT_pV[count,8]<-sum_med.out1$z.avg.p[1]
+  ATM_RT_pV[count,9]<-sum_med.out1$n.avg.p[1]
+  
+  # assign fit to list by name for Miss
+  med_Miss_ATM[[i]] <- med.out2
+  sum_med.out2<-summary(med.out2)
+  ATM_Miss_Est[count,1]<-sum_med.out2$d0[1]
+  ATM_Miss_Est[count,2]<-sum_med.out2$d1[1]
+  ATM_Miss_Est[count,3]<-sum_med.out2$z0[1]
+  ATM_Miss_Est[count,4]<-sum_med.out2$z1[1]
+  ATM_Miss_Est[count,5]<-sum_med.out2$n0[1]
+  ATM_Miss_Est[count,6]<-sum_med.out2$n1[1]
+  ATM_Miss_Est[count,7]<-sum_med.out2$d.avg[1]
+  ATM_Miss_Est[count,8]<-sum_med.out2$z.avg[1]
+  ATM_Miss_Est[count,9]<-sum_med.out2$n.avg[1]
+  
+  ATM_Miss_pV[count,1]<-sum_med.out2$d0.p[1]
+  ATM_Miss_pV[count,2]<-sum_med.out2$d1.p[1]
+  ATM_Miss_pV[count,3]<-sum_med.out2$z0.p[1]
+  ATM_Miss_pV[count,4]<-sum_med.out2$z1.p[1]
+  ATM_Miss_pV[count,5]<-sum_med.out2$n0.p[1]
+  ATM_Miss_pV[count,6]<-sum_med.out2$n1.p[1]
+  ATM_Miss_pV[count,7]<-sum_med.out2$d.avg.p[1]
+  ATM_Miss_pV[count,8]<-sum_med.out2$z.avg.p[1]
+  ATM_Miss_pV[count,9]<-sum_med.out2$n.avg.p[1]
+  
+  # assign fit to list by name for RT
+  med_RT_ATM[[i]] <- med.out3
+  sum_med.out3<-summary(med.out3)
+  ATM_FA_Est[count,1]<-sum_med.out3$d0[1]
+  ATM_FA_Est[count,2]<-sum_med.out3$d1[1]
+  ATM_FA_Est[count,3]<-sum_med.out3$z0[1]
+  ATM_FA_Est[count,4]<-sum_med.out3$z1[1]
+  ATM_FA_Est[count,5]<-sum_med.out3$n0[1]
+  ATM_FA_Est[count,6]<-sum_med.out3$n1[1]
+  ATM_FA_Est[count,7]<-sum_med.out3$d.avg[1]
+  ATM_FA_Est[count,8]<-sum_med.out3$z.avg[1]
+  ATM_FA_Est[count,9]<-sum_med.out3$n.avg[1]
+  
+  ATM_FA_pV[count,1]<-sum_med.out3$d0.p[1]
+  ATM_FA_pV[count,2]<-sum_med.out3$d1.p[1]
+  ATM_FA_pV[count,3]<-sum_med.out3$z0.p[1]
+  ATM_FA_pV[count,4]<-sum_med.out3$z1.p[1]
+  ATM_FA_pV[count,5]<-sum_med.out3$n0.p[1]
+  ATM_FA_pV[count,6]<-sum_med.out3$n1.p[1]
+  ATM_FA_pV[count,7]<-sum_med.out3$d.avg.p[1]
+  ATM_FA_pV[count,8]<-sum_med.out3$z.avg.p[1]
+  ATM_FA_pV[count,9]<-sum_med.out3$n.avg.p[1]
+}
+output_names<-c("ACME_control","ACME_treated","ADE_control","ADE_treated","Prop_Mediated_control","Prop_Mediated_treated","ACME_average","ADE_average","Prop_Mediated_average")
+rownames(ATM_RT_Est)<-channels.names
+rownames(ATM_RT_pV)<-channels.names
+colnames(ATM_RT_Est)<-output_names
+colnames(ATM_RT_pV)<-output_names
+
+rownames(ATM_Miss_Est)<-channels.names
+rownames(ATM_Miss_pV)<-channels.names
+colnames(ATM_Miss_Est)<-output_names
+colnames(ATM_Miss_pV)<-output_names
+
+rownames(ATM_FA_Est)<-channels.names
+rownames(ATM_FA_pV)<-channels.names
+colnames(ATM_FA_Est)<-output_names
+colnames(ATM_FA_pV)<-output_names
+
+write.table(ATM_RT_Est,file="../Tables/CTET_Mediation_byE_ATM_RT_Est_v2.txt")
+write.table(ATM_RT_pV,file="../Tables/CTET_Mediation_byE_ATM_RT_pV_v2.txt")
+write.table(ATM_Miss_Est,file="../Tables/CTET_Mediation_byE_ATM_Miss_Est_v2.txt")
+write.table(ATM_Miss_pV,file="../Tables/CTET_Mediation_byE_ATM_Miss_pV_v2.txt")
+write.table(ATM_FA_Est,file="../Tables/CTET_Mediation_byE_ATM_FA_Est_v2.txt")
+write.table(ATM_FA_pV,file="../Tables/CTET_Mediation_byE_ATM_FA_pV_v2.txt")
+```
+
+```{r}
+#detach("package:multilevelTools", unload=FALSE)
+#detach("package:lmerTest", unload=FALSE)
+SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="CIT",] #|: . $: and
+SWS_data3<-SWS_data3[is.na(SWS_data3$Hit_RT)==FALSE,]
+SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
+
+# names of channels
+channels.names <- unique(SWS_data$Elec)
+no.channels <- length(channels.names)
+
+# create a named list to hold the fitted models
+med_RT_CIT <- as.list(1:no.channels)
+names(med_RT_CIT) <- channels.names
+med_Miss_CIT <- as.list(1:no.channels)
+names(med_Miss_CIT) <- channels.names
+med_FA_CIT <- as.list(1:no.channels)
+names(med_FA_CIT) <- channels.names
+
+# loop over channel names
+CIT_RT_Est<-matrix(NA,no.channels,9)
+CIT_RT_pV<-matrix(NA,no.channels,9)
+CIT_Miss_Est<-matrix(NA,no.channels,9)
+CIT_Miss_pV<-matrix(NA,no.channels,9)
+CIT_FA_Est<-matrix(NA,no.channels,9)
+CIT_FA_pV<-matrix(NA,no.channels,9)
+
+count<-0
+for(i in channels.names){ 
+  # print status
+  print(paste("Running channel:", i, "which is", which(channels.names==i), "out of", no.channels))
+  count<-count+1
+
+  # create temporary data matrix and model formula
+  tmp <- SWS_data3[SWS_data3$Elec==i,]
+  med.fit0 <- glmer(SWdens  ~ 1 + Treatment+ (1|SubID), data = tmp)
+
+    # run mediation on RT
+  out.fit1 <- glmer(Hit_RT  ~ 1 + SWdens * Treatment+ (1|SubID), data = tmp)
+  med.out1 <- mediate(med.fit0, out.fit1, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
+  
+  # run mediation on Miss
+  out.fit2 <- glmer(Miss  ~ 1 + SWdens * Treatment+ (1|SubID), data = tmp)
+  med.out2 <- mediate(med.fit0, out.fit2, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
+  
+  # run mediation on FA
+  out.fit3 <- glmer(FA  ~ 1 + SWdens * Treatment+ (1|SubID), data = tmp)
+  med.out3 <- mediate(med.fit0, out.fit3, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
+  
+  # assign fit to list by name for RT
+  med_RT_CIT[[i]] <- med.out1
+  sum_med.out1<-summary(med.out1)
+  CIT_RT_Est[count,1]<-sum_med.out1$d0[1]
+  CIT_RT_Est[count,2]<-sum_med.out1$d1[1]
+  CIT_RT_Est[count,3]<-sum_med.out1$z0[1]
+  CIT_RT_Est[count,4]<-sum_med.out1$z1[1]
+  CIT_RT_Est[count,5]<-sum_med.out1$n0[1]
+  CIT_RT_Est[count,6]<-sum_med.out1$n1[1]
+  CIT_RT_Est[count,7]<-sum_med.out1$d.avg[1]
+  CIT_RT_Est[count,8]<-sum_med.out1$z.avg[1]
+  CIT_RT_Est[count,9]<-sum_med.out1$n.avg[1]
+  
+  CIT_RT_pV[count,1]<-sum_med.out1$d0.p[1]
+  CIT_RT_pV[count,2]<-sum_med.out1$d1.p[1]
+  CIT_RT_pV[count,3]<-sum_med.out1$z0.p[1]
+  CIT_RT_pV[count,4]<-sum_med.out1$z1.p[1]
+  CIT_RT_pV[count,5]<-sum_med.out1$n0.p[1]
+  CIT_RT_pV[count,6]<-sum_med.out1$n1.p[1]
+  CIT_RT_pV[count,7]<-sum_med.out1$d.avg.p[1]
+  CIT_RT_pV[count,8]<-sum_med.out1$z.avg.p[1]
+  CIT_RT_pV[count,9]<-sum_med.out1$n.avg.p[1]
+  
+  # assign fit to list by name for Miss
+  med_Miss_CIT[[i]] <- med.out2
+  sum_med.out2<-summary(med.out2)
+  CIT_Miss_Est[count,1]<-sum_med.out2$d0[1]
+  CIT_Miss_Est[count,2]<-sum_med.out2$d1[1]
+  CIT_Miss_Est[count,3]<-sum_med.out2$z0[1]
+  CIT_Miss_Est[count,4]<-sum_med.out2$z1[1]
+  CIT_Miss_Est[count,5]<-sum_med.out2$n0[1]
+  CIT_Miss_Est[count,6]<-sum_med.out2$n1[1]
+  CIT_Miss_Est[count,7]<-sum_med.out2$d.avg[1]
+  CIT_Miss_Est[count,8]<-sum_med.out2$z.avg[1]
+  CIT_Miss_Est[count,9]<-sum_med.out2$n.avg[1]
+  
+  CIT_Miss_pV[count,1]<-sum_med.out2$d0.p[1]
+  CIT_Miss_pV[count,2]<-sum_med.out2$d1.p[1]
+  CIT_Miss_pV[count,3]<-sum_med.out2$z0.p[1]
+  CIT_Miss_pV[count,4]<-sum_med.out2$z1.p[1]
+  CIT_Miss_pV[count,5]<-sum_med.out2$n0.p[1]
+  CIT_Miss_pV[count,6]<-sum_med.out2$n1.p[1]
+  CIT_Miss_pV[count,7]<-sum_med.out2$d.avg.p[1]
+  CIT_Miss_pV[count,8]<-sum_med.out2$z.avg.p[1]
+  CIT_Miss_pV[count,9]<-sum_med.out2$n.avg.p[1]
+  
+  # assign fit to list by name for RT
+  med_RT_CIT[[i]] <- med.out3
+  sum_med.out3<-summary(med.out3)
+  CIT_FA_Est[count,1]<-sum_med.out3$d0[1]
+  CIT_FA_Est[count,2]<-sum_med.out3$d1[1]
+  CIT_FA_Est[count,3]<-sum_med.out3$z0[1]
+  CIT_FA_Est[count,4]<-sum_med.out3$z1[1]
+  CIT_FA_Est[count,5]<-sum_med.out3$n0[1]
+  CIT_FA_Est[count,6]<-sum_med.out3$n1[1]
+  CIT_FA_Est[count,7]<-sum_med.out3$d.avg[1]
+  CIT_FA_Est[count,8]<-sum_med.out3$z.avg[1]
+  CIT_FA_Est[count,9]<-sum_med.out3$n.avg[1]
+  
+  CIT_FA_pV[count,1]<-sum_med.out3$d0.p[1]
+  CIT_FA_pV[count,2]<-sum_med.out3$d1.p[1]
+  CIT_FA_pV[count,3]<-sum_med.out3$z0.p[1]
+  CIT_FA_pV[count,4]<-sum_med.out3$z1.p[1]
+  CIT_FA_pV[count,5]<-sum_med.out3$n0.p[1]
+  CIT_FA_pV[count,6]<-sum_med.out3$n1.p[1]
+  CIT_FA_pV[count,7]<-sum_med.out3$d.avg.p[1]
+  CIT_FA_pV[count,8]<-sum_med.out3$z.avg.p[1]
+  CIT_FA_pV[count,9]<-sum_med.out3$n.avg.p[1]
+}
+output_names<-c("ACME_control","ACME_treated","ADE_control","ADE_treated","Prop_Mediated_control","Prop_Mediated_treated","ACME_average","ADE_average","Prop_Mediated_average")
+rownames(CIT_RT_Est)<-channels.names
+rownames(CIT_RT_pV)<-channels.names
+colnames(CIT_RT_Est)<-output_names
+colnames(CIT_RT_pV)<-output_names
+
+rownames(CIT_Miss_Est)<-channels.names
+rownames(CIT_Miss_pV)<-channels.names
+colnames(CIT_Miss_Est)<-output_names
+colnames(CIT_Miss_pV)<-output_names
+
+rownames(CIT_FA_Est)<-channels.names
+rownames(CIT_FA_pV)<-channels.names
+colnames(CIT_FA_Est)<-output_names
+colnames(CIT_FA_pV)<-output_names
+
+write.table(CIT_RT_Est,file="../Tables/CTET_Mediation_byE_CIT_RT_Est_v2.txt")
+write.table(CIT_RT_pV,file="../Tables/CTET_Mediation_byE_CIT_RT_pV_v2.txt")
+write.table(CIT_Miss_Est,file="../Tables/CTET_Mediation_byE_CIT_Miss_Est_v2.txt")
+write.table(CIT_Miss_pV,file="../Tables/CTET_Mediation_byE_CIT_Miss_pV_v2.txt")
+write.table(CIT_FA_Est,file="../Tables/CTET_Mediation_byE_CIT_FA_Est_v2.txt")
+write.table(CIT_FA_pV,file="../Tables/CTET_Mediation_byE_CIT_FA_pV_v2.txt")
+```
