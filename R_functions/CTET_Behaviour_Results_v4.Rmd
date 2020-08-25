@@ -165,7 +165,7 @@ marks <- c(0,20000,40000,60000,80000,100000)
 
 
 ggplot(data=fa2.graph, aes(x=Treatment, y=FA, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA-se, ymax = FA+se), width = .4, size = .45) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("% of Mean False Alarms")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_y_continuous(labels = scales::percent_format(accuracy = .01)) +theme_classic() +theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) + coord_cartesian(ylim =c(0.0001, .012)) 
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA-se, ymax = FA+se), width = .4, size = .45) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("% of Mean False Alarms")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_y_continuous(labels = scales::percent_format(accuracy = .01)) +theme_classic() +theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) + coord_cartesian(ylim =c(0.00045, .01)) +
 
 ggsave(file="../Figures/CTET_BarPlot_FA.png", dpi = 600, 
        width = 15/2,
@@ -225,7 +225,7 @@ rt2.graph <- summarySE(CTET_Behaviour1, measurevar = "Hit_RT", groupvars = c("Tr
 rt2.graph$Treatment<-ordered(rt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data= rt2.graph, aes(x=Treatment, y=Hit_RT, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Hit_RT-se, ymax = Hit_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + ylim(0, 2) + labs(y = "Reaction Time (seconds)") + coord_cartesian(ylim =c(1.30, 1.48)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Hit_RT-se, ymax = Hit_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + ylim(0, 2) + labs(y = "Reaction Time (seconds)") + coord_cartesian(ylim =c(1.3, 1.48)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
   
 ggsave(file="../Figures/CTET_BarPlot_RThits.eps", dpi = 600, 
        width = 15/2,

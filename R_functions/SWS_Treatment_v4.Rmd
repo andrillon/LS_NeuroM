@@ -68,6 +68,21 @@ lm.pp3 <- lmer(P2P  ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data2, REML =
 summary(lm.pp3)
 confint(lm.pp3, method = "Wald", oldNames = FALSE)
 
+##residuals 
+hist(residuals(lm.pp2))
+boxplot(residuals(lm.pp2))
+qqnorm(resid(lm.pp2))
+qqline(resid(lm.pp2))
+plot(lm.pp2)
+plot(fitted(lm.pp2), resid(lm.pp2)) 
+
+hist(residuals(lm.pp3))
+boxplot(residuals(lm.pp3))
+qqnorm(resid(lm.pp3))
+qqline(resid(lm.pp3))
+plot(lm.pp3)
+plot(fitted(lm.pp3), resid(lm.pp3)) 
+
 ```
 - According to AIC, lm.pp3 is the winning model, whilst BIC says lm.pp2 is the winning model 
 -Showed different results; 
@@ -101,7 +116,20 @@ lm.ps3 <- lmer(PosSlope   ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data3, 
 summary(lm.ps3)
 confint(lm.ps3, method = "Wald", oldNames = FALSE)
 
+##residuals 
+hist(residuals(lm.ps2))
+boxplot(residuals(lm.ps2))
+qqnorm(resid(lm.ps2))
+qqline(resid(lm.ps2))
+plot(lm.ps2)
+plot(fitted(lm.ps2), resid(lm.ps2)) 
 
+hist(residuals(lm.ps3))
+boxplot(residuals(lm.ps3))
+qqnorm(resid(lm.ps3))
+qqline(resid(lm.ps3))
+plot(lm.ps3)
+plot(fitted(lm.ps3), resid(lm.ps3)) 
 ```
   - According to AIC, lm.ps3 is the winning model, whilst BIC says lm.ps2 is the winning model 
 -Showed different results; 
