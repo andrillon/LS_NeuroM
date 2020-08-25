@@ -1,0 +1,1283 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0 (4035a4f, 2020-05-01)"
+   sodipodi:docname="Mediation_Plots_Supplementary.svg"
+   inkscape:export-filename="/Users/elaine/Desktop/PSY4100/LS_NeuroM/Figures/Mediation_Supplementary.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs2">
+    <rect
+       id="rect1034"
+       height="73.685389"
+       width="55.673405"
+       y="12.553807"
+       x="92.789009" />
+    <rect
+       id="rect1437"
+       height="146.38596"
+       width="211.56709"
+       y="274.03234"
+       x="160.50853" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.66274447"
+     inkscape:cx="345.98375"
+     inkscape:cy="375.34656"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1440"
+     inkscape:window-height="900"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="-12.05614,53.040469"
+       orientation="0,-1"
+       id="guide1162" />
+    <sodipodi:guide
+       id="guide218"
+       orientation="1,0"
+       position="108.47079,222.47007" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ce4a08;fill-opacity:1;stroke:#000000;stroke-width:0.264583"
+       id="rect10"
+       width="24.883394"
+       height="18.662546"
+       x="2.488338"
+       y="36.71999" />
+    <rect
+       y="36.486607"
+       x="75.110229"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-1"
+       style="fill:#c2a5cf;fill-opacity:1;stroke:#000000;stroke-width:0.264583" />
+    <rect
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583"
+       id="rect10-1-7"
+       width="24.883394"
+       height="18.662546"
+       x="35.683147"
+       y="8.0963087" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="14.363549"
+       y="46.792534"
+       id="text911"><tspan
+         sodipodi:role="line"
+         id="tspan909"
+         x="14.363549"
+         y="46.792534"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">MPH (-)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="47.456902"
+       y="16.163313"
+       id="text915"><tspan
+         sodipodi:role="line"
+         id="tspan913"
+         x="47.456902"
+         y="16.163313"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">Local</tspan><tspan
+         sodipodi:role="line"
+         x="48.141788"
+         y="22.336926"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan917"> Sleep </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="88.242958"
+       y="44.810257"
+       id="text921"><tspan
+         sodipodi:role="line"
+         id="tspan919"
+         x="88.242958"
+         y="44.810257"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">Reaction </tspan><tspan
+         sodipodi:role="line"
+         x="88.242958"
+         y="50.983868"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan923">Time</tspan></text>
+    <path
+       id="rect925"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.150497"
+       d="m 71.436334,44.217287 -0.04117,1.693787 -0.04117,1.69379 2.047165,-0.744447 2.047167,-0.744447 -2.006003,-0.949343 z m -43.342289,1.675096 v 0.504327 h 43.260511 v -0.504327 z" />
+    <path
+       d="m 32.257642,20.201254 0.830807,1.496697 0.830806,1.496695 0.696468,-1.325261 0.69647,-1.325257 -1.52731,-0.171457 z m -21.834721,15.723208 0.253736,0.441641 22.634868,-14.229515 -0.253746,-0.441635 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.118852"
+       id="rect925-6" />
+    <path
+       id="rect925-6-0"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.108902"
+       d="m 80.713384,35.661248 0.765428,-1.363918 0.765428,-1.363917 0.64166,1.207691 0.641663,1.207688 -1.407121,0.156246 z m -20.116482,-14.328332 0.233769,-0.402461 20.853663,12.967151 -0.233778,0.402456 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="47.828552"
+       y="49.772728"
+       id="text987"><tspan
+         id="tspan982"
+         sodipodi:role="line"
+         x="47.828552"
+         y="49.772728"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">ADE </tspan><tspan
+         id="tspan986"
+         sodipodi:role="line"
+         x="47.828552"
+         y="53.741478"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">- 0.03 [- 0.04, - 0.01] </tspan><tspan
+         id="tspan988"
+         sodipodi:role="line"
+         x="47.828552"
+         y="57.710228"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">(***)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="48.930946"
+       y="26.770483"
+       id="text991"
+       transform="rotate(2.5441938)"><tspan
+         sodipodi:role="line"
+         x="48.930946"
+         y="26.770483"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan993" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="48.581871"
+       y="30.311487"
+       id="text1021"><tspan
+         sodipodi:role="line"
+         x="48.581871"
+         y="30.311487"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan1023">ACME </tspan><tspan
+         id="tspan976"
+         sodipodi:role="line"
+         x="48.581871"
+         y="34.280235"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">2.98e-3 [- 1.50e-3, 0.01] </tspan><tspan
+         id="tspan980"
+         sodipodi:role="line"
+         x="49.022156"
+         y="38.248985"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">(ns) </tspan></text>
+    <rect
+       y="36.719669"
+       x="108.77884"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-6"
+       style="fill:#ce4a08;fill-opacity:1;stroke:#000000;stroke-width:0.264583" />
+    <rect
+       style="fill:#92c5de;fill-opacity:1;stroke:#000000;stroke-width:0.264583"
+       id="rect10-1-74"
+       width="24.883394"
+       height="18.662546"
+       x="182.13229"
+       y="36.486607" />
+    <rect
+       y="8.0959902"
+       x="141.97365"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-1-7-7"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583" />
+    <text
+       id="text911-1"
+       y="46.792217"
+       x="120.65405"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="46.792217"
+         x="120.65405"
+         id="tspan909-9"
+         sodipodi:role="line">MPH (-)</tspan></text>
+    <text
+       id="text915-2"
+       y="16.162996"
+       x="153.74739"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="16.162996"
+         x="153.74739"
+         id="tspan913-6"
+         sodipodi:role="line">Local</tspan><tspan
+         id="tspan917-7"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="22.33662"
+         x="154.43228"
+         sodipodi:role="line"> Sleep </tspan></text>
+    <text
+       id="text921-4"
+       y="47.077091"
+       x="194.53345"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         id="tspan923-7"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="47.077091"
+         x="194.53345"
+         sodipodi:role="line">Misses</tspan></text>
+    <path
+       d="m 177.72683,44.216971 -0.0412,1.693786 -0.0412,1.693791 2.04717,-0.744448 2.04716,-0.744447 -2.006,-0.949344 z m -43.34229,1.675095 v 0.504325 h 43.26052 v -0.504325 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.150497"
+       id="rect925-5" />
+    <path
+       id="rect925-6-04"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.118852"
+       d="m 138.54814,20.200936 0.83081,1.496698 0.8308,1.496695 0.69647,-1.325262 0.69647,-1.325257 -1.52731,-0.171457 z m -21.83472,15.723207 0.25374,0.441643 22.63487,-14.229516 -0.25375,-0.441634 z" />
+    <path
+       d="m 187.00388,35.660931 0.76543,-1.363919 0.76543,-1.363917 0.64166,1.207692 0.64166,1.207687 -1.40712,0.156247 z m -20.11648,-14.328333 0.23377,-0.402461 20.85366,12.967151 -0.23377,0.402457 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.108902"
+       id="rect925-6-0-3" />
+    <text
+       id="text987-1"
+       y="49.772728"
+       x="156.38828"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="49.772728"
+         x="156.38828"
+         id="tspan985-1"
+         sodipodi:role="line">ADE </tspan><tspan
+         id="tspan994"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="53.741478"
+         x="156.38828"
+         sodipodi:role="line">-0.10 [- 0.12, - 0.08] </tspan><tspan
+         id="tspan996"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="57.710228"
+         x="156.38828"
+         sodipodi:role="line">(***)</tspan></text>
+    <text
+       id="text1021-9"
+       y="30.311487"
+       x="155.01285"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         id="tspan1023-1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="30.311487"
+         x="155.01285"
+         sodipodi:role="line">ACME </tspan><tspan
+         id="tspan990"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="34.280235"
+         x="155.01285"
+         sodipodi:role="line">- 1.58e-3 [- 9.20e-3, 0.01]</tspan><tspan
+         id="tspan992"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="38.248985"
+         x="155.45312"
+         sodipodi:role="line"> (ns) </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
+       x="191.00749"
+       y="45.343025"
+       id="text1166"><tspan
+         sodipodi:role="line"
+         id="tspan1164"
+         x="191.00749"
+         y="45.343025"
+         style="stroke-width:0.264583" /></text>
+    <text
+       id="text224"
+       y="109.27797"
+       x="87.757759"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="stroke-width:0.264583"
+         y="109.27797"
+         x="87.757759"
+         id="tspan222"
+         sodipodi:role="line" /></text>
+    <rect
+       y="95.755966"
+       x="6.0732841"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-9"
+       style="fill:#6159a4;fill-opacity:1;stroke:#000000;stroke-width:0.264583" />
+    <rect
+       style="fill:#c2a5cf;fill-opacity:1;stroke:#000000;stroke-width:0.264583"
+       id="rect10-1-3"
+       width="24.883394"
+       height="18.662546"
+       x="78.69516"
+       y="95.522293" />
+    <rect
+       y="67.132294"
+       x="39.268085"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-1-7-6"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583" />
+    <text
+       id="text911-6"
+       y="105.82853"
+       x="17.948498"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="105.82853"
+         x="17.948498"
+         id="tspan909-8"
+         sodipodi:role="line">ATM (-)</tspan></text>
+    <text
+       id="text915-6"
+       y="75.199295"
+       x="51.041843"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="75.199295"
+         x="51.041843"
+         id="tspan913-3"
+         sodipodi:role="line">Local</tspan><tspan
+         id="tspan917-79"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="81.372917"
+         x="51.72673"
+         sodipodi:role="line"> Sleep </tspan></text>
+    <text
+       id="text921-8"
+       y="103.84637"
+       x="91.827896"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="103.84637"
+         x="91.827896"
+         id="tspan919-7"
+         sodipodi:role="line">Reaction </tspan><tspan
+         id="tspan923-5"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="110.01999"
+         x="91.827896"
+         sodipodi:role="line">Time</tspan></text>
+    <path
+       d="m 75.021275,103.25327 -0.0412,1.69379 -0.0412,1.69379 2.04717,-0.74445 2.04717,-0.74445 -2.00601,-0.94934 z m -43.34228,1.6751 v 0.50432 h 43.26051 v -0.50432 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.150497"
+       id="rect925-3" />
+    <path
+       id="rect925-6-7"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.118852"
+       d="m 35.842585,79.237216 0.83081,1.496698 0.83081,1.49669 0.69646,-1.325257 0.69647,-1.325257 -1.52731,-0.171457 z m -21.83472,15.723208 0.25374,0.44164 22.63487,-14.229514 -0.25375,-0.441634 z" />
+    <path
+       d="m 84.298325,94.697214 0.76543,-1.36392 0.76543,-1.36392 0.64166,1.2077 0.64166,1.20768 -1.40712,0.15625 z m -20.11648,-14.328336 0.23377,-0.402461 20.85366,12.967157 -0.23377,0.40245 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.108902"
+       id="rect925-6-0-0" />
+    <text
+       id="text987-17"
+       y="108.27273"
+       x="52.690453"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="108.27273"
+         x="52.690453"
+         id="tspan985-9"
+         sodipodi:role="line">ADE </tspan><tspan
+         id="tspan1000"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="112.24148"
+         x="52.690453"
+         sodipodi:role="line"> 1.51e-2 [1.95e-3, 0.03]</tspan><tspan
+         id="tspan1002"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="116.21023"
+         x="52.690453"
+         sodipodi:role="line"> (*)</tspan></text>
+    <text
+       id="text1021-2"
+       y="88.811485"
+       x="51.012856"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         id="tspan1023-8"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="88.811485"
+         x="51.012856"
+         sodipodi:role="line">ACME </tspan><tspan
+         id="tspan998"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="92.780235"
+         x="51.012856"
+         sodipodi:role="line">- 1.15e-3 [- 4.62e-3, 0.00]</tspan><tspan
+         id="tspan1190"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="96.748985"
+         x="51.45314"
+         sodipodi:role="line"> (ns) </tspan></text>
+    <text
+       id="text1123"
+       y="96.993462"
+       x="140.22876"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="stroke-width:0.264583"
+         y="96.993462"
+         x="140.22876"
+         id="tspan1121"
+         sodipodi:role="line" /></text>
+    <rect
+       style="fill:#6159a4;fill-opacity:1;stroke:#000000;stroke-width:0.264583"
+       id="rect10-6-9"
+       width="24.883394"
+       height="18.662546"
+       x="108.63229"
+       y="95.719681" />
+    <rect
+       y="95.486618"
+       x="181.98573"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-1-74-8"
+       style="fill:#92c5de;fill-opacity:1;stroke:#000000;stroke-width:0.264583" />
+    <rect
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583"
+       id="rect10-1-7-7-1"
+       width="24.883394"
+       height="18.662546"
+       x="141.82709"
+       y="67.095993" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="120.50751"
+       y="105.79222"
+       id="text911-1-3"><tspan
+         sodipodi:role="line"
+         id="tspan909-9-3"
+         x="120.50751"
+         y="105.79222"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">ATM (-)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="153.60083"
+       y="75.162994"
+       id="text915-2-2"><tspan
+         sodipodi:role="line"
+         id="tspan913-6-1"
+         x="153.60083"
+         y="75.162994"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">Local</tspan><tspan
+         sodipodi:role="line"
+         x="154.28572"
+         y="81.336617"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan917-7-4"> Sleep </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="194.3869"
+       y="106.0771"
+       id="text921-4-1"><tspan
+         sodipodi:role="line"
+         x="194.3869"
+         y="106.0771"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan923-7-1">Misses</tspan></text>
+    <path
+       id="rect925-5-4"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.150497"
+       d="m 177.58028,103.21697 -0.0412,1.69379 -0.0412,1.69379 2.04717,-0.74445 2.04716,-0.74444 -2.006,-0.94935 z m -43.34229,1.6751 v 0.50432 h 43.26052 v -0.50432 z" />
+    <path
+       d="m 138.40159,79.200916 0.83081,1.496704 0.8308,1.496694 0.69647,-1.325264 0.69647,-1.325264 -1.52731,-0.17145 z m -21.83472,15.723208 0.25374,0.44165 22.63487,-14.229524 -0.25375,-0.44163 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.118852"
+       id="rect925-6-04-9" />
+    <path
+       id="rect925-6-0-3-5"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.108902"
+       d="m 186.85733,94.660914 0.76543,-1.36392 0.76543,-1.36391 0.64166,1.20769 0.64166,1.20769 -1.40712,0.15624 z m -20.11648,-14.328334 0.23377,-0.402464 20.85366,12.967158 -0.23377,0.40246 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="155.23007"
+       y="108.27273"
+       id="text987-1-4"><tspan
+         sodipodi:role="line"
+         id="tspan985-1-4"
+         x="155.23007"
+         y="108.27273"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">ADE </tspan><tspan
+         id="tspan1008"
+         sodipodi:role="line"
+         x="155.23007"
+         y="112.24148"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">0.01 [- 9.84e-3, 0.03] </tspan><tspan
+         id="tspan1010"
+         sodipodi:role="line"
+         x="155.23007"
+         y="116.21023"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">(ns)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="154.0717"
+       y="88.811485"
+       id="text1021-9-7"><tspan
+         sodipodi:role="line"
+         x="154.0717"
+         y="88.811485"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan1023-1-1">ACME </tspan><tspan
+         id="tspan1004"
+         sodipodi:role="line"
+         x="154.0717"
+         y="92.780235"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"> - 3.31e-3 [- 9.48e-3, 0.00] </tspan><tspan
+         id="tspan1006"
+         sodipodi:role="line"
+         x="154.51198"
+         y="96.748985"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">(ns) </tspan></text>
+    <rect
+       style="fill:#6159a4;fill-opacity:1;stroke:#000000;stroke-width:0.264583"
+       id="rect10-8-0"
+       width="24.883394"
+       height="18.662546"
+       x="6.1766367"
+       y="157.25597" />
+    <rect
+       y="157.02258"
+       x="78.798531"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-1-2-5"
+       style="fill:#fee090;fill-opacity:1;stroke:#000000;stroke-width:0.264583" />
+    <rect
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583"
+       id="rect10-1-7-5-0"
+       width="24.883394"
+       height="18.662546"
+       x="39.371452"
+       y="128.63229" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="18.051849"
+       y="167.32852"
+       id="text911-5-4"><tspan
+         sodipodi:role="line"
+         id="tspan909-7-2"
+         x="18.051849"
+         y="167.32852"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">ATM (-)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="51.14521"
+       y="136.6993"
+       id="text915-4-8"><tspan
+         sodipodi:role="line"
+         id="tspan913-7-2"
+         x="51.14521"
+         y="136.6993"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">Local</tspan><tspan
+         sodipodi:role="line"
+         x="51.830097"
+         y="142.87292"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan917-4-3"> Sleep </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="91.092827"
+       y="165.34624"
+       id="text921-0-6"><tspan
+         sodipodi:role="line"
+         x="91.092827"
+         y="165.34624"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan923-6-5">False</tspan><tspan
+         sodipodi:role="line"
+         x="91.092827"
+         y="171.51987"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan228-2"> Alarm</tspan></text>
+    <path
+       id="rect925-61-8"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.150497"
+       d="m 75.124627,164.75328 -0.0412,1.69379 -0.0412,1.69379 2.04716,-0.74445 2.04717,-0.74445 -2.006,-0.94934 z m -43.34229,1.6751 v 0.50432 h 43.26052 v -0.50432 z" />
+    <path
+       d="m 35.945937,140.73725 0.83081,1.49669 0.8308,1.4967 0.69647,-1.32526 0.69647,-1.32526 -1.52731,-0.17146 z m -21.83472,15.7232 0.25374,0.44165 22.63487,-14.22952 -0.25375,-0.44163 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.118852"
+       id="rect925-6-3-9" />
+    <path
+       id="rect925-6-0-2-9"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.108902"
+       d="m 84.401687,156.19724 0.76543,-1.36392 0.76542,-1.36391 0.64166,1.20769 0.64167,1.20768 -1.40713,0.15625 z m -20.11649,-14.32833 0.23377,-0.40246 20.85367,12.96715 -0.23378,0.40246 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="52.453136"
+       y="169.77274"
+       id="text987-5-8"><tspan
+         sodipodi:role="line"
+         id="tspan985-8-6"
+         x="52.453136"
+         y="169.77274"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">ADE </tspan><tspan
+         id="tspan1016"
+         sodipodi:role="line"
+         x="52.453136"
+         y="173.74149"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">- 4.65e-4 [- 1.50e-3, 0.00] </tspan><tspan
+         sodipodi:role="line"
+         x="52.453136"
+         y="177.71024"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan1119-9">(ns)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="52.532265"
+       y="150.31149"
+       id="text1021-5-8"><tspan
+         sodipodi:role="line"
+         x="52.532265"
+         y="150.31149"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan1023-0-0">ACME </tspan><tspan
+         id="tspan1012"
+         sodipodi:role="line"
+         x="52.532265"
+         y="154.28024"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">8.71e-5 [- 1.74e-4, 0.00] </tspan><tspan
+         id="tspan1014"
+         sodipodi:role="line"
+         x="52.972549"
+         y="158.24899"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">(ns) </tspan></text>
+    <rect
+       style="fill:#6159a4;fill-opacity:1;stroke:#000000;stroke-width:0.264583"
+       id="rect10-9-6"
+       width="24.883394"
+       height="18.662546"
+       x="108.24151"
+       y="156.84885" />
+    <rect
+       y="156.61517"
+       x="180.86339"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-1-3-4"
+       style="fill:#c2a5cf;fill-opacity:1;stroke:#000000;stroke-width:0.264583" />
+    <rect
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583"
+       id="rect10-1-7-6-2"
+       width="24.883394"
+       height="18.662546"
+       x="141.43631"
+       y="128.22517" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="120.11672"
+       y="166.9214"
+       id="text911-6-6"><tspan
+         sodipodi:role="line"
+         id="tspan909-8-9"
+         x="120.11672"
+         y="166.9214"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">ATM (+)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="153.21007"
+       y="136.29218"
+       id="text915-6-5"><tspan
+         sodipodi:role="line"
+         id="tspan913-3-4"
+         x="153.21007"
+         y="136.29218"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">Local</tspan><tspan
+         sodipodi:role="line"
+         x="153.89496"
+         y="142.46581"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan917-79-7"> Sleep </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="193.99612"
+       y="164.93925"
+       id="text921-8-4"><tspan
+         sodipodi:role="line"
+         id="tspan919-7-5"
+         x="193.99612"
+         y="164.93925"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">Reaction </tspan><tspan
+         sodipodi:role="line"
+         x="193.99612"
+         y="171.11288"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan923-5-0">Time</tspan></text>
+    <path
+       id="rect925-3-4"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.150497"
+       d="m 177.1895,164.34622 -0.0412,1.69379 -0.0412,1.69379 2.04717,-0.74445 2.04717,-0.74445 -2.00601,-0.94934 z m -43.34228,1.6751 v 0.50432 h 43.26051 v -0.50432 z" />
+    <path
+       d="m 138.01081,140.33019 0.83081,1.4967 0.83081,1.49669 0.69646,-1.32526 0.69647,-1.32525 -1.52731,-0.17146 z m -21.83472,15.72321 0.25374,0.44164 22.63487,-14.22951 -0.25376,-0.44164 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.118852"
+       id="rect925-6-7-9" />
+    <path
+       id="rect925-6-0-0-2"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.108902"
+       d="m 186.46655,155.79019 0.76543,-1.36392 0.76543,-1.36392 0.64166,1.20769 0.64166,1.20769 -1.40712,0.15625 z m -20.11648,-14.32834 0.23377,-0.40246 20.85366,12.96715 -0.23377,0.40246 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="154.4393"
+       y="169.77274"
+       id="text987-17-6"><tspan
+         sodipodi:role="line"
+         id="tspan985-9-8"
+         x="154.4393"
+         y="169.77274"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">ADE </tspan><tspan
+         id="tspan1020"
+         sodipodi:role="line"
+         x="154.4393"
+         y="173.74149"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">1.56e-2 [2.00e-3, 0.03] </tspan><tspan
+         id="tspan1022"
+         sodipodi:role="line"
+         x="154.4393"
+         y="177.71024"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">(*)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="154.13979"
+       y="149.81149"
+       id="text1021-2-5"><tspan
+         sodipodi:role="line"
+         x="154.13979"
+         y="149.81149"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan1023-8-5">ACME </tspan><tspan
+         id="tspan1018"
+         sodipodi:role="line"
+         x="154.13979"
+         y="153.78024"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"> 1.68e-4 [- 2.27e-3, 0.00]</tspan><tspan
+         sodipodi:role="line"
+         x="154.58006"
+         y="157.74899"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan1190-0"> (ns) </tspan></text>
+    <rect
+       y="217.75598"
+       x="6.0784516"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-6-9-9"
+       style="fill:#6159a4;fill-opacity:1;stroke:#000000;stroke-width:0.264583" />
+    <rect
+       style="fill:#92c5de;fill-opacity:1;stroke:#000000;stroke-width:0.264583"
+       id="rect10-1-74-8-0"
+       width="24.883394"
+       height="18.662546"
+       x="79.431915"
+       y="217.52292" />
+    <rect
+       y="189.13229"
+       x="39.27327"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-1-7-7-1-2"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583" />
+    <text
+       id="text911-1-3-6"
+       y="227.82852"
+       x="17.95368"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="227.82852"
+         x="17.95368"
+         id="tspan909-9-3-3"
+         sodipodi:role="line">ATM (+)</tspan></text>
+    <text
+       id="text915-2-2-5"
+       y="197.1993"
+       x="51.047028"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="197.1993"
+         x="51.047028"
+         id="tspan913-6-1-3"
+         sodipodi:role="line">Local</tspan><tspan
+         id="tspan917-7-4-4"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="203.37292"
+         x="51.731915"
+         sodipodi:role="line"> Sleep </tspan></text>
+    <text
+       id="text921-4-1-5"
+       y="228.1134"
+       x="91.833084"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         id="tspan923-7-1-8"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="228.1134"
+         x="91.833084"
+         sodipodi:role="line">Misses</tspan></text>
+    <path
+       d="m 75.026452,225.25327 -0.0412,1.69378 -0.0412,1.6938 2.04717,-0.74446 2.04716,-0.74443 -2.006,-0.94936 z m -43.34229,1.67509 v 0.50432 h 43.26052 v -0.50432 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.150497"
+       id="rect925-5-4-0" />
+    <path
+       id="rect925-6-04-9-4"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.118852"
+       d="m 35.847762,201.23723 0.83081,1.4967 0.8308,1.49669 0.69647,-1.32526 0.69647,-1.32526 -1.52731,-0.17145 z m -21.83472,15.72321 0.25374,0.44164 22.63487,-14.22952 -0.25375,-0.44163 z" />
+    <path
+       d="m 84.303502,216.69723 0.76543,-1.36393 0.76543,-1.36391 0.64166,1.20769 0.64166,1.20769 -1.40712,0.15625 z m -20.11648,-14.32834 0.23377,-0.40246 20.85367,12.96715 -0.23378,0.40246 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.108902"
+       id="rect925-6-0-3-5-7" />
+    <text
+       id="text987-1-4-0"
+       y="230.27274"
+       x="54.101219"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="230.27274"
+         x="54.101219"
+         id="tspan985-1-4-5"
+         sodipodi:role="line">ADE</tspan><tspan
+         id="tspan1030"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="234.24149"
+         x="54.101219"
+         sodipodi:role="line"> 3.68e-3 [- 1.95e-2, 0.03] </tspan><tspan
+         id="tspan1441"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="238.21024"
+         x="54.101219"
+         sodipodi:role="line">(ns)</tspan></text>
+    <text
+       id="text1021-9-7-5"
+       y="210.81149"
+       x="52.14159"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         id="tspan1024"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="210.81149"
+         x="52.14159"
+         sodipodi:role="line">ACME</tspan><tspan
+         id="tspan1026"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="214.78024"
+         x="52.14159"
+         sodipodi:role="line"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+   id="tspan1210">2.71e-3 [- 1.24e-3, 0.01]</tspan></tspan><tspan
+         id="tspan1212"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="218.74899"
+         x="52.581875"
+         sodipodi:role="line">(ns) </tspan></text>
+    <text
+       style="fill:black;fill-opacity:1;line-height:1.25;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:10.58333333000000032px;white-space:pre;shape-inside:url(#rect1437);"
+       id="text1435"
+       xml:space="preserve" />
+    <text
+       id="text1445"
+       y="8.5757408"
+       x="2.1227632"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583"
+         y="8.5757408"
+         x="2.1227632"
+         id="tspan1443"
+         sodipodi:role="line">a.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="104.62276"
+       y="8.5757408"
+       id="text1445-5"><tspan
+         sodipodi:role="line"
+         id="tspan1443-9"
+         x="104.62276"
+         y="8.5757408"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583">b.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="1.9167517"
+       y="67.612045"
+       id="text1445-3"><tspan
+         sodipodi:role="line"
+         id="tspan1443-0"
+         x="1.9167517"
+         y="67.612045"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583">c.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="108.26676"
+       y="67.575745"
+       id="text1445-1"><tspan
+         sodipodi:role="line"
+         id="tspan1443-04"
+         x="108.26676"
+         y="67.575745"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583">d.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="2.0201042"
+       y="129.11205"
+       id="text1445-8"><tspan
+         sodipodi:role="line"
+         id="tspan1443-4"
+         x="2.0201042"
+         y="129.11205"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583">e.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="107.87598"
+       y="128.70493"
+       id="text1445-6"><tspan
+         sodipodi:role="line"
+         id="tspan1443-5"
+         x="107.87598"
+         y="128.70493"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583">f.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="1.9219193"
+       y="189.61205"
+       id="text1445-9"><tspan
+         sodipodi:role="line"
+         id="tspan1443-6"
+         x="1.9219193"
+         y="189.61205"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583">g.</tspan></text>
+    <text
+       style="fill:black;fill-opacity:1;line-height:1.25;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:10.58333333000000032px;white-space:pre;shape-inside:url(#rect1034);"
+       id="text1032"
+       xml:space="preserve" />
+    <rect
+       style="fill:#6159a4;fill-opacity:1;stroke:#000000;stroke-width:0.264583"
+       id="rect10-19"
+       width="24.883394"
+       height="18.662546"
+       x="108.13229"
+       y="217.72" />
+    <rect
+       y="217.4866"
+       x="180.75418"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-1-2"
+       style="fill:#fee090;fill-opacity:1;stroke:#000000;stroke-width:0.264583" />
+    <rect
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583"
+       id="rect10-1-7-0"
+       width="24.883394"
+       height="18.662546"
+       x="141.3271"
+       y="189.09631" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="120.00751"
+       y="227.79254"
+       id="text911-0"><tspan
+         sodipodi:role="line"
+         id="tspan909-0"
+         x="120.00751"
+         y="227.79254"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">ATM (+)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="153.10086"
+       y="197.16333"
+       id="text915-4"><tspan
+         sodipodi:role="line"
+         id="tspan913-35"
+         x="153.10086"
+         y="197.16333"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">Local</tspan><tspan
+         sodipodi:role="line"
+         x="153.78575"
+         y="203.33696"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan917-4"> Sleep </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="193.8869"
+       y="225.81027"
+       id="text921-87"><tspan
+         sodipodi:role="line"
+         x="193.8869"
+         y="225.81027"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan923-2">False </tspan><tspan
+         id="tspan1852"
+         sodipodi:role="line"
+         x="193.8869"
+         y="231.9839"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">Alarm</tspan></text>
+    <path
+       id="rect925-8"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.150497"
+       d="m 177.08029,225.2173 -0.0412,1.69378 -0.0412,1.69379 2.04716,-0.74444 2.04716,-0.74445 -2.006,-0.94934 z m -43.34229,1.67509 v 0.50433 h 43.26051 v -0.50433 z" />
+    <path
+       d="m 137.90159,201.20126 0.83081,1.4967 0.83081,1.4967 0.69647,-1.32527 0.69647,-1.32525 -1.52731,-0.17146 z m -21.83472,15.72321 0.25374,0.44164 22.63487,-14.22951 -0.25375,-0.44164 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.118852"
+       id="rect925-6-6" />
+    <path
+       id="rect925-6-0-4"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.108902"
+       d="m 186.35734,216.66126 0.76543,-1.36392 0.76543,-1.36392 0.64166,1.20769 0.64166,1.20769 -1.40712,0.15625 z m -20.11648,-14.32833 0.23376,-0.40247 20.85367,12.96715 -0.23378,0.40246 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="156.0717"
+       y="230.27274"
+       id="text987-6"><tspan
+         sodipodi:role="line"
+         id="tspan985"
+         x="156.0717"
+         y="230.27274"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">ADE </tspan><tspan
+         id="tspan1117"
+         sodipodi:role="line"
+         x="156.0717"
+         y="234.24149"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"> - 1.43e-4 [- 1.21e-3, 0.00] </tspan><tspan
+         id="tspan1860"
+         sodipodi:role="line"
+         x="156.0717"
+         y="238.21024"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">(ns)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="154.10123"
+       y="210.81149"
+       id="text1021-4"><tspan
+         sodipodi:role="line"
+         x="154.10123"
+         y="210.81149"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         id="tspan1023-15">ACME </tspan><tspan
+         id="tspan1113"
+         sodipodi:role="line"
+         x="154.10123"
+         y="214.78024"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"> 1.82e-6 [- 1.87e-4, 0.00] </tspan><tspan
+         id="tspan1115"
+         sodipodi:role="line"
+         x="154.5415"
+         y="218.74899"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583">(ns) </tspan></text>
+    <text
+       id="text1445-89"
+       y="189.57574"
+       x="107.76672"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583"
+         y="189.57574"
+         x="107.76672"
+         id="tspan1443-03"
+         sodipodi:role="line">h.</tspan></text>
+    <rect
+       y="274.71967"
+       x="5.7528987"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-9-64"
+       style="fill:#1d8f64;fill-opacity:1;stroke:#000000;stroke-width:0.264583" />
+    <rect
+       style="fill:#fee090;fill-opacity:1;stroke:#000000;stroke-width:0.264583"
+       id="rect10-1-3-5"
+       width="24.883394"
+       height="18.662546"
+       x="78.374802"
+       y="274.48596" />
+    <rect
+       y="246.09598"
+       x="38.947701"
+       height="18.662546"
+       width="24.883394"
+       id="rect10-1-7-6-4"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583" />
+    <text
+       id="text911-6-7"
+       y="285.55963"
+       x="18.495308"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="285.55963"
+         x="18.495308"
+         id="tspan909-8-3"
+         sodipodi:role="line">CIT (+)</tspan></text>
+    <text
+       id="text915-6-2"
+       y="254.16299"
+       x="50.721481"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="254.16299"
+         x="50.721481"
+         id="tspan913-3-5"
+         sodipodi:role="line">Local</tspan><tspan
+         id="tspan917-79-0"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="260.33661"
+         x="51.406368"
+         sodipodi:role="line"> Sleep </tspan></text>
+    <text
+       id="text921-8-6"
+       y="282.81006"
+       x="91.507523"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         id="tspan923-5-2"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="282.81006"
+         x="91.507523"
+         sodipodi:role="line">False </tspan><tspan
+         id="tspan1911"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="288.98367"
+         x="91.507523"
+         sodipodi:role="line">Alarm</tspan></text>
+    <path
+       d="m 74.700893,282.21695 -0.0412,1.6938 -0.0412,1.69379 2.04718,-0.74445 2.04716,-0.74445 -2.00601,-0.94934 z m -43.34228,1.67511 v 0.50432 h 43.26051 v -0.50432 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.150497"
+       id="rect925-3-7" />
+    <path
+       id="rect925-6-7-8"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.118852"
+       d="m 35.522203,258.20092 0.83081,1.49669 0.83081,1.4967 0.69646,-1.32526 0.69647,-1.32526 -1.52731,-0.17146 z m -21.834718,15.72321 0.25374,0.44164 22.634868,-14.22952 -0.25375,-0.44163 z" />
+    <path
+       d="m 83.977943,273.66092 0.76543,-1.36392 0.76543,-1.36392 0.64166,1.20769 0.64166,1.20768 -1.40712,0.15626 z m -20.11648,-14.32834 0.23377,-0.40246 20.85366,12.96716 -0.23377,0.40245 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.108902"
+       id="rect925-6-0-0-0" />
+    <text
+       id="text987-17-3"
+       y="287.27274"
+       x="53.772232"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="287.27274"
+         x="53.772232"
+         id="tspan985-9-2"
+         sodipodi:role="line">ADE </tspan><tspan
+         id="tspan1199"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="291.24149"
+         x="53.772232"
+         sodipodi:role="line"> - 5.83e-4 [-1.54e-3, 0.00]</tspan><tspan
+         id="tspan1913"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="295.21024"
+         x="53.772232"
+         sodipodi:role="line"> (ns)</tspan></text>
+    <text
+       id="text1021-2-2"
+       y="267.81149"
+       x="51.650703"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         id="tspan1023-8-2"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="267.81149"
+         x="51.650703"
+         sodipodi:role="line">ACME </tspan><tspan
+         id="tspan1197"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="271.78024"
+         x="51.650703"
+         sodipodi:role="line"> - 3.48 e-5 [- 2.72e-4, 0.00]</tspan><tspan
+         id="tspan1190-6"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.175px;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
+         y="275.74899"
+         x="52.090988"
+         sodipodi:role="line"> (ns) </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="1.5963589"
+       y="246.57574"
+       id="text1445-3-8"><tspan
+         sodipodi:role="line"
+         id="tspan1443-0-0"
+         x="1.5963589"
+         y="246.57574"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583">i.</tspan></text>
+  </g>
+</svg>
