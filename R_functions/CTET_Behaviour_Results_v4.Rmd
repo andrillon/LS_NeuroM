@@ -110,7 +110,7 @@ plot(fitted(lm.Miss3), resid(lm.Miss3))
 
 binnedplot(fitted(lm.Miss3),resid(lm.Miss3))
 ```
-
+--> treatment CIT on misses seems to not be sig after Bonferronni correction; (p > .00556)
 ```{r}
 ##Hit Rate  
 lm.HR0 <- lmer(Hit_RT ~ 1 + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
@@ -139,7 +139,7 @@ plot(lm.HR3)
 plot(fitted(lm.HR1), resid(lm.HR1))
 binnedplot(fitted(lm.HR1), resid(lm.HR1))
 ```
-
+--> after bonferronni correction (p <.00556), ATM and CIT on RT is non-sig 
 ```{r}
 ##Graph of the interaction between treatment and block number on false alarms
 fa.graph <- summarySE(CTET_Behaviour1, measurevar = "FA", groupvars = c("BlockN", "Treatment"))
