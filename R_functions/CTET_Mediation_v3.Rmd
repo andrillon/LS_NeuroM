@@ -166,21 +166,20 @@ SWS_data5$Treatment<-droplevels(SWS_data5$Treatment)
 med.fit1 <- lm(C_Pos_CIT  ~ 1 + Treatment, data = SWS_data5)
 out.fit1 <- lm(Hit_RT  ~ 1 + C_Pos_CIT * Treatment, data = SWS_data5)
 med.out10 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_CIT",robustSE = TRUE, sims = 10000)
-print(' CIT - Hit RT (Positive ATM cluster)')
+print(' CIT - Hit RT (Positive CIT cluster)')
 summary(med.out10)
 
 ## Pos CIT on misses 
 med.fit1 <- lm(C_Pos_CIT  ~ 1 + Treatment, data = SWS_data5)
 out.fit1 <- lm(Miss  ~ 1 + C_Pos_CIT * Treatment, data = SWS_data5)
 med.out11 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_CIT",robustSE = TRUE, sims = 10000)
-print(' CIT - Miss (Positive ATM cluster)')
+print(' CIT - Miss (Positive CIT cluster)')
 summary(med.out11)
-
 ## Pos CIT on FA
 med.fit1 <- lm(C_Pos_CIT  ~ 1 + Treatment, data = SWS_data5)
 out.fit1 <- lm(FA  ~ 1 + C_Pos_CIT * Treatment, data = SWS_data5)
 med.out12 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_CIT",robustSE = TRUE, sims = 10000)
-print(' CIT - FA (Positive ATM cluster)')
+print(' CIT - FA (Positive CIT cluster)')
 summary(med.out12)
 
 
