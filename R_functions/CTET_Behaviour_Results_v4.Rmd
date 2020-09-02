@@ -96,21 +96,23 @@ lm.Miss3 <- lmer(Miss ~ 1 + Treatment*BlockN + (1|SubID), data =  CTET_Behaviour
 
 ##Anova to see which one has the most interaction
 anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3)
-lm.Miss3 <- lmer(Miss ~ 1 + Treatment*BlockN + (1|SubID), data =  CTET_Behaviour1, REML = TRUE)
-summary(lm.Miss3)
-confint(lm.Miss3, method = "Wald", oldNames = FALSE)
+lm.Miss2 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data =  CTET_Behaviour1, REML = TRUE)
+summary(lm.Miss2)
+confint(lm.Miss2, method = "Wald", oldNames = FALSE)
 
 ##Normality plot of residuals 
-hist(residuals(lm.Miss3))
-boxplot(residuals(lm.Miss3))
-qqnorm(resid(lm.Miss3))
-qqline(resid(lm.Miss3))
-plot(lm.Miss3)
-plot(fitted(lm.Miss3), resid(lm.Miss3))
+hist(residuals(lm.Miss2))
+boxplot(residuals(lm.Miss2))
+qqnorm(resid(lm.Miss2))
+qqline(resid(lm.Miss2))
+plot(lm.Miss2)
+plot(fitted(lm.Miss2), resid(lm.Miss2))
 
-binnedplot(fitted(lm.Miss3),resid(lm.Miss3))
+binnedplot(fitted(lm.Miss2),resid(lm.Miss2))
 ```
---> treatment CIT on misses seems to not be sig after Bonferronni correction; (p > .00556)
+-Although lm.Miss3 is the winning model, after Bonferonni correction, it does not sig any more (p > .00556)
+- using lm.Miss2 as sig model 
+- note as well, BIC (takes into consideration complexity of model) says lm.Miss2 is winning model
 ```{r}
 ##Hit Rate  
 lm.HR0 <- lmer(Hit_RT ~ 1 + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
@@ -139,7 +141,7 @@ plot(lm.HR3)
 plot(fitted(lm.HR1), resid(lm.HR1))
 binnedplot(fitted(lm.HR1), resid(lm.HR1))
 ```
---> after bonferronni correction (p <.00556), ATM and CIT on RT is non-sig 
+
 ```{r}
 ##Graph of the interaction between treatment and block number on false alarms
 fa.graph <- summarySE(CTET_Behaviour1, measurevar = "FA", groupvars = c("BlockN", "Treatment"))

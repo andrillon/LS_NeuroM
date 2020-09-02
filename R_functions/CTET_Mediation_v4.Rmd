@@ -86,7 +86,7 @@ NEG MPH ON Misses:
   -significant average ADE (p < .001)
   -non-significant mediated path 
 NEG MPH ON FA: 
-  - mediated path for control (p = .0238) and treated (p <.01) are significant
+  - mediated path for control (p = .0228) and treated (p <.0018) are significant
   - non-significant direct path 
   - ACME average is significant (p < .001)
 
@@ -120,9 +120,9 @@ summary(med.out6)
 #fit<-mlmer(d=SWS_data4,id="SubID",x="Treatment",m="C_Neg_ATM",y="Miss",iter=1000,core=2)
 ```
 NEG ATM ON RT: 
-  - significant direct effect for control (p = .013) and treated (p = .024) and total effect (p = .017)
+  - significant direct effect for control (p = .019) and treated (p = .032) and total effect (p = .024)
   - non-significant mediated path 
-  - ADE average was significant (p = .014)
+  - ADE average was significant (p = .025)
   
 NEG ATM ON Misses: 
   -non-significant effect for all 
@@ -155,13 +155,13 @@ summary(med.out9)
 ```
 
 POS ATM ON RT: 
-  - Significant direct path for control (p = .025) and treated (p = .023) and total effect (p = .02)
+  - Significant direct path for control (p = .028) and treated (p = .025) and total effect (p = .021)
   - non-significant mediated path 
-  -Significant ADE average (p = .022)
+  -Significant ADE average (p = .023)
   
 POS ATM ON Misses: 
-  -Non-significant mediated path and total effect
-  -Significant ACME (Average) effect (p = .046)
+  -Non-significant mediated path, direct path and total effect
+  -Significant ACME (Average) effect (p = .043)
   
 POS ATM ON FA: 
   -Non-signficant effects for everything
@@ -196,13 +196,13 @@ summary(med.out12)
 
 ```
 POS CIT ON RT: 
-  - Significant mediated path for treated (p < .01) and total effect (p = .029)
+  - Significant mediated path for treated (p < .01) and total effect (p = .0248)
   -Non-significant direct path 
-  -significant prop. mediated effect for treated (p = .0374)
-  -significant ACME average (p = .0344)
+  -significant prop. mediated effect for treated (p = .0316)
+  -significant ACME average (p = .0322)
   
 POS CIT ON Misses: 
-  -significant mediated path for control (p < .001) and treated (p < .01)
+  -significant mediated path for control (p < .001) and treated (p < .001)
   -significant direct path for control ( p < .001) and treated (p <.01)
   -significant total effect (p <.001)
   -Prop mediated control (p < .001) and prop mediated treated (p <.01)
