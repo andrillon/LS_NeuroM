@@ -130,7 +130,7 @@ for nF=1:length(files)
 
     for nbl=1:10
         resblock_mat=[resblock_mat; [SubN SessN nbl nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==0,6)==0) nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==0,6)==1) ...
-            nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==0) nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==1) nanmean(this_cleanRT(this_behav(:,3)==nbl & this_behav(:,4)==1))]];
+            nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==0) nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==1) nanmean(this_cleanRT(this_behav(:,3)==nbl & this_behav(:,4)==1)) nanstd(this_cleanRT(this_behav(:,3)==nbl & this_behav(:,4)==1))]];
         drugblock_cond=[drugblock_cond ; {DrugC}];
     end
     
@@ -167,7 +167,7 @@ table2=table(ismember(table.SubID,FullSubID),:);
 writetable(table2,'/Users/tand0009/Data/CTET_Dockree/CTET_behav_res_full.txt');
 
 %%
-table2=array2table(resblock_mat,'VariableNames',{'SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT'});
+table2=array2table(resblock_mat,'VariableNames',{'SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','STD_RT'});
 table2.Treatment=drugblock_cond;
 table2.SubID=categorical(table2.SubID);
 table2.SessN=categorical(table2.SessN);
@@ -199,6 +199,7 @@ labelsDrugs=[];
 for nSubj=1:length(uniqueIDs)
     for nDrug=1:length(uniqueDrugs)
         Hit_RT(nSubj,nDrug)=nanmean(table.Hit_RT(table.SubID==uniqueIDs(nSubj) & table.Treatment==uniqueDrugs(nDrug)));
+        STD_RT(nSubj,nDrug)=nanmean(table3.STD_RT(table3.SubID==uniqueIDs(nSubj) & table3.Treatment==uniqueDrugs(nDrug)));
         FA(nSubj,nDrug)=nanmean(table.FA(table.SubID==uniqueIDs(nSubj) & table.Treatment==uniqueDrugs(nDrug)));
         Miss(nSubj,nDrug)=nanmean(table.Miss(table.SubID==uniqueIDs(nSubj) & table.Treatment==uniqueDrugs(nDrug)));
         labelsDrugs{nDrug}=char(uniqueDrugs(nDrug));
@@ -207,11 +208,13 @@ end
 
 Colors=[[1 1 1]*0.5; [253,174,97]/256 ; [44,123,182]/256; [215,25,28]/256];
 figure; set(gcf,'Position',[82         600        1158         378]);
-for nPlot=1:3
-    subplot(1,3,nPlot); format_fig; hold on;
+for nPlot=1:4
+    subplot(1,4,nPlot); format_fig; hold on;
     if nPlot==1
         temp=Hit_RT;
     elseif nPlot==2
+        temp=STD_RT;
+    elseif nPlot==3
         temp=FA;
     else
         temp=Miss;
@@ -225,6 +228,8 @@ for nPlot=1:3
     ylim([1.2 1.5])
         title('Hit RT')
     elseif nPlot==2
+        title('STD RT')
+    elseif nPlot==3
         title('FA')
     else
         title('Miss')

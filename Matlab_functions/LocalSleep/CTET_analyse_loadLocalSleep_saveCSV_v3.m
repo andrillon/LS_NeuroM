@@ -146,9 +146,9 @@ for nF=1:length(files)
         
         all_slow_Waves=[all_slow_Waves ; [nF SubN SessN nbl nout'/((max_sample-min_sample)/hdr.Fs/60)]];
         all_drug_types=[all_drug_types ; {DrugC}];
-        all_slow_Waves_vec=[all_slow_Waves_vec ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:8))],64,1) (1:64)' nout/((max_sample-min_sample)/hdr.Fs/60) temp_P2P' temp_NegSl' temp_PosSl']];
+        all_slow_Waves_vec=[all_slow_Waves_vec ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:9))],64,1) (1:64)' nout/((max_sample-min_sample)/hdr.Fs/60) temp_P2P' temp_NegSl' temp_PosSl']];
         all_drug_types_vec=[all_drug_types_vec ; repmat({DrugC},64,1)];
-        all_slow_Waves_vec2=[all_slow_Waves_vec2 ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:8))],1,1) 0 nanmean(nout/((max_sample-min_sample)/hdr.Fs/60)) nanmean(temp_P2P) nanmean(temp_NegSl) nanmean(temp_PosSl)]];
+        all_slow_Waves_vec2=[all_slow_Waves_vec2 ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:9))],1,1) 0 nanmean(nout/((max_sample-min_sample)/hdr.Fs/60)) nanmean(temp_P2P) nanmean(temp_NegSl) nanmean(temp_PosSl)]];
         all_drug_types_vec2=[all_drug_types_vec2 ; repmat({DrugC},1,1)];
     end
 end
@@ -173,7 +173,7 @@ end
 table_Thr(ismember(table_Thr.Elec,{'Iz','TP7','TP8','P9','P10'}),:)=[];
 table_Thr.Elec=removecats(table_Thr.Elec);
 
-table_SW=array2table(all_slow_Waves_vec,'VariableNames',{'FileN','SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','Elec','SWdens','P2P','NegSlope','PosSlope'});
+table_SW=array2table(all_slow_Waves_vec,'VariableNames',{'FileN','SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','STD_RT','Elec','SWdens','P2P','NegSlope','PosSlope'});
 table_SW.SubID=categorical(table_SW.SubID);
 table_SW.SessN=categorical(table_SW.SessN);
 table_SW.BlockN=ordinal(table_SW.BlockN);
@@ -213,7 +213,7 @@ else
 end
 table_allSW=table_SW;
 %%
-table_SW=array2table(all_slow_Waves_vec2,'VariableNames',{'FileN','SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','Elec','SWdens','P2P','NegSlope','PosSlope'});
+table_SW=array2table(all_slow_Waves_vec2,'VariableNames',{'FileN','SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','STD_RT','Elec','SWdens','P2P','NegSlope','PosSlope'});
 table_SW.SubID=categorical(table_SW.SubID);
 table_SW.SessN=categorical(table_SW.SessN);
 table_SW.BlockN=ordinal(table_SW.BlockN);

@@ -52,8 +52,9 @@ SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
 
 ### Neg MPH on RT
 med.fit1 <- lmer(C_Neg_MPH  ~ 1 + Treatment + (1|SubID), data = SWS_data3)
+med.fit2 <- lmer(Hit_RT  ~ 1 + C_Neg_MPH + (1|SubID), data = SWS_data3)
 out.fit1 <- lmer(Hit_RT  ~ 1 + C_Neg_MPH * Treatment + (1|SubID), data = SWS_data3)
-med.out1 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_MPH",boot = FALSE, sims = nsims)
+med.out1 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_MPH",boot = FALSE, sims = nsims, group.out='SubID')
 print(' MPH - Hit RT (Negative MPH cluster)')
 summary(med.out1)
 
