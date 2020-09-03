@@ -52,9 +52,8 @@ SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
 
 ### Neg MPH on RT
 med.fit1 <- lmer(C_Neg_MPH  ~ 1 + Treatment + (1|SubID), data = SWS_data3)
-med.fit2 <- lmer(Hit_RT  ~ 1 + C_Neg_MPH + (1|SubID), data = SWS_data3)
 out.fit1 <- lmer(Hit_RT  ~ 1 + C_Neg_MPH * Treatment + (1|SubID), data = SWS_data3)
-med.out1 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_MPH",boot = FALSE, sims = nsims, group.out='SubID')
+med.out1 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_MPH",boot = FALSE, sims = nsims)
 print(' MPH - Hit RT (Negative MPH cluster)')
 summary(med.out1)
 
@@ -71,6 +70,13 @@ out.fit1 <- lmer(FA  ~ 1 + C_Neg_MPH * Treatment + (1|SubID), data = SWS_data3)
 med.out3 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_MPH",robustSE = TRUE, sims = nsims)
 print(' MPH - FA (Negative MPH cluster)')
 summary(med.out3)
+
+### Neg MPH on SD RT
+med.fit1 <- lmer(C_Neg_MPH  ~ 1 + Treatment + (1|SubID), data = SWS_data3)
+out.fit1 <- lmer(STD_RT  ~ 1 + C_Neg_MPH * Treatment + (1|SubID), data = SWS_data3)
+med.out13 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_MPH",boot = FALSE, sims = nsims)
+print(' MPH - SD RT (Negative MPH cluster)')
+summary(med.out13)
 
 ### bmlm package
 #library("bmlm")

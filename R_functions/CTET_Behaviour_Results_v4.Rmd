@@ -143,6 +143,36 @@ binnedplot(fitted(lm.HR1), resid(lm.HR1))
 ```
 
 ```{r}
+##SD Hit Rate  
+lm.SDHR0 <- lmer(STD_RT ~ 1 + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Effects of treatment on hit rate 
+lm.SDHR1 <- lmer(STD_RT ~ 1 + Treatment + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Added effects of block number on hit rate  
+lm.SDHR2 <- lmer(STD_RT ~ 1 + Treatment + BlockN + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Added effects of block number as an interaction on hit rate  
+lm.SDHR3 <- lmer(STD_RT ~ 1 + Treatment*BlockN + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Anova to see which one has the most interaction
+anova(lm.SDHR0,lm.SDHR1,lm.SDHR2,lm.SDHR3)
+lm.SDHR1 <- lmer(STD_RT ~ 1 + Treatment + (1|SubID), data = CTET_Behaviour1, REML = TRUE)
+summary(lm.SDHR1)
+confint(lm.SDHR1, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals 
+hist(residuals(lm.SDHR1))
+boxplot(residuals(lm.SDHR1))
+qqnorm(residuals(lm.SDHR1))
+qqline(resid(lm.SDHR1))
+plot(lm.SDHR1)
+plot(fitted(lm.SDHR1), resid(lm.SDHR1))
+binnedplot(fitted(lm.SDHR1), resid(lm.SDHR1))
+```
+
+
+```{r}
 ##Graph of the interaction between treatment and block number on false alarms
 fa.graph <- summarySE(CTET_Behaviour1, measurevar = "FA", groupvars = c("BlockN", "Treatment"))
 fa.graph$Treatment<-ordered(fa.graph$Treatment, c("PLA","MPH","ATM","CIT"))
@@ -212,7 +242,7 @@ rt.graph <- summarySE(CTET_Behaviour1, measurevar = "Hit_RT", groupvars = c("Blo
 rt.graph$Treatment<-ordered(rt.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ##Reference graph
-ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Mean RT for Hits according to block number and treatment") + ylab("Hit Rate") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5)
+ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Mean RT for Hits according to block number and treatment") + ylab("Reaction Time") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5)
 
 ##Graph with Standard Error 
 ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ylab("Reaction Time (seconds)") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.48) + geom_ribbon(aes(ymin = Hit_RT-se, ymax = Hit_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +
@@ -234,6 +264,40 @@ ggsave(file="../Figures/CTET_BarPlot_RThits.eps", dpi = 600,
       height = 18/2,
     units = c("cm"))
 ggsave(file="../Figures/CTET_BarPlot_RThits.png", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
+```
+
+
+```{r}
+##Graph of the interaction between treatment and block number on SD hit rates
+sdrt.graph <- summarySE(CTET_Behaviour1, measurevar = "STD_RT", groupvars = c("BlockN", "Treatment"), na.rm = TRUE)
+sdrt.graph$Treatment<-ordered(sdrt.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+##Reference graph
+ggplot(sdrt.graph, aes(x = BlockN, y = STD_RT, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("SD of RT for Hits according to block number and treatment") + ylab("SD RT") + xlab("Block Number") + xlim(0, 11) 
+
+##Graph with Standard Error 
+ggplot(sdrt.graph, aes(x = BlockN, y = STD_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ylab("Standard Deviation of Reaction Time (seconds)") + xlab("Block Number") + xlim(0, 11) + geom_ribbon(aes(ymin = STD_RT-se, ymax = STD_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +
+  scale_x_continuous(breaks = c(1:10)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank()) + ylim(0.075, 0.2)
+
+ggsave(file="../Figures/CTET_LinePlot_SDRThits.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))
+
+sdrt2.graph <- summarySE(CTET_Behaviour1, measurevar = "STD_RT", groupvars = c("Treatment"), na.rm = TRUE)
+sdrt2.graph$Treatment<-ordered(sdrt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data= sdrt2.graph, aes(x=Treatment, y=STD_RT, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = STD_RT-se, ymax = STD_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + labs(y = "Reaction Time (seconds)") + coord_cartesian(ylim =c(0.075, .2)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+  
+ggsave(file="../Figures/CTET_BarPlot_SDRThits.eps", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
+ggsave(file="../Figures/CTET_BarPlot_SDRThits.png", dpi = 600, 
        width = 15/2,
       height = 18/2,
     units = c("cm"))
