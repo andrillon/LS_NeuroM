@@ -142,9 +142,9 @@ mdl5=fitlme(table_SW2,'SWdens~1+Elec*BlockN*Drug+(1|SubID)');
 compare(mdl4,mdl5)
 
 %%
-redo=1;
-if redo==1
+redo=0;
     totperm=1000;
+if redo==1
     temp_topo_tval=[];
     temp_topo_pval=[];
     % fprintf('%2.0f/%2.0f\n',0,64)
@@ -230,7 +230,7 @@ for nDrug=1:3
     
     title(Drugs{nDrug+1})
 end
-print('-dpng', '-r300', '../../Figures/Topo_LS_LME_DrugEffect_v3.png')
+% print('-dpng', '-r300', '../../Figures/Topo_LS_LME_DrugEffect_v3.png')
 
 %% Make new table
 table_avSW.C_Pos_ATM=nan(size(table_avSW,1),1);
