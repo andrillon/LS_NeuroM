@@ -101,6 +101,7 @@ NEG MPH ON FA:
 ```{r}
 SWS_data4<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="ATM",] 
 SWS_data4<-SWS_data4[is.na(SWS_data4$Hit_RT)==FALSE,]
+SWS_data4<-SWS_data4[is.na(SWS_data4$STD_RT)==FALSE,]
 SWS_data4$Treatment<-droplevels(SWS_data4$Treatment)
 
 ### Neg ATM on RT
@@ -124,6 +125,15 @@ med.out6 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_A
 print(' ATM - FA (Negative ATM cluster)')
 summary(med.out6)
 #fit<-mlmer(d=SWS_data4,id="SubID",x="Treatment",m="C_Neg_ATM",y="Miss",iter=1000,core=2)
+
+### Neg ATM on SD RT
+med.fit1 <- lmer(C_Neg_ATM  ~ 1 + Treatment + (1|SubID), data = SWS_data4)
+out.fit1 <- lmer(STD_RT  ~ 1 + C_Neg_ATM * Treatment + (1|SubID), data = SWS_data4)
+med.out14 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Neg_ATM",robustSE = TRUE, sims = nsims)
+print(' ATM - SD RT (Negative ATM cluster)')
+summary(med.out14)
+
+
 ```
 NEG ATM ON RT: 
   - significant direct effect for control (p = .019) and treated (p = .032) and total effect (p = .024)
@@ -157,6 +167,12 @@ med.out9 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_A
 print(' ATM - FA (Positive ATM cluster)')
 summary(med.out9)
 
+### Pos ATM on SD RT
+med.fit1 <- lmer(C_Pos_ATM  ~ 1 + Treatment + (1|SubID), data = SWS_data4)
+out.fit1 <- lmer(STD_RT  ~ 1 + C_Pos_ATM * Treatment + (1|SubID), data = SWS_data4)
+med.out15 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_ATM",robustSE = TRUE, sims = nsims)
+print(' ATM - SD RT (Positive ATM cluster)')
+summary(med.out15)
 
 ```
 
@@ -199,7 +215,12 @@ med.out12 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_
 print(' CIT - FA (Positive CIT cluster)')
 summary(med.out12)
 
-
+### Pos CIT on SD RT
+med.fit1 <- lmer(C_Pos_CIT  ~ 1 + Treatment + (1|SubID), data = SWS_data5)
+out.fit1 <- lmer(STD_RT  ~ 1 + C_Pos_CIT * Treatment + (1|SubID), data = SWS_data5)
+med.out16 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "C_Pos_CIT",robustSE = TRUE, sims = nsims)
+print(' CIT - Hit SD RT (Positive CIT cluster)')
+summary(med.out16)
 ```
 POS CIT ON RT: 
   - Significant mediated path for treated (p < .01) and total effect (p = .0248)
@@ -219,8 +240,5 @@ POS CIT ON Misses:
 POS CIT ON FA: 
   -non-significant effects for all
 
-```{r}
 
 
-
-```
