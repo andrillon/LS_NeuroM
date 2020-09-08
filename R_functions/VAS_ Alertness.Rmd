@@ -141,7 +141,7 @@ str(alertness.long.NoNA)
 
 ## summary statistics 
 sum.alertness <- alertness.long.NoNA%>%
-  group_by(condition, time) %>%
+  group_by(Treatment, time) %>%
   get_summary_stats(score, type = "mean_sd")
 sum.alertness
 
@@ -213,16 +213,25 @@ pwc2
 -for time, a few effects were found to be significant
 
 ```{r}
+names(alertness.long.NoNA)[2] <- "Treatment"
+alertness.long.NoNA$Treatment<-ordered(alertness.long.NoNA$Treatment,c("PLA","MPH","ATM","CIT"))
 
-alertness.graph <- ggplot(alertness.long.NoNA, aes(x = time, y = score, fill = condition)) +
-  geom_flat_violin(aes(fill = condition), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) +
-  geom_point(aes(x = as.numeric(time)-.225, y = score, colour = condition), position = position_jitter(width = .05), size = .25, shape = 20)  + geom_boxplot(aes(x = time, y = score, fill = condition), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
-  geom_line(data = sum.alertness, aes(x = as.numeric(time)+.1, y = mean, group = condition, colour = condition), linetype = 3, size = .6) + geom_point(data = sum.alertness, aes(x = as.numeric(time)+.1, y = mean, group = condition, colour = condition), shape = 18) +
-  scale_colour_brewer(palette = "Dark2")+
-  scale_fill_brewer(palette = "Dark2")+
-  ggtitle("Reported levels of alertness across time and condition")
 
-alertness.graph
+ggplot(alertness.long.NoNA, aes(x = time, y = score, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) +
+  geom_point(aes(x = as.numeric(time)-.225, y = score, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20)  + geom_boxplot(aes(x = time, y = score, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = sum.alertness, aes(x = as.numeric(time)+.1, y = mean, group = Treatment, colour = Treatment), linetype = 3, size = .6) + geom_point(data = sum.alertness, aes(x = as.numeric(time)+.1, y = mean, group = Treatment, colour = Treatment), shape = 18) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Timepoints") + ylab("Alertness Scores") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) + ylim(0, 100) 
+
+
+#  +ggtitle("Reported levels of alertness across time and Treatment")
+
+
+ggsave(file="../Figures/VAS_Plot.png", dpi = 600, 
+       width = 20,
+      height = 15,
+    units = c("cm"))
+
+
 
 ```
 ** got rid of SE because my stats summary didnt have it 
