@@ -28,7 +28,7 @@ library(tidyverse)
 library(mediation)
 
 
-SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v2.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v2.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 SWS_data$Treatment<-as.factor(SWS_data$Treatment)
 SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
@@ -174,12 +174,12 @@ rownames(MPH_FA_pV)<-channels.names
 colnames(MPH_FA_Est)<-output_names
 colnames(MPH_FA_pV)<-output_names
 
-write.table(MPH_RT_Est,file="../Tables/CTET_Mediation_byE_MPH_RT_Est_v2.txt")
-write.table(MPH_RT_pV,file="../Tables/CTET_Mediation_byE_MPH_RT_pV_v2.txt")
-write.table(MPH_Miss_Est,file="../Tables/CTET_Mediation_byE_MPH_Miss_Est_v2.txt")
-write.table(MPH_Miss_pV,file="../Tables/CTET_Mediation_byE_MPH_Miss_pV_v2.txt")
-write.table(MPH_FA_Est,file="../Tables/CTET_Mediation_byE_MPH_FA_Est_v2.txt")
-write.table(MPH_FA_pV,file="../Tables/CTET_Mediation_byE_MPH_FA_pV_v2.txt")
+write.table(MPH_RT_Est,file="../Tables/CTET_Mediation_allE_MPH_RT_Est_v2.txt")
+write.table(MPH_RT_pV,file="../Tables/CTET_Mediation_allE_MPH_RT_pV_v2.txt")
+write.table(MPH_Miss_Est,file="../Tables/CTET_Mediation_allE_MPH_Miss_Est_v2.txt")
+write.table(MPH_Miss_pV,file="../Tables/CTET_Mediation_allE_MPH_Miss_pV_v2.txt")
+write.table(MPH_FA_Est,file="../Tables/CTET_Mediation_allE_MPH_FA_Est_v2.txt")
+write.table(MPH_FA_pV,file="../Tables/CTET_Mediation_allE_MPH_FA_pV_v2.txt")
 ```
 NEG MPH ON RT: 
   - significant direct path and total effect (p < .001)
@@ -324,12 +324,12 @@ rownames(ATM_FA_pV)<-channels.names
 colnames(ATM_FA_Est)<-output_names
 colnames(ATM_FA_pV)<-output_names
 
-write.table(ATM_RT_Est,file="../Tables/CTET_Mediation_byE_ATM_RT_Est_v2.txt")
-write.table(ATM_RT_pV,file="../Tables/CTET_Mediation_byE_ATM_RT_pV_v2.txt")
-write.table(ATM_Miss_Est,file="../Tables/CTET_Mediation_byE_ATM_Miss_Est_v2.txt")
-write.table(ATM_Miss_pV,file="../Tables/CTET_Mediation_byE_ATM_Miss_pV_v2.txt")
-write.table(ATM_FA_Est,file="../Tables/CTET_Mediation_byE_ATM_FA_Est_v2.txt")
-write.table(ATM_FA_pV,file="../Tables/CTET_Mediation_byE_ATM_FA_pV_v2.txt")
+write.table(ATM_RT_Est,file="../Tables/CTET_Mediation_allE_ATM_RT_Est_v2.txt")
+write.table(ATM_RT_pV,file="../Tables/CTET_Mediation_allE_ATM_RT_pV_v2.txt")
+write.table(ATM_Miss_Est,file="../Tables/CTET_Mediation_allE_ATM_Miss_Est_v2.txt")
+write.table(ATM_Miss_pV,file="../Tables/CTET_Mediation_allE_ATM_Miss_pV_v2.txt")
+write.table(ATM_FA_Est,file="../Tables/CTET_Mediation_allE_ATM_FA_Est_v2.txt")
+write.table(ATM_FA_pV,file="../Tables/CTET_Mediation_allE_ATM_FA_pV_v2.txt")
 ```
 
 ```{r}
@@ -466,10 +466,10 @@ rownames(CIT_FA_pV)<-channels.names
 colnames(CIT_FA_Est)<-output_names
 colnames(CIT_FA_pV)<-output_names
 
-write.table(CIT_RT_Est,file="../Tables/CTET_Mediation_byE_CIT_RT_Est_v2.txt")
-write.table(CIT_RT_pV,file="../Tables/CTET_Mediation_byE_CIT_RT_pV_v2.txt")
-write.table(CIT_Miss_Est,file="../Tables/CTET_Mediation_byE_CIT_Miss_Est_v2.txt")
-write.table(CIT_Miss_pV,file="../Tables/CTET_Mediation_byE_CIT_Miss_pV_v2.txt")
-write.table(CIT_FA_Est,file="../Tables/CTET_Mediation_byE_CIT_FA_Est_v2.txt")
-write.table(CIT_FA_pV,file="../Tables/CTET_Mediation_byE_CIT_FA_pV_v2.txt")
+write.table(CIT_RT_Est,file="../Tables/CTET_Mediation_allE_CIT_RT_Est_v2.txt")
+write.table(CIT_RT_pV,file="../Tables/CTET_Mediation_allE_CIT_RT_pV_v2.txt")
+write.table(CIT_Miss_Est,file="../Tables/CTET_Mediation_allE_CIT_Miss_Est_v2.txt")
+write.table(CIT_Miss_pV,file="../Tables/CTET_Mediation_allE_CIT_Miss_pV_v2.txt")
+write.table(CIT_FA_Est,file="../Tables/CTET_Mediation_allE_CIT_FA_Est_v2.txt")
+write.table(CIT_FA_pV,file="../Tables/CTET_Mediation_allE_CIT_FA_pV_v2.txt")
 ```

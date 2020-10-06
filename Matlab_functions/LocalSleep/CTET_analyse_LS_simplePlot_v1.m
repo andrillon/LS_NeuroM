@@ -9,8 +9,8 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath([pwd filesep '..']));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v3.txt']);
-table_avSW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3.txt']);
+table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v3.txt']);
+table_avSW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v3.txt']);
 
 % prctile(table_SW.SWdens,99)
 %%
@@ -38,7 +38,7 @@ colormap(cmap);
 ylabel(h, 'waves/min')
 %     set(h,'Position',[0.85 0.7 0.04 0.2])
 format_fig;
-print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens.png')
+% print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens.png')
 
 %% By Block
 figure; set(gcf,'Position',[228         128        1363         828]);
@@ -81,7 +81,7 @@ format_fig;
 xlabel('Block')
 xlim([0.5 10.5])
 ylabel('waves/min')
-print('-dpng', '-r300', '../../Figures/Line_LS_SWdens_byBlock.png')
+% print('-dpng', '-r300', '../../Figures/Line_LS_SWdens_byBlock.png')
 
 %% By Drug
 figure; hold on; set(gcf,'Position',[201         428        1135         500]);
@@ -102,7 +102,7 @@ for nD=1:4
     colormap(cmap);
     title(Drugs{nD})
 end
-print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens_byDrug.png')
+% print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens_byDrug.png')
 
 figure;
 for nD=1:4
@@ -121,7 +121,7 @@ format_fig;
 xlabel('Block')
 xlim([0.5 10.5])
 ylabel('waves/min')
-print('-dpng', '-r300', '../../Figures/Line_LS_SWdens_byDrugAndBlock.png')
+% print('-dpng', '-r300', '../../Figures/Line_LS_SWdens_byDrugAndBlock.png')
 
 
 %% Models
@@ -143,7 +143,7 @@ compare(mdl4,mdl5)
 
 %%
 redo=0;
-    totperm=1000;
+    totperm=10;
 if redo==1
     temp_topo_tval=[];
     temp_topo_pval=[];
@@ -162,9 +162,9 @@ if redo==1
             SWdens_est{2}=[SWdens_est{2} ; [nE*ones(totperm,1) perm_out{nDrug} nDrug*ones(totperm,1)]];
         end
     end
-    save('../../Tables/model_SWdens_est_v3','SWdens_est');
+    save('../../Tables/model_SWdens_est_v3_allE','SWdens_est');
 else
-    load('../../Tables/model_SWdens_est_v3');
+    load('../../Tables/model_SWdens_est_v3_allE');
 end
 %% Filter clusters
 clus_alpha=0.01;
@@ -274,7 +274,7 @@ for nS=1:length(uS)
 %             nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'PLA') & ismember(table_SW.Elec,ClustersByDrugs{2,3})));
     end
 end
-writetable(table_avSW,[save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3_CLUSTERS.txt']);
+% writetable(table_avSW,[save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3_CLUSTERS.txt']);
 
 % figure;
 % for nDrug=1:3

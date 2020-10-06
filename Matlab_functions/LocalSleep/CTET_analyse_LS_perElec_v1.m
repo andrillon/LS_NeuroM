@@ -9,8 +9,17 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath([pwd filesep '..']));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec.txt']);
+% table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec.txt']);
+table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v3.txt']);
+table_avSW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v3.txt']);
 
+% prctile(table_SW.SWdens,99)
+%%
+cfg = [];
+cfg.layout = 'biosemi64.lay';
+cfg.channel=unique(table_SW.Elec);
+cfg.center      = 'yes';
+layout=ft_prepare_layout(cfg);
 %%
 cfg = [];
 cfg.layout = 'biosemi64.lay';
