@@ -148,7 +148,7 @@ sw2.graph <- summarySE(SWS_data2, measurevar = "SWdens", groupvars = c( "Treatme
 sw2.graph$Treatment<-ordered(sw2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data=sw2.graph, aes(x=Treatment, y=SWdens, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Slow Wave Density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(3.25, 5.5)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Slow Wave Density per Minute")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(3.25, 5.5)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
 
  
   

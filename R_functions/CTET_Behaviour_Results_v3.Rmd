@@ -131,18 +131,18 @@ lm.Miss3 <- lmer(Miss ~ 1 + Treatment*BlockN + (1|SubID), data =  aggdata_MISS, 
 
 ##Anova to see which one has the most interaction
 anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3)
-summary(lm.Miss3)
-confint(lm.Miss3, method = "Wald", oldNames = FALSE)
+summary(lm.Miss2)
+confint(lm.Miss2, method = "Wald", oldNames = FALSE)
 
 ##Normality plot of residuals 
-hist(residuals(lm.Miss3))
-boxplot(residuals(lm.Miss3))
-qqnorm(resid(lm.Miss3))
-qqline(resid(lm.Miss3))
-plot(lm.Miss3)
-plot(fitted(lm.Miss3), resid(lm.Miss3))
+hist(residuals(lm.Miss2))
+boxplot(residuals(lm.Miss2))
+qqnorm(resid(lm.Miss2))
+qqline(resid(lm.Miss2))
+plot(lm.Miss2)
+plot(fitted(lm.Miss2), resid(lm.Miss2))
 
-binnedplot(fitted(lm.Miss3),resid(lm.Miss3))
+binnedplot(fitted(lm.Miss2),resid(lm.Miss2))
 
 ```
 
