@@ -291,7 +291,7 @@ sdrt2.graph <- summarySE(CTET_Behaviour1, measurevar = "STD_RT", groupvars = c("
 sdrt2.graph$Treatment<-ordered(sdrt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data= sdrt2.graph, aes(x=Treatment, y=STD_RT, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = STD_RT-se, ymax = STD_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + labs(y = "Reaction Time (seconds)") + coord_cartesian(ylim =c(0.075, .2)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = STD_RT-se, ymax = STD_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + labs(y = "Reaction Time Variability (seconds)") + coord_cartesian(ylim =c(0.075, .2)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
   
 ggsave(file="../Figures/CTET_BarPlot_SDRThits.eps", dpi = 600, 
        width = 15/2,
