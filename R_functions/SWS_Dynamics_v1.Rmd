@@ -150,7 +150,7 @@ plot(all_lme_block[[10]])
 plot(fitted(all_lme_block[[10]]), resid(all_lme_block[[10]]))
 ```
 
-```{r} 
+``` {r} 
 
 #lme_treatment <- lmer(SWdens ~ 1 + BlockN + (1|SubID), REML = TRUE, data = SWS_data4[SWS_data4$Treatment == 'PLA',])
 #summary(lme_treatment)
