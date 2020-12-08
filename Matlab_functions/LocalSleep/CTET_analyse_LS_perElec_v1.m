@@ -20,10 +20,6 @@ cfg.layout = 'biosemi64.lay';
 cfg.channel=unique(table_SW.Elec);
 cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
-%%
-cfg = [];
-cfg.layout = 'biosemi64.lay';
-layout=ft_prepare_layout(cfg);
 
 cmap=cbrewer('seq','YlOrRd',64); % select a sequential colorscale from yellow to red (64)
 Drugs={'PLA','ATM','CIT','MPH'};

@@ -123,8 +123,8 @@ for nF=1:length(files)
     end
     for nTr=1:size(temp_table,1)
         temp_trial=temp_table(nTr,:);
-        beg_sample=(temp_trial.Sample)-1*hdr.Fs;
-        end_sample=(temp_trial.Sample)+1*hdr.Fs;
+        beg_sample=(temp_trial.Sample)+0*hdr.Fs;
+        end_sample=(temp_trial.Sample)+1.5*hdr.Fs;
         temp_slow_Waves=slow_Waves(:,5)>beg_sample & slow_Waves(:,7)<end_sample;
         temp_all_SWflag(nTr,slow_Waves(temp_slow_Waves,3))=1;
         temp_all_SWflag(nTr,65)=sum(temp_slow_Waves);
@@ -132,21 +132,22 @@ for nF=1:length(files)
     all_SWflag(table.SubID==SubN & table.SessN==SessN,:)=temp_all_SWflag;
 end
 %%
-cfg = [];
-cfg.layout = 'biosemi64.lay';
-layout=ft_prepare_layout(cfg);
+load ../lsneurom_biosemi_cleanlayout.mat
+myElecs=ismember(hdr.label,layout.label);
+all_SWflag2=all_SWflag(:,myElecs);
 
 VarNames=[];
-for nE=1:64
-VarNames{nE}=layout.label{nE};
+myLabels=hdr.label(ismember(hdr.label,layout.label));
+for nE=1:length(myLabels)
+VarNames{nE}=myLabels{nE};
 end
-VarNames{nE+1}='ALL';
-table_SW=array2table(all_SWflag,'VariableNames',VarNames);
+% VarNames{nE+1}='ALL';
+table_SW=array2table(all_SWflag2,'VariableNames',VarNames);
 
 table_BehavSW=[table table_SW];
 table_BehavSW.Treatment=categorical(table_BehavSW.Treatment);
 table_BehavSW.Treatment=reordercats(table_BehavSW.Treatment,[4 1 2 3]);
 table_BehavSW(find(ismember(table_BehavSW.BlockN,'<undefined>')),:)=[];
 table_BehavSW.BlockN=categorical(table_BehavSW.BlockN);
-writetable(table_BehavSW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWflag_perTrial_byElec.txt');
+writetable(table_BehavSW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWflag_perTrial_byElec_v2.txt');
 

@@ -37,7 +37,125 @@ SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 nsims<-1000
 
 ```
+```{r}
+#detach("package:multilevelTools", unload=TRUE)
+#detach("package:lmerTest", unload=TRUE)
 
+### TRY ALL DRUGS
+SWS_data_Target<-SWS_data[SWS_data$StimType==1,] #|: . $: and
+SWS_data_Target$SubID<-as.factor(SWS_data_Target$SubID)
+
+med.fit1 <- glmer(Fz  ~ 1 + Treatment + (1|SubID), data = SWS_data_Target, family="binomial")
+out.fit1 <- glmer(Miss  ~ 1 + Fz+Treatment + (1|SubID), data = SWS_data_Target, family="binomial")
+med.out1 <- mediate(med.fit1, out.fit1, treat = "Treatment", mediator = "Fz",boot = FALSE, sims = nsims)
+summary(med.out1)
+
+# names of channels
+channels.names <- names(SWS_data)
+channels.names <- channels.names[12:75]
+no.channels <- length(channels.names)
+
+# create a named list to hold the fitted models
+med_RT_MPH <- as.list(1:no.channels)
+names(med_RT_MPH) <- channels.names
+med_Miss_MPH <- as.list(1:no.channels)
+names(med_Miss_MPH) <- channels.names
+
+# loop over channel names
+MPH_RT_Est<-matrix(NA,no.channels,9)
+MPH_RT_pV<-matrix(NA,no.channels,9)
+MPH_Miss_Est<-matrix(NA,no.channels,9)
+MPH_Miss_pV<-matrix(NA,no.channels,9)
+
+count<-0
+for(i in channels.names){ 
+  # print status
+  print(paste("Running channel:", i, "which is", which(channels.names==i), "out of", no.channels))
+  count<-count+1
+
+  # create temporary data matrix and model formula
+  tmp <- SWS_data_MPH
+  fml0 <- as.formula( paste( i, "~ 1 + Treatment + (1|SubID)"))
+  
+  # run mediation on RT
+  tmp1<-tmp[is.na(tmp$Hit_RT)==FALSE,]
+  med.fit0 <- lmer(fml0, data = tmp1)
+  fml1 <- as.formula( paste( "Hit_RT ~ 1 + ",i,"+Treatment + (1|SubID)"))
+  out.fit1 <- lmer(fml1, data = tmp1)
+  med.out1 <- mediate(med.fit0, out.fit1, treat = "Treatment", mediator = i,robustSE = FALSE, sims = nsims)
+  
+  # run mediation on Miss
+  tmp1<-tmp[is.na(tmp$Miss)==FALSE,]
+  med.fit0 <- lmer(fml0, data = tmp1)
+  fml1 <- as.formula( paste( "Miss ~ 1 + ",i,"+Treatment + (1|SubID)"))
+  out.fit2 <- lmer(fml1, data = tmp1)
+  med.out2 <- mediate(med.fit0, out.fit2, treat = "Treatment", mediator = i,robustSE = FALSE, sims = nsims)
+  
+   # assign fit to list by name for RT
+  med_RT_MPH[[i]] <- med.out1
+  sum_med.out1<-summary(med.out1)
+  MPH_RT_Est[count,1]<-sum_med.out1$d0[1]
+  MPH_RT_Est[count,2]<-sum_med.out1$d1[1]
+  MPH_RT_Est[count,3]<-sum_med.out1$z0[1]
+  MPH_RT_Est[count,4]<-sum_med.out1$z1[1]
+  MPH_RT_Est[count,5]<-sum_med.out1$n0[1]
+  MPH_RT_Est[count,6]<-sum_med.out1$n1[1]
+  MPH_RT_Est[count,7]<-sum_med.out1$d.avg[1]
+  MPH_RT_Est[count,8]<-sum_med.out1$z.avg[1]
+  MPH_RT_Est[count,9]<-sum_med.out1$n.avg[1]
+  
+  MPH_RT_pV[count,1]<-sum_med.out1$d0.p[1]
+  MPH_RT_pV[count,2]<-sum_med.out1$d1.p[1]
+  MPH_RT_pV[count,3]<-sum_med.out1$z0.p[1]
+  MPH_RT_pV[count,4]<-sum_med.out1$z1.p[1]
+  MPH_RT_pV[count,5]<-sum_med.out1$n0.p[1]
+  MPH_RT_pV[count,6]<-sum_med.out1$n1.p[1]
+  MPH_RT_pV[count,7]<-sum_med.out1$d.avg.p[1]
+  MPH_RT_pV[count,8]<-sum_med.out1$z.avg.p[1]
+  MPH_RT_pV[count,9]<-sum_med.out1$n.avg.p[1]
+  
+  # assign fit to list by name for Miss
+  med_Miss_MPH[[i]] <- med.out2
+  sum_med.out2<-summary(med.out2)
+  MPH_Miss_Est[count,1]<-sum_med.out2$d0[1]
+  MPH_Miss_Est[count,2]<-sum_med.out2$d1[1]
+  MPH_Miss_Est[count,3]<-sum_med.out2$z0[1]
+  MPH_Miss_Est[count,4]<-sum_med.out2$z1[1]
+  MPH_Miss_Est[count,5]<-sum_med.out2$n0[1]
+  MPH_Miss_Est[count,6]<-sum_med.out2$n1[1]
+  MPH_Miss_Est[count,7]<-sum_med.out2$d.avg[1]
+  MPH_Miss_Est[count,8]<-sum_med.out2$z.avg[1]
+  MPH_Miss_Est[count,9]<-sum_med.out2$n.avg[1]
+  
+  MPH_Miss_pV[count,1]<-sum_med.out2$d0.p[1]
+  MPH_Miss_pV[count,2]<-sum_med.out2$d1.p[1]
+  MPH_Miss_pV[count,3]<-sum_med.out2$z0.p[1]
+  MPH_Miss_pV[count,4]<-sum_med.out2$z1.p[1]
+  MPH_Miss_pV[count,5]<-sum_med.out2$n0.p[1]
+  MPH_Miss_pV[count,6]<-sum_med.out2$n1.p[1]
+  MPH_Miss_pV[count,7]<-sum_med.out2$d.avg.p[1]
+  MPH_Miss_pV[count,8]<-sum_med.out2$z.avg.p[1]
+  MPH_Miss_pV[count,9]<-sum_med.out2$n.avg.p[1]
+  
+}
+output_names<-c("ACME_control","ACME_treated","ADE_control","ADE_treated","Prop_Mediated_control","Prop_Mediated_treated","ACME_average","ADE_average","Prop_Mediated_average")
+rownames(MPH_RT_Est)<-channels.names
+rownames(MPH_RT_pV)<-channels.names
+colnames(MPH_RT_Est)<-output_names
+colnames(MPH_RT_pV)<-output_names
+
+rownames(MPH_Miss_Est)<-channels.names
+rownames(MPH_Miss_pV)<-channels.names
+colnames(MPH_Miss_Est)<-output_names
+colnames(MPH_Miss_pV)<-output_names
+
+
+write.table(MPH_RT_Est,file="../Tables/CTET_Mediation_allE_MPH_RT_Est_perTrial_v3.txt")
+write.table(MPH_RT_pV,file="../Tables/CTET_Mediation_allE_MPH_RT_pV_perTrial_v3.txt")
+write.table(MPH_Miss_Est,file="../Tables/CTET_Mediation_allE_MPH_Miss_Est_perTrial_v3.txt")
+write.table(MPH_Miss_pV,file="../Tables/CTET_Mediation_allE_MPH_Miss_pV_perTrial_v3.txt")
+
+```
 
 
 ```{r}
