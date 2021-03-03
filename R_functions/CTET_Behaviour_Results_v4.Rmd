@@ -40,6 +40,10 @@ library(plyr)
 library(Rmisc)
 library(plotly)
 
+library(cowplot) 
+library(dplyr) 
+library(readr)
+
 ##NOT WORKING:  CTET_Behaviour1 <- read.table("../Tables/CTET_behav_resblock.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 CTET_Behaviour1 <- read.csv("../Tables/CTET_behav_resblock_full.txt")
@@ -302,3 +306,69 @@ ggsave(file="../Figures/CTET_BarPlot_SDRThits.png", dpi = 600,
       height = 18/2,
     units = c("cm"))
 ```
+
+
+```{r} 
+##Raincloud plot of RT
+#summary stats 
+CTET_Behaviour1_noNA <-na.omit(CTET_Behaviour1)
+CTET_Behaviour1_noNA$Treatment<-ordered(CTET_Behaviour1_noNA$Treatment,c("PLA","MPH","ATM","CIT"))
+summary_RT <- summarySE(CTET_Behaviour1_noNA, measurevar = "Hit_RT", groupvars=c("Treatment", "BlockN"))
+summary_RT
+
+
+ 
+ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = Hit_RT, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = Hit_RT, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+  geom_boxplot(aes(x = Treatment, y = Hit_RT, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = summary_RT, aes(x = as.numeric(Treatment)+.1, y = Hit_RT, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
+  geom_point(data = summary_RT, aes(x = as.numeric(Treatment)+.1, y = Hit_RT, group = Treatment, colour = Treatment), shape = 18) +
+  geom_errorbar(data = summary_RT, aes(x = as.numeric(Treatment)+.1, y =  Hit_RT, group = Treatment, colour = Treatment, ymin = Hit_RT-se, ymax = Hit_RT+se), width = .05)+ ylim(1, 1.72) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) 
+
+
+# code from raincloud plot: 
+ geom_line(data = sumrepdat, aes(x = as.numeric(group)+.1, y = score_mean, group = time, colour = time), linetype = 3)
+   geom_point(data = sumrepdat, aes(x = as.numeric(time)+.1, y = score_mean, group = group, colour = group), shape = 18) +
+  geom_errorbar(data = sumrepdat, aes(x = as.numeric(time)+.1, y = score_mean, group = group, colour = group, ymin = score_mean-se, ymax = score_mean+se), width = .05)
+  
+   
+```
+
+```{r}
+##Raincloud plot of STD_RT
+#summary stats 
+summary_STDRT <- summarySE(CTET_Behaviour1_noNA, measurevar = "STD_RT", groupvars=c("Treatment", "BlockN"))
+summary_STDRT
+
+
+ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = STD_RT, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = STD_RT, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+  geom_boxplot(aes(x = Treatment, y = STD_RT, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = summary_STDRT, aes(x = as.numeric(Treatment)+.1, y = STD_RT, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
+  geom_point(data = summary_STDRT, aes(x = as.numeric(Treatment)+.1, y = STD_RT, group = Treatment, colour = Treatment), shape = 18) +
+  geom_errorbar(data = summary_STDRT, aes(x = as.numeric(Treatment)+.1, y =  STD_RT, group = Treatment, colour = Treatment, ymin = STD_RT-se, ymax = STD_RT+se), width = .05)+ ylim(0, 0.5) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time Variability (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+
+```
+
+```{r}
+##Raincloud plot of misses
+#summary stats 
+summary_miss <- summarySE(CTET_Behaviour1_noNA, measurevar = "Miss", groupvars=c("Treatment", "BlockN"))
+summary_miss
+
+ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = Miss, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = Miss, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+  geom_boxplot(aes(x = Treatment, y = Miss, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = summary_miss, aes(x = as.numeric(Treatment)+.1, y = Miss, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
+  geom_point(data = summary_miss, aes(x = as.numeric(Treatment)+.1, y = Miss, group = Treatment, colour = Treatment), shape = 18) +
+  geom_errorbar(data = summary_miss, aes(x = as.numeric(Treatment)+.1, y =  Miss, group = Treatment, colour = Treatment, ymin = Miss-se, ymax = Miss+se), width = .05)+ ylim(0, 1) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time Variability (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+```
+*** if probem occurs in geom_flat_violin : type in console: source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R") )

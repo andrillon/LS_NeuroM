@@ -141,7 +141,7 @@ str(alertness.long.NoNA)
 
 ## summary statistics 
 sum.alertness <- alertness.long.NoNA%>%
-  group_by(Treatment, time) %>%
+  group_by(condition, time) %>%
   get_summary_stats(score, type = "mean_sd")
 sum.alertness
 
