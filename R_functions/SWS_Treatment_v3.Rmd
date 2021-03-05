@@ -37,6 +37,8 @@ SWS_data$Treatment<-as.factor(SWS_data$Treatment)
 SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 
 SWS_data2<-aggregate(SWdens ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
+SWS_data3<-aggregate(SWdens ~ SubID+Treatment, data=SWS_data, FUN=mean)
+
 ```
 
 
@@ -114,7 +116,7 @@ plot(fitted(lm.sw2), resid(lm.sw2))
 ```{r}
 #DRAFT 
 ##Graph of the effects of block number and drug on slow wave density
-sw.graph <- summarySE(SWS_data, measurevar = "SWdens", groupvars = c("BlockN", "Treatment"))
+sw.graph <- summarySE(SWS_data2, measurevar = "SWdens", groupvars = c("BlockN", "Treatment"))
 sw.graph$Treatment<-ordered(sw.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 
 
@@ -122,7 +124,7 @@ sw.graph$Treatment<-ordered(sw.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 ggplot(sw.graph, aes(x = BlockN, y = SWdens, colour = Treatment)) + geom_point() + geom_line() +  ggtitle("Mean Slow Wave Density According To Block Number and Treatment") + ylab("Mean Slow Wave Density") + xlab("Block Number")+ geom_ribbon(aes(ymin = SWdens-se, ymax = SWdens+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))
 
 ##Barplot 
-sw2.graph <- summarySE(SWS_data, measurevar = "SWdens", groupvars = c( "Treatment"))
+sw2.graph <- summarySE(SWS_data3, measurevar = "SWdens", groupvars = c( "Treatment"))
 sw2.graph$Treatment<-ordered(sw2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data=sw2.graph, aes(x=Treatment, y=SWdens, fill = Treatment)) +
