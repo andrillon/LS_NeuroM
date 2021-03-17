@@ -6,7 +6,7 @@ addpath((path_fieldtrip));
 ft_defaults;
 
 %% choose and load subject
-List_Subj=dir([data_path filesep 'Ife_ft_*.mat']);
+List_Subj=dir([data_path filesep 'Icfe_ft_*.mat']);
 ListNames={List_Subj.name};
 pick=listdlg('ListString',ListNames);
 load([data_path filesep ListNames{pick}])
