@@ -27,8 +27,8 @@ for nF=1:length(files)
     end
     nFc=nFc+1;
     
-    if exist([data_path filesep 'Ife_ft_' File_Name(1:end-4) '.mat'])==0
-    load([data_path filesep 'fe_ft_' File_Name(1:end-4)]);
+    if exist([data_path filesep 'Icfe_ft_' File_Name(1:end-4) '.mat'])==0
+    load([data_path filesep 'cfe_ft_' File_Name(1:end-4)]);
     
     cfg=[];
     cfg.reref      = 'yes';
@@ -41,7 +41,7 @@ for nF=1:length(files)
     cfg.method = 'runica'; % this is the default and uses the implementation from EEGLAB
     cfg.numcomponent = rankICA;
     comp = ft_componentanalysis(cfg, data);
-    save([data_path filesep 'Ife_ft_' File_Name(1:end-4)],'data','comp','rankICA');
+    save([data_path filesep 'Icfe_ft_' File_Name(1:end-4)],'data','comp','rankICA');
     end
 %     clear dat
 %     cfg2=[];
