@@ -8,7 +8,7 @@ ft_defaults;
 addpath(genpath(path_fooof))
 addpath(genpath(path_LSCPtools));
 
-files=dir([data_path filesep '*.bdf']);
+files=dir([data_path filesep 'fe_ft_*.mat']);
 
 table=readtable([save_path 'CTET_behav_res.txt']);
 
@@ -25,13 +25,14 @@ load ../EEG_Cleaning.mat
 nFc=0;
 for nF=1:length(files)
     File_Name=files(nF).name;
+    File_Name=File_Name(7:end);
     fprintf('... processing %s\n',File_Name);
     septag=findstr(File_Name,'_');
     SubN=str2num(File_Name(1:septag(1)-1));
     SessN=str2num(File_Name(septag(3)-1));
     DrugC=(File_Name(septag(3)+1:septag(3)+3));
-    hdr=ft_read_header([data_path filesep File_Name]);
-    if hdr.Fs~=1024 || length(unique(table.BlockN(table.SubID==SubN & table.SessN==SessN)))~=10
+%     hdr=ft_read_header([data_path filesep File_Name]);
+    if length(unique(table.BlockN(table.SubID==SubN & table.SessN==SessN)))~=10
         continue;
     end
     nFc=nFc+1;
