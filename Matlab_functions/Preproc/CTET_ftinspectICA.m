@@ -47,5 +47,6 @@ cfg.channel  = pickComponents; % components to be plotted
 cfg.viewmode = 'component';
 cfg.layout   = layout; % specify the layout file that should be used for plotting
 cfg.allowoverlap='true';
-ft_databrowser(cfg, comp)
+ft_databrowser(cfg, comp);
+fprintf('... working on %s\n',ListNames{pick})
 
