@@ -12,6 +12,16 @@ pick=listdlg('ListString',ListNames);
 load([data_path filesep ListNames{pick}])
 oridata=data;
 
+... processing 14_ctet_session1_CIT.mat
+... processing 15_ctet_session4_ATM.mat
+... processing 27_ctet_session3_ATM.mat
+... processing 29_ctet_session4_MPH.mat
+... processing 30_ctet_session1_CIT.mat
+... processing 31_ctet_session4_MPH.mat
+... processing 32_ctet_session1_CIT.mat
+... processing 33_ctet_session3_PLA.mat
+... processing 34_ctet_session2_MPH.mat
+... processing 36_ctet_session4_CIT.mat
 %% Layout
 cfg = [];
 cfg.layout = 'biosemi64.lay';

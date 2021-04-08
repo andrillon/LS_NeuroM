@@ -8,7 +8,7 @@ ft_defaults;
 addpath(genpath(path_fooof))
 addpath(genpath(path_LSCPtools));
 
-files=dir([data_path filesep 'fe_ft_*.mat']);
+files=dir([data_path filesep '*.bdf']);
 
 table=readtable([save_path 'CTET_behav_res.txt']);
 
@@ -21,29 +21,32 @@ cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
 load ../EEG_Cleaning.mat
+load('../ICA_Artifacts.mat')
+
 %%
 redo=1;
 nFc=0;
 for nF=1:length(files)
     File_Name=files(nF).name;
-    File_Name=File_Name(7:end);
     fprintf('... processing %s\n',File_Name);
     septag=findstr(File_Name,'_');
     SubN=str2num(File_Name(1:septag(1)-1));
     SessN=str2num(File_Name(septag(3)-1));
     DrugC=(File_Name(septag(3)+1:septag(3)+3));
-%     hdr=ft_read_header([data_path filesep File_Name]);
-    if length(unique(table.BlockN(table.SubID==SubN & table.SessN==SessN)))~=10
+    hdr=ft_read_header([data_path filesep File_Name]);
+    if hdr.Fs~=1024 || length(unique(table.BlockN(table.SubID==SubN & table.SessN==SessN)))~=10
+        continue;
+    end
+    if SubN==14 && SessN==1
+    else
         continue;
     end
     nFc=nFc+1;
     
-    if redo==1 || exist([data_path filesep 'cfe_ft_' File_Name(1:end-4) '.mat'])==0
-       
+    if redo==1 || exist([data_path filesep 'CIcfe_blocks_ft_' File_Name(1:end-4) '.mat'])==0
         
-        %%% take out trial
+        %%% interporate channels
         thisF=match_str(EEGCleaning.File,['fe_ft_' File_Name(1:end-4) '.mat']);
-        eval(['badTrials=[' EEGCleaning.Trials{thisF} '];']);
         badChannelsStr=EEGCleaning.Channels{thisF};
         badChannels=[];
         if ~isempty(badChannelsStr)
@@ -65,17 +68,6 @@ for nF=1:length(files)
         else
             badChannels=[];
         end
-        if isempty(badChannels)==1
-            continue;
-        end
-         %%% Define epochs
-        load([data_path filesep 'fe_ft_' File_Name(1:end-4)])
-        
-        cfg=[];
-        cfg.trials          = setdiff(1:length(data.trial),badTrials);
-        data = ft_preprocessing(cfg, data);
-        
-
         % clean from channels not included in layout
         if ~isempty(badChannels)
             remove=nan(1,length(badChannels));
@@ -88,6 +80,39 @@ for nF=1:length(files)
             end
             badChannels(remove==1)=[];
         end
+        
+        
+        
+        %%% Define epochs
+        cfg=[];
+        cfg.trialfun            = 'CTET_blockfun';
+        cfg.table               = table;
+        cfg.SubID               = SubN;
+        cfg.SessN               = SessN;
+        cfg.dataset             = [data_path filesep File_Name];
+        cfg.trialdef.prestim    = -2;
+        cfg.trialdef.poststim   = 1;
+        cfg = ft_definetrial(cfg);
+        
+        cfg.channel        = hdr.label(match_str(hdr.chantype,'eeg'));
+        cfg.demean         = 'yes';
+        cfg.lpfilter       = 'yes';        % enable high-pass filtering
+        cfg.lpfilttype     = 'but';
+        cfg.lpfiltord      = 4;
+        cfg.lpfreq         = 40;
+        cfg.hpfilter       = 'yes';        % enable high-pass filtering
+        cfg.hpfilttype     = 'but';
+        cfg.hpfiltord      = 4;
+        cfg.hpfreq         = 0.1;
+        cfg.dftfilter      = 'yes';        % enable notch filtering to eliminate power line noise
+        cfg.dftfreq        = [50]; % set up the frequencies for notch filtering
+        dat                   = ft_preprocessing(cfg); % read raw data
+        
+        cfg.resamplefs      = 256;
+        cfg.detrend         = 'no';
+        cfg.demean          = 'yes';
+        cfg.baselinewindow  = [-0.5 0];
+        data = ft_resampledata(cfg, dat);
         
         if ~isempty(badChannels)
             fprintf('... ... interpolating %g channels\n',length(badChannels))
@@ -111,7 +136,22 @@ for nF=1:length(files)
             [data] = ft_channelrepair(cfg, data);
         end
         
-        save([data_path filesep 'cfe_ft_' File_Name(1:end-4)],'data');
+        %%% Reject bad component
+        load([data_path filesep 'Icfe_ft_' files(nF).name(1:end-4) '.mat'], 'comp');
+        cfg = [];
+        this_line=match_str(ICA_Artifacts.File,['Icfe_ft_' files(nF).name(1:end-4) '.mat']);
+        these_components=ICA_Artifacts.OcularArtifact{this_line};
+        eval(sprintf('cfg.component = [%s];',these_components)); % to be removed component(s)
+        data_clean = ft_rejectcomponent(cfg, comp, data);
+        
+        cfg=[];
+        cfg.reref           = 'yes';
+        cfg.refchannel      = 'all';
+        cfg.demean          = 'yes';
+        cfg.baselinewindow  = [-2 0];
+        data_clean = ft_preprocessing(cfg,data_clean);
+        
+        save([data_path filesep 'CIcfe_blocks_ft_' File_Name(1:end-4)],'data_clean');
     end
     %     clear dat
     %     cfg2=[];

@@ -14,10 +14,14 @@ trl = [];
 table=cfg.table;
 subtable=table(table.SubID==cfg.SubID & table.SessN==cfg.SessN,:);
 
-for i=1:size(subtable,1)
+for i=1:10 % expecting 10 blocks
+    temp_trial=subtable.Sample(ismember(subtable.BlockN,num2str(i)));
+    first_trial=temp_trial(1);
+    last_trial=temp_trial(end);
+    
     % add this to the trl definition
-    begsample     = subtable.Sample(i) - cfg.trialdef.prestim*hdr.Fs;
-    endsample     = subtable.Sample(i) + cfg.trialdef.poststim*hdr.Fs - 1;
+    begsample     = first_trial - cfg.trialdef.prestim*hdr.Fs;
+    endsample     = last_trial + cfg.trialdef.poststim*hdr.Fs - 1;
     offset        = -cfg.trialdef.prestim*hdr.Fs;
     trl(end+1, :) = [round([begsample endsample offset])];
 end
