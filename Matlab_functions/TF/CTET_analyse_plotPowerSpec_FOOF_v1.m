@@ -5,9 +5,8 @@ run ../localdef.m
 addpath(genpath([pwd filesep '..']))
 
 addpath(path_fieldtrip);
-addpath(path_localsleep);
 ft_defaults;
-addpath(genpath(fooof_path))
+addpath(genpath(path_fooof))
 addpath(genpath(path_LSCPtools));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
@@ -66,27 +65,27 @@ end
 %%
 thisCh=match_str(hdr.label,'Oz');
 figure;
-    hold on;
+hold on;
 for k=1:length(uSubs)
-plot(myfreqs,(squeeze(nanmean(av_pow_subs(k,:,thisCh,:),2)))','LineWidth',1); %,0,Colors(nDrug,:),0,'-',.5,1,0,[],2);
-% pause;
-% clf;
+    plot(myfreqs,(squeeze(nanmean(av_pow_subs(k,:,thisCh,:),2)))','LineWidth',1); %,0,Colors(nDrug,:),0,'-',.5,1,0,[],2);
+    % pause;
+    % clf;
 end% plot(myfreqs,nanmean(squeeze(nanmean(av_pow(:,:,thisCh,:),2))),'Color','r','LineWidth',3); %,0,Colors(nDrug,:),0,'-',.5,1,0,[],2);
- xlim([2 30])
- xlabel('Freq (Hz)')
+xlim([2 30])
+xlabel('Freq (Hz)')
 ylabel('Power')
 format_fig;
 
- [~,find625]=findclosest(myfreqs,6.25);
- [~,find225]=findclosest(myfreqs,22.5);
- [~,find25]=findclosest(myfreqs,25);
- 
- Power625=(squeeze(mean(av_pow(:,:,thisCh,find625),2))./squeeze(mean(mean(av_pow(:,:,thisCh,[find625-5 find625+5]),2),4)));
- Power225=(squeeze(mean(av_pow(:,:,thisCh,find225),2))./squeeze(mean(mean(av_pow(:,:,thisCh,[find225-5 find225+5]),2),4)));
- Power25=(squeeze(mean(av_pow(:,:,thisCh,find25),2))./squeeze(mean(mean(av_pow(:,:,thisCh,[find25-5 find25+5]),2),4)));
+[~,find625]=findclosest(myfreqs,6.25);
+[~,find225]=findclosest(myfreqs,22.5);
+[~,find25]=findclosest(myfreqs,25);
+
+Power625=(squeeze(mean(av_pow(:,:,thisCh,find625),2))./squeeze(mean(mean(av_pow(:,:,thisCh,[find625-5 find625+5]),2),4)));
+Power225=(squeeze(mean(av_pow(:,:,thisCh,find225),2))./squeeze(mean(mean(av_pow(:,:,thisCh,[find225-5 find225+5]),2),4)));
+Power25=(squeeze(mean(av_pow(:,:,thisCh,find25),2))./squeeze(mean(mean(av_pow(:,:,thisCh,[find25-5 find25+5]),2),4)));
 
 %%
-thisCh=match_str(hdr.label,'Fz');
+thisCh=match_str(hdr.label,'Cz');
 figure;
     hold on;
 Drugs={'PLA','MPH','CIT','ATM'};
@@ -364,7 +363,8 @@ set(gca,'XTick',1:4,'XTickLabel',Drugs);
 title('Alpha Power')
 
 %% PEAKS: PLOTS
-table_pktag=table_pk(table_pk.peak_freq>=24.8 & table_pk.peak_freq<=25.2,:);
+% table_pktag=table_pk(table_pk.peak_freq>=24.8 & table_pk.peak_freq<=25.2,:);
+table_pktag=table_pk(table_pk.peak_freq>=5 & table_pk.peak_freq<=8,:);
 
 figure; set(gcf,'Position',[213         173        1027         805]);
 for nDrug=1:4

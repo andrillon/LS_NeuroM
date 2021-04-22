@@ -10,7 +10,6 @@ addpath(genpath(path_LSCPtools));
 
 files=dir([data_path filesep 'Icfe_ft_*.mat']);
 
-table=readtable([save_path 'CTET_behav_res.txt']);
 load('../ICA_Artifacts.mat')
 
 %%
@@ -22,13 +21,15 @@ for nF=1:length(files)
     SubN=str2num(File_Name(1:septag(1)-1));
     SessN=str2num(File_Name(septag(3)-1));
     DrugC=(File_Name(septag(3)+1:septag(3)+3));
-    if length(unique(table.BlockN(table.SubID==SubN & table.SessN==SessN)))~=10
+    
+    table=readtable([save_path 'CTET_behav_' File_Name(1:end-4) '.txt']);
+    if length(unique(table.BlockN))~=10
         continue;
     end
     nFc=nFc+1;
-    if exist([data_path filesep 'CIf' File_Name])==0
-         fprintf('... processing %s\n',File_Name);
-   load([data_path filesep 'Icfe_ft_' File_Name(1:end-4)]);
+    if exist([data_path filesep 'CIcfe_ft_' File_Name])==0
+        fprintf('... processing %s\n',File_Name);
+        load([data_path filesep 'Icfe_ft_' File_Name(1:end-4)]);
         
         %%% Reject bad component
         cfg = [];
@@ -45,7 +46,7 @@ for nF=1:length(files)
         data_clean = ft_preprocessing(cfg,data_clean);
         data = ft_preprocessing(cfg,data);
         
-        save([data_path filesep 'CIf' File_Name],'data_clean');
+        save([data_path filesep 'CIcfe_ft_' File_Name],'data_clean');
     end
     %     cfgerp = [];
     %     av_data_preICA = ft_timelockanalysis(cfgerp, data);

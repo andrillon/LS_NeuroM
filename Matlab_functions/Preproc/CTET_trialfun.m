@@ -12,8 +12,11 @@ trl = [];
 
 % clean events
 table=cfg.table;
-subtable=table(table.SubID==cfg.SubID & table.SessN==cfg.SessN,:);
-
+if isfield(table,'SubID')
+    subtable=table(table.SubID==cfg.SubID & table.SessN==cfg.SessN,:);
+else
+    subtable=table;
+end
 for i=1:size(subtable,1)
     % add this to the trl definition
     begsample     = subtable.Sample(i) - cfg.trialdef.prestim*hdr.Fs;

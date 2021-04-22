@@ -10,10 +10,8 @@ addpath(genpath(path_LSCPtools));
 
 files=dir([data_path filesep 'fe_ft_*.mat']);
 
-table=readtable([save_path 'CTET_behav_res.txt']);
 
 %% Layout
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v3.txt']);
 cfg = [];
 cfg.layout = 'biosemi64.lay';
 % cfg.channel=unique(table_SW.Elec);
@@ -32,14 +30,15 @@ for nF=1:length(files)
     SubN=str2num(File_Name(1:septag(1)-1));
     SessN=str2num(File_Name(septag(3)-1));
     DrugC=(File_Name(septag(3)+1:septag(3)+3));
-%     hdr=ft_read_header([data_path filesep File_Name]);
-    if length(unique(table.BlockN(table.SubID==SubN & table.SessN==SessN)))~=10
+    %     hdr=ft_read_header([data_path filesep File_Name]);
+    table=readtable([save_path 'CTET_behav_' File_Name(1:end-4) '.txt']);
+    if length(unique(table.BlockN))~=10
         continue;
     end
     nFc=nFc+1;
     
     if redo==1 || exist([data_path filesep 'cfe_ft_' File_Name(1:end-4) '.mat'])==0
-       
+        
         
         %%% take out trial
         thisF=match_str(EEGCleaning.File,['fe_ft_' File_Name(1:end-4) '.mat']);

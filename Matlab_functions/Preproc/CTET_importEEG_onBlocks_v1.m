@@ -37,10 +37,6 @@ for nF=1:length(files)
     if hdr.Fs~=1024 || length(unique(table.BlockN(table.SubID==SubN & table.SessN==SessN)))~=10
         continue;
     end
-    if SubN==14 && SessN==1
-    else
-        continue;
-    end
     nFc=nFc+1;
     
     if redo==1 || exist([data_path filesep 'CIcfe_blocks_ft_' File_Name(1:end-4) '.mat'])==0
@@ -136,20 +132,21 @@ for nF=1:length(files)
             [data] = ft_channelrepair(cfg, data);
         end
         
+        cfg=[];
+        cfg.reref           = 'yes';
+        cfg.refchannel      = 'all';
+        cfg.demean          = 'yes';
+        cfg.baselinewindow  = [-2 0];
+        data_clean = ft_preprocessing(cfg,data);
+        
         %%% Reject bad component
         load([data_path filesep 'Icfe_ft_' files(nF).name(1:end-4) '.mat'], 'comp');
         cfg = [];
         this_line=match_str(ICA_Artifacts.File,['Icfe_ft_' files(nF).name(1:end-4) '.mat']);
         these_components=ICA_Artifacts.OcularArtifact{this_line};
         eval(sprintf('cfg.component = [%s];',these_components)); % to be removed component(s)
-        data_clean = ft_rejectcomponent(cfg, comp, data);
+        data_clean = ft_rejectcomponent(cfg, comp, data_clean);
         
-        cfg=[];
-        cfg.reref           = 'yes';
-        cfg.refchannel      = 'all';
-        cfg.demean          = 'yes';
-        cfg.baselinewindow  = [-2 0];
-        data_clean = ft_preprocessing(cfg,data_clean);
         
         save([data_path filesep 'CIcfe_blocks_ft_' File_Name(1:end-4)],'data_clean');
     end

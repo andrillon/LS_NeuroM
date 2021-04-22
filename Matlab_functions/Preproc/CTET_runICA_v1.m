@@ -31,11 +31,11 @@ for nF=1:length(files)
     
     if redo==1 || exist([data_path filesep 'Icfe_ft_' File_Name(1:end-4) '.mat'])==0
         
-        thisF=match_str(EEGCleaning.File,['fe_ft_' File_Name(1:end-4) '.mat']);
-        badChannelsStr=EEGCleaning.Channels{thisF};
-        if isempty(badChannelsStr)
-            continue;
-        end
+%         thisF=match_str(EEGCleaning.File,['fe_ft_' File_Name(1:end-4) '.mat']);
+%         badChannelsStr=EEGCleaning.Channels{thisF};
+%         if isempty(badChannelsStr)
+%             continue;
+%         end
         fprintf('... processing %s\n',File_Name);
         load([data_path filesep 'cfe_ft_' File_Name(1:end-4)]);
         
