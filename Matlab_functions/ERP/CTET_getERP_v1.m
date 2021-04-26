@@ -48,26 +48,26 @@ for nF=1:length(files)
     thisF=match_str(EEGCleaning.File,['fe_ft_' File_Name(1:end-4) '.mat']);
     eval(['badTrials=[' EEGCleaning.Trials{thisF} '];']);
     table(ismember(table.TrialN,badTrials),:)=[];
-    table.StimType(diff(table.BlockN)==1)=NaN;
+    table.StimType(find(diff(table.BlockN)==1 | diff(table.StimType)==1))=NaN;
     
     % COMPUTE BOTH ONSET AND OFFSET ERP
     cfgerp        = [];
-    cfgerp.latency        = [-0.2 0.8];
-    cfgerp.trials = find(table.StimType==0)+1; cfgerp.trials(cfgerp.trials>length(data_clean.trial))=[];
+%     cfgerp.latency        = [-0.2 0.8];
+    cfgerp.trials = find(table.StimType==0); %cfgerp.trials(cfgerp.trials>length(data_clean.trial))=[];
     av_data_NT = ft_timelockanalysis(cfgerp, data_clean);
-    cfgerp.trials = find(table.StimType==1)+1; cfgerp.trials(cfgerp.trials>length(data_clean.trial))=[];
+    cfgerp.trials = find(table.StimType==1); %cfgerp.trials(cfgerp.trials>length(data_clean.trial))=[];
     av_data_TG = ft_timelockanalysis(cfgerp, data_clean);
     
     ERP_NT=av_data_NT.avg; %(:,av_data_NT.time>-0.2 & av_data_NT.time<0.8);
 %     [~,idx]=findclosest(av_data_TG.time,NT_ITI(nF)-0.2);
 %     ERP_NT=ERP_NT(:,idx:idx+176);
-    ERP_NT=ERP_NT-repmat(mean(ERP_NT(:,1:50),2),[1 size(ERP_NT,2)]);
+%     ERP_NT=ERP_NT-repmat(mean(ERP_NT(:,1:50),2),[1 size(ERP_NT,2)]);
     all_ERP_NT(nFc,:,:)=ERP_NT;
     
     ERP_TG=av_data_TG.avg; %(:,av_data_TG.time>-0.2 & av_data_TG.time<0.8);
 %     [~,idx]=findclosest(av_data_TG.time,TG_ITI(nF)-0.2);
 %     ERP_TG=ERP_TG(:,idx:idx+176);
-    ERP_TG=ERP_TG-repmat(mean(ERP_TG(:,1:50),2),[1 size(ERP_TG,2)]);
+%     ERP_TG=ERP_TG-repmat(mean(ERP_TG(:,1:50),2),[1 size(ERP_TG,2)]);
     all_ERP_TG(nFc,:,:)=ERP_TG;
     
     all_DrugC{nFc}=DrugC;
@@ -80,7 +80,7 @@ for nF=1:length(files)
 end
 
 %%
-xTime=-0.2:1/256:(0.8);
+xTime=av_data_NT.time;
 thisCh=match_str(av_data_NT.label,'Pz');
 
 figure;
@@ -88,15 +88,18 @@ plot(xTime,squeeze(nanmean(all_ERP_NT(:,thisCh,:),1)),'k')
 hold on;
 plot(xTime,squeeze(nanmean(all_ERP_TG(:,thisCh,:),1)),'r')
 
+all_DrugC2=all_DrugC;
+all_DrugC2(NT_ITI>1)={'wrongITI'};
+
 figure;
 % ColorsD={[1 1 1]*0.5,[84 81 153]/255,[170 75 21]/255,[75 128 90]/255};
 % ColorsDlabels={'PLA','ATM','MPH','CIT'};
 for nDrug=1:4
     subplot(1,4,nDrug);
-    plot(xTime,squeeze(nanmean(all_ERP_NT(match_str(all_DrugC,ColorsDlabels{nDrug}),thisCh,:),1)),'k')
+    plot(xTime,squeeze(nanmean(all_ERP_NT(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:),1)),'k')
     hold on;
-    plot(xTime,squeeze(nanmean(all_ERP_TG(match_str(all_DrugC,ColorsDlabels{nDrug}),thisCh,:),1)),'r')
+    plot(xTime,squeeze(nanmean(all_ERP_TG(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:),1)),'r')
     title(ColorsDlabels{nDrug})
-    ylim([-1 3])
-    xlim([-0.2 0.8])
+    ylim([-1 5])
+    xlim([-0.2 1.8])
 end

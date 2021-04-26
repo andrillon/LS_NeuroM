@@ -174,8 +174,8 @@ table.SessN=categorical(table.SessN);
 table.Treatment=categorical(table.Treatment);
 table.Treatment=reordercats(table.Treatment,[4,1,2,3]);
 
-table.TrialN=ordinal(table.TrialN);
-table.BlockN=ordinal(table.BlockN);
+% table.TrialN=ordinal(table.TrialN);
+% table.BlockN=ordinal(table.BlockN);
 
 mdl1=fitlme(table,'RT~1+Treatment+(1|SubID)');
 % mdl2=fitlme(table,'FA~1+Treatment+(1|SubID)');

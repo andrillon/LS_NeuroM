@@ -23,6 +23,7 @@ layout=ft_prepare_layout(cfg);
 
 %%
 nFc=0;
+redo=1;
 for nF=1:length(files)
     File_Name=files(nF).name;
     fprintf('... processing %s\n',File_Name);
@@ -32,6 +33,9 @@ for nF=1:length(files)
     DrugC=(File_Name(septag(3)+1:septag(3)+3));
     hdr=ft_read_header([data_path filesep File_Name]);
     
+    if exist([save_path 'CTET_behav_' File_Name(1:end-4) '.txt'])==0
+        continue;
+    end
     table=readtable([save_path 'CTET_behav_' File_Name(1:end-4) '.txt']);
 
     if hdr.Fs~=1024 || length(unique(table.BlockN))~=10
@@ -39,7 +43,7 @@ for nF=1:length(files)
     end
     nFc=nFc+1;
     
-    if exist([data_path filesep 'fe_ft_' File_Name(1:end-4) '.mat'])==0
+    if redo==1 || exist([data_path filesep 'fe_ft_' File_Name(1:end-4) '.mat'])==0
         
         
         %%% Define epochs
@@ -59,10 +63,10 @@ for nF=1:length(files)
         cfg.lpfilttype     = 'but';
         cfg.lpfiltord      = 4;
         cfg.lpfreq         = 40;
-        cfg.hpfilter       = 'yes';        % enable high-pass filtering
-        cfg.hpfilttype     = 'but';
-        cfg.hpfiltord      = 4;
-        cfg.hpfreq         = 0.1;
+        cfg.hpfilter       = 'no';        % enable high-pass filtering
+%         cfg.hpfilttype     = 'but';
+%         cfg.hpfiltord      = 4;
+%         cfg.hpfreq         = 0.1;
         cfg.dftfilter      = 'yes';        % enable notch filtering to eliminate power line noise
         cfg.dftfreq        = [50]; % set up the frequencies for notch filtering
         dat                   = ft_preprocessing(cfg); % read raw data
