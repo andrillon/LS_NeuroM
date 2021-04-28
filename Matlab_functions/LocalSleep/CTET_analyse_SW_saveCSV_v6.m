@@ -40,7 +40,7 @@ for nF=1:length(filesPLA)
     paramSW.art_ampl=150;
     paramSW.max_posampl=75;
     paramSW.max_Freq=4;
-    paramSW.byElec=0;
+    paramSW.byElec=1;
     
     all_Waves=double(all_Waves);
     all_freq=1./(abs((all_Waves(:,5)-all_Waves(:,7)))./Fs);
@@ -158,6 +158,9 @@ end
 % set(gca,'XTick',1:4,'XTickLabel',Drugs)
 % ylim([5 7])
 %%
+all_slow_Waves_vec(:,6)=1-all_slow_Waves_vec(:,6);
+all_slow_Waves_vec2(:,6)=1-all_slow_Waves_vec2(:,6);
+%%
 table_Thr=array2table(sw_thr,'VariableNames',{'FileN','Thr','Elec'});
 table_Thr.Elec=categorical(table_Thr.Elec);
 for nE=1:64
@@ -166,7 +169,7 @@ end
 table_Thr(ismember(table_Thr.Elec,{'Iz'}),:)=[];
 table_Thr.Elec=removecats(table_Thr.Elec);
 
-table_SW=array2table(all_slow_Waves_vec,'VariableNames',{'FileN','SubID','SessN','BlockN','rawRT','corrNT','corrTG','ITI','RT','Elec','SWdens','P2P','NegSlope','PosSlope'});
+table_SW=array2table(all_slow_Waves_vec,'VariableNames',{'FileN','SubID','SessN','BlockN','rawRT','FA','Hit','ITI','RT','Elec','SWdens','P2P','NegSlope','PosSlope'});
 table_SW.SubID=categorical(table_SW.SubID);
 table_SW.SessN=categorical(table_SW.SessN);
 table_SW.Elec=categorical(table_SW.Elec);
@@ -198,11 +201,11 @@ end
 FullSubID=myS(sum(nSession,2)==4);
 table_SW2=table_SW(ismember(table_SW.SubID,FullSubID),:);
 if paramSW.byElec
-    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_behav_vec_v6.txt');
-    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v6.txt');
+    writetable(table_SW,[save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_v6.txt']);
+    writetable(table_SW2,[save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v6.txt']);
 else
-    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_v6.txt');
-    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v6.txt');
+    writetable(table_SW,[save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec_v6.txt']);
+    writetable(table_SW2,[save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v6.txt']);
 end
 table_allSW=table_SW;
 %%
@@ -229,12 +232,12 @@ mdl2=fitlme(table_SW,'SWdens~1+Elec+BlockN+(1|SubID)');
 mdl3=fitlme(table_SW,'SWdens~1+Elec*Drug+(1|SubID)');
 table_SW2=table_SW(ismember(table_SW.SubID,FullSubID),:);
 if paramSW.byElec
-    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_v6.txt');
-    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v6.txt');
+    writetable(table_SW,[save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_v6.txt']);
+    writetable(table_SW2,[save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v6.txt']);
     
 else
-    writetable(table_SW,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_v6.txt');
-    writetable(table_SW2,'/Users/tand0009/Data/CTET_Dockree/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v6.txt');
+    writetable(table_SW,[save_path filesep 'CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_v6.txt']);
+    writetable(table_SW2,[save_path filesep 'CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v6.txt']);
 end
 
 %%
