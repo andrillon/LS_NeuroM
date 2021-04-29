@@ -221,7 +221,7 @@ cor.test(agg_SWS_data$SWdens, agg_SWS_data$Miss)
 
 ##Scatterplot of slow wave density and reaction time
 ggplot(agg_SWS_data, aes (x = SWdens, y = RT)) + geom_point(alpha = .5)+ geom_smooth(method=lm, se = FALSE) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))
-cor.test(agg_SWS_data$SWdens, agg_SWS_data$Hit_RT)
+cor.test(agg_SWS_data$SWdens, agg_SWS_data$RT)
 
 ```
 

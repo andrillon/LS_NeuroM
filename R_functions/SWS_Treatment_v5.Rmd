@@ -28,7 +28,7 @@ library(tidyverse)
 library(Rmisc)
 
 
-SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v6.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v6.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
@@ -39,7 +39,26 @@ SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 
 ```
 
+```{r}
 
+SWS_data1<-aggregate(SWdens ~ SubID+Treatment+BlockN, data=SWS_data, FUN=mean)
+##Peak to Peak 
+lm.sw0 <- lmer(SWdens ~ 1 + (1|SubID), data = SWS_data1, REML =FALSE)
+
+##Effects of block number on peak to peak 
+lm.sw1 <- lmer(SWdens  ~ 1  + BlockN + (1|SubID), data = SWS_data1, REML = FALSE)
+
+##Effects of block number and drug on peak to peak 
+lm.sw2 <- lmer(SWdens  ~ 1  + BlockN + Treatment + (1|SubID), data = SWS_data1, REML = FALSE)
+
+##Effects of the interaction between block number and drug on peak to peak
+lm.sw3 <- lmer(SWdens  ~ 1 + BlockN*Treatment + (1|SubID), data = SWS_data1, REML = FALSE)
+
+
+##Anova to see which one has the most interaction
+anova(lm.sw0,lm.sw1,lm.sw2, lm.sw3)
+
+```
 
 ```{r}
 
@@ -158,6 +177,32 @@ confint(lm.ns2, method = "Wald", oldNames = FALSE)
 - second model was the winning model (lm.ns2) according to AIC and BIC (same as previous analysis)
 -  Block number and treatments except citalopream were significant (same as previous analysis)
 
+```{r}
+##Graph of the effects of block number and drug on peak to peak 
+dens.graph <- summarySE(SWS_data1, measurevar = "SWdens", groupvars = c("BlockN", "Treatment"))
+dens.graph$Treatment<-ordered(p2p.graph$Treatment, c("PLA","MPH","ATM","CIT"))
+
+
+##Graph with Standard Error 
+ggplot(dens.graph, aes(x = BlockN, y = SWdens, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = SWdens-se, ymax = SWdens+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(),  legend.position = "none", axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab("Peak to Peak")
+
+ggsave(file="../Figures/CTET_LinePlot_Dens_2021.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))
+
+##Barplot 
+dens.graph <- summarySE(SWS_data1, measurevar = "SWdens", groupvars = c( "Treatment"))
+dens.graph$Treatment<-ordered(dens.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data=dens.graph, aes(x=Treatment, y=SWdens, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("SW density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(4, 6)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) 
+
+ggsave(file="../Figures/CTET_BarPlot_Dens_2021.png", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
+```
 
 ```{r}
 ##Graph of the effects of block number and drug on peak to peak 

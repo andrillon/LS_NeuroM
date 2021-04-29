@@ -124,8 +124,18 @@ for nF=1:length(files)
     this_behav(this_behav(:,4)==0,6)=1;
     this_behav(this_behav(:,4)==1,7)=0;
     for m=1:length(respidx)
+        %         post_resp=this_behav(this_behav(:,2)>this_behav(respidx(m),2),3);
+        %         post_resp=post_resp(1);
+        %         if this_behav(respidx(m),3)~=post_resp
+        %             this_behav(respidx(m),5:9)=NaN;
+        %             continue;
+        %         end
+        if this_behav(respidx(m),5)>5*mode(this_behav(this_behav(:,8)>min(this_behav(:,8))+0.1,8))
+            this_behav(respidx(m),5:9)=NaN;
+            %             continue;
+        end
         if this_behav(respidx(m),4)==1 % resp on target
-            if this_behav(respidx(m),5)>min(this_behav(:,8))
+            if this_behav(respidx(m),5)>min(this_behav(:,8)) %&  this_behav(respidx(m),5)<mode(this_behav(this_behav(:,8)>min(this_behav(:,8))+0.1,8))+2*min(this_behav(:,8))
                 this_behav(respidx(m),7)=1;
                 this_behav(respidx(m),9)=this_behav(respidx(m),5);
             else
@@ -134,13 +144,13 @@ for nF=1:length(files)
                 this_behav(respidx(m)-1,9)=this_behav(respidx(m),5)+this_behav(respidx(m)-1,8);
             end
         elseif this_behav(respidx(m),4)==0 % resp on non target
-            if this_behav(respidx(m)-1,4)==1
+            if this_behav(respidx(m)-1,4)==1 %&& this_behav(respidx(m)-1,3)==this_behav(respidx(m),3)
                 this_behav(respidx(m)-1,7)=1;
                 this_behav(respidx(m)-1,9)=this_behav(respidx(m),5)+this_behav(respidx(m)-1,8);
             else
-                if this_behav(respidx(m)-2,4)==1
-                this_behav(respidx(m)-2,7)=1;
-                this_behav(respidx(m)-2,9)=this_behav(respidx(m),5)+this_behav(respidx(m)-1,8)+this_behav(respidx(m)-2,8);    
+                if this_behav(respidx(m)-2,4)==1 %&& this_behav(respidx(m)-2,3)==this_behav(respidx(m),3)
+                    this_behav(respidx(m)-2,7)=1;
+                    this_behav(respidx(m)-2,9)=this_behav(respidx(m),5)+this_behav(respidx(m)-1,8)+this_behav(respidx(m)-2,8);
                 else
                     this_behav(respidx(m)-1,6)=0;
                     this_behav(respidx(m)-1,9)=this_behav(respidx(m),5)+this_behav(respidx(m)-1,8);
@@ -181,7 +191,7 @@ mdl1=fitlme(table,'RT~1+Treatment+(1|SubID)');
 % mdl2=fitlme(table,'FA~1+Treatment+(1|SubID)');
 % mdl3=fitlme(table,'Miss~1+Treatment+(1|SubID)');
 
-writetable(table,'/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
+writetable(table,[save_path filesep 'CTET_behav_res.txt']);
 
 myS=unique(table.SubID);
 myD=unique(table.Treatment);
@@ -192,7 +202,7 @@ for nS=1:length(myS)
 end
 FullSubID=myS(sum(nSession,2)==4);
 table2=table(ismember(table.SubID,FullSubID),:);
-writetable(table2,'/Users/tand0009/Data/CTET_Dockree/CTET_behav_res_full.txt');
+writetable(table2,[save_path filesep 'CTET_behav_res_full.txt']);
 
 %%
 table2=array2table(resblock_mat,'VariableNames',{'SubID','SessN','BlockN','CR','FA','Hit','Miss','Hit_RT','STD_RT'});
@@ -208,7 +218,7 @@ mdl1=fitlme(table2,'Hit_RT~1+Treatment+(1|SubID)');
 mdl2=fitlme(table2,'FA~1+Treatment+(1|SubID)');
 mdl3=fitlme(table2,'Miss~1+Treatment+(1|SubID)');
 
-writetable(table2,'/Users/tand0009/Data/CTET_Dockree/CTET_behav_resblock.txt');
+writetable(table2,[save_path filesep 'CTET_behav_resblock.txt']);
 
 myS=unique(table2.SubID);
 myD=unique(table2.Treatment);
@@ -219,6 +229,6 @@ for nS=1:length(myS)
 end
 FullSubID=myS(sum(nSession,2)==4);
 table3=table2(ismember(table2.SubID,FullSubID),:);
-writetable(table3,'/Users/tand0009/Data/CTET_Dockree/CTET_behav_resblock_full.txt');
+writetable(table3,[save_path filesep 'CTET_behav_resblock_full.txt']);
 
 

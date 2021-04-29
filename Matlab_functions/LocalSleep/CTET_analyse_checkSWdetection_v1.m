@@ -17,6 +17,7 @@ filesPLA=dir([data_path filesep '*PLA.bdf']);
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
 % tableblock=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_resblock.txt');
+table=readtable([save_path filesep 'CTET_behav_res.txt']);
 
 %% Get the thresholds
 sw_thr=[];
@@ -42,7 +43,7 @@ for nF=1:length(filesPLA)
     paramSW.art_ampl=150;
     paramSW.max_posampl=75;
     paramSW.max_Freq=4;
-    paramSW.byElec=0;
+    paramSW.byElec=1;
     
     all_Waves=double(all_Waves);
     all_freq=1./(abs((all_Waves(:,5)-all_Waves(:,7)))./Fs);
@@ -73,14 +74,7 @@ end
 % %%
 
 % 
-% figure;
-% temp_topo=[];
-% for nE=1:length(layout.label)-2
-%     findElec=match_str(data_clean.label,layout.label{nE});
-%     temp_topo(nE)=nanmean(sw_thr(sw_thr(:,3)==findElec,2));
-% end
-% simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-% colorbar;
+
 %%
 myERP_Elec={'Fz','FCz','Cz','CPz','Oz'};
 %%
@@ -88,6 +82,7 @@ res_mat=[];
 drug_cond=[];
 all_slow_Waves=[];
 all_drug_types=[];
+all_slow_Waves_Lags=[];
 mean_SW_ERP_byElec=[];
 for nF=1:length(files)
     File_Name=files(nF).name;
@@ -145,6 +140,7 @@ for nF=1:length(files)
         temp_P2P=[];
         temp_NegSl=[];
         temp_PosSl=[];
+        all_dist_closestTrial=[];
         for nE=1:64
             temp_P2P(nE)=nanmean(temp_slow_Waves(temp_slow_Waves(:,3)==nE,4));
             temp_NegSl(nE)=nanmean(temp_slow_Waves(temp_slow_Waves(:,3)==nE,12));
@@ -155,12 +151,24 @@ for nF=1:length(files)
                 temp_SW=temp_slow_Waves(temp_slow_Waves(:,3)==nE,5);
                 for m=1:length(temp_SW)
                     if temp_SW(m)-0.5*data_clean.fsample>0 && temp_SW(m)+1*data_clean.fsample<size(data_clean.trial{nbl},2)
-                    vec=data_clean.trial{nbl}(nE,(temp_SW(m)-0.5*data_clean.fsample):(temp_SW(m)+1*data_clean.fsample));
-                    vec=vec-mean(vec(1:0.5*data_clean.fsample));
-                    temp_ERP{find(ismember(myERP_Elec,data_clean.label(nE)))}=[temp_ERP{find(ismember(myERP_Elec,data_clean.label(nE)))} ; vec];
+                        vec=data_clean.trial{nbl}(nE,(temp_SW(m)-0.5*data_clean.fsample):(temp_SW(m)+1*data_clean.fsample));
+                        vec=vec-mean(vec(1:0.5*data_clean.fsample));
+                        temp_ERP{find(ismember(myERP_Elec,data_clean.label(nE)))}=[temp_ERP{find(ismember(myERP_Elec,data_clean.label(nE)))} ; vec];
                     end
                 end
             end
+            
+            
+            %%% distance to closest trial
+            temp_table=table(table.SubID==SubN & table.SessN==SessN & table.BlockN==nbl,:);
+            temp_table.Sample=temp_table.Sample-temp_table.Sample(1)-data_clean.time{nbl}(1)*data_clean.fsample;
+            thisE_slow_Waves=temp_slow_Waves(temp_slow_Waves(:,3)==nE,:);
+            dist_closestTrial=[];
+            for nW=1:size(thisE_slow_Waves,1)
+                [closest_Sample]=findclosest(temp_table.Sample,thisE_slow_Waves(nW,5));
+                dist_closestTrial(nW)=(thisE_slow_Waves(nW,5)-closest_Sample)/data_clean.fsample;
+            end
+            all_dist_closestTrial(nE)=mean(dist_closestTrial);
         end
         nout(match_str(data_clean.label,'Iz'))=NaN;
         temp_P2P(match_str(data_clean.label,'Iz'))=NaN;
@@ -168,6 +176,7 @@ for nF=1:length(files)
         temp_PosSl(match_str(data_clean.label,'Iz'))=NaN;
         
         all_slow_Waves=[all_slow_Waves ; [nF SubN SessN nbl nout'/(size(data_clean.trial{nbl},2)/Fs/60)]];
+        all_slow_Waves_Lags=[all_slow_Waves_Lags ; [nF SubN SessN nbl all_dist_closestTrial]];
         all_drug_types=[all_drug_types ; {DrugC}];
 %         all_slow_Waves_vec=[all_slow_Waves_vec ; [repmat([nF SubN SessN nbl table2array(temp_table2(1,4:9))],64,1) (1:64)' nout/(size(data_clean.trial{nbl},2)/Fs/60) temp_P2P' temp_NegSl' temp_PosSl']];
 %         all_drug_types_vec=[all_drug_types_vec ; repmat({DrugC},64,1)];
@@ -248,4 +257,26 @@ for nBl=1:10
 end
 %%
 figure; 
-plot(squeeze(mean(mean_SW_ERP_byElec,3))')
+plot(-0.5:1/Fs:1,squeeze(mean(mean_SW_ERP_byElec,3))')
+hold on 
+line(xlim,[0 0],'Color','k','LineStyle','--');
+line([0 0],ylim,'Color','k','LineStyle','--');
+
+%%
+figure;
+temp_topo=[];
+for nE=1:length(layout.label)-2
+    findElec=match_str(data_clean.label,layout.label{nE});
+    temp_topo(nE)=nanmean(all_slow_Waves_Lags(:,4+findElec),1);
+end
+simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
+colorbar;
+
+figure;
+temp_topo=[];
+for nE=1:length(layout.label)-2
+    findElec=match_str(data_clean.label,layout.label{nE});
+    temp_topo(nE)=nanmean(sw_thr(sw_thr(:,3)==findElec,2));
+end
+simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
+colorbar;

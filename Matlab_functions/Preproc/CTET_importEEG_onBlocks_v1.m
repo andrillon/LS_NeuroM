@@ -86,7 +86,7 @@ for nF=1:length(files)
         cfg.SubID               = SubN;
         cfg.SessN               = SessN;
         cfg.dataset             = [data_path filesep File_Name];
-        cfg.trialdef.prestim    = -2;
+        cfg.trialdef.prestim    = 2;
         cfg.trialdef.poststim   = 1;
         cfg = ft_definetrial(cfg);
         

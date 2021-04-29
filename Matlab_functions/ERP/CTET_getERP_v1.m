@@ -1,6 +1,6 @@
 %%
 clear all;
-close all;
+% close all;
 run ../localdef.m
 
 addpath(path_fieldtrip);
@@ -45,6 +45,13 @@ for nF=1:length(files)
     fprintf('... processing %s\n',File_Name);
     load([data_path filesep 'CIcfe_ft_' File_Name(1:end-4)]);
     
+    cfg=[];
+    cfg.reref           = 'yes';
+    cfg.refchannel      = {'M1','M2'};
+    cfg.demean          = 'yes';
+    cfg.baselinewindow  = [-0.2 0];
+    data_clean = ft_preprocessing(cfg,data_clean);
+        
     thisF=match_str(EEGCleaning.File,['fe_ft_' File_Name(1:end-4) '.mat']);
     eval(['badTrials=[' EEGCleaning.Trials{thisF} '];']);
     table(ismember(table.TrialN,badTrials),:)=[];
