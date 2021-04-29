@@ -1,0 +1,168 @@
+---
+title: "SWS_Dynamics_v2"
+author: "Elaine P."
+date: "28/04/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+library(tidyverse)
+library(Rmisc)
+
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v6.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+
+names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
+
+SWS_data$Treatment<-as.factor(SWS_data$Treatment)
+
+SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
+
+```
+
+```{r} 
+
+all_lme_block = list()
+for (nBlock in seq(1,10))
+{lme_block <- lmer(SWdens ~ 1 + Treatment + (1|SubID), REML = TRUE, data = SWS_data[SWS_data$BlockN == nBlock,])
+all_lme_block[[length(all_lme_block)+1]] = lme_block
+}
+
+summary(all_lme_block[[1]])
+summary(all_lme_block[[2]])
+summary(all_lme_block[[3]])
+summary(all_lme_block[[4]])
+summary(all_lme_block[[5]])
+summary(all_lme_block[[6]])
+summary(all_lme_block[[7]])
+summary(all_lme_block[[8]])
+summary(all_lme_block[[9]])
+summary(all_lme_block[[10]])
+
+```
+
+
+``` {r} 
+hist(residuals(all_lme_block[[1]]))
+boxplot(residuals(all_lme_block[[1]]))
+qqnorm(resid(all_lme_block[[1]]))
+qqline(resid(all_lme_block[[1]]))
+plot(all_lme_block[[1]])
+plot(fitted(all_lme_block[[1]]), resid(all_lme_block[[1]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[2]]))
+boxplot(residuals(all_lme_block[[2]]))
+qqnorm(resid(all_lme_block[[2]]))
+qqline(resid(all_lme_block[[2]]))
+plot(all_lme_block[[2]])
+plot(fitted(all_lme_block[[2]]), resid(all_lme_block[[2]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[3]]))
+boxplot(residuals(all_lme_block[[3]]))
+qqnorm(resid(all_lme_block[[3]]))
+qqline(resid(all_lme_block[[3]]))
+plot(all_lme_block[[3]])
+plot(fitted(all_lme_block[[3]]), resid(all_lme_block[[3]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[4]]))
+boxplot(residuals(all_lme_block[[4]]))
+qqnorm(resid(all_lme_block[[4]]))
+qqline(resid(all_lme_block[[4]]))
+plot(all_lme_block[[4]])
+plot(fitted(all_lme_block[[4]]), resid(all_lme_block[[4]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[5]]))
+boxplot(residuals(all_lme_block[[5]]))
+qqnorm(resid(all_lme_block[[5]]))
+qqline(resid(all_lme_block[[5]]))
+plot(all_lme_block[[5]])
+plot(fitted(all_lme_block[[5]]), resid(all_lme_block[[5]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[6]]))
+boxplot(residuals(all_lme_block[[6]]))
+qqnorm(resid(all_lme_block[[6]]))
+qqline(resid(all_lme_block[[6]]))
+plot(all_lme_block[[6]])
+plot(fitted(all_lme_block[[6]]), resid(all_lme_block[[6]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[7]]))
+boxplot(residuals(all_lme_block[[7]]))
+qqnorm(resid(all_lme_block[[7]]))
+qqline(resid(all_lme_block[[7]]))
+plot(all_lme_block[[7]])
+plot(fitted(all_lme_block[[7]]), resid(all_lme_block[[7]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[8]]))
+boxplot(residuals(all_lme_block[[8]]))
+qqnorm(resid(all_lme_block[[8]]))
+qqline(resid(all_lme_block[[8]]))
+plot(all_lme_block[[8]])
+plot(fitted(all_lme_block[[8]]), resid(all_lme_block[[8]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[9]]))
+boxplot(residuals(all_lme_block[[9]]))
+qqnorm(resid(all_lme_block[[9]]))
+qqline(resid(all_lme_block[[9]]))
+plot(all_lme_block[[9]])
+plot(fitted(all_lme_block[[9]]), resid(all_lme_block[[9]]))
+```
+
+``` {r} 
+hist(residuals(all_lme_block[[10]]))
+boxplot(residuals(all_lme_block[[10]]))
+qqnorm(resid(all_lme_block[[10]]))
+qqline(resid(all_lme_block[[10]]))
+plot(all_lme_block[[10]])
+plot(fitted(all_lme_block[[10]]), resid(all_lme_block[[10]]))
+```
+
+``` {r} 
+
+#lme_treatment <- lmer(SWdens ~ 1 + BlockN + (1|SubID), REML = TRUE, data = SWS_data[SWS_data$Treatment == 'PLA',])
+#summary(lme_treatment)
+
+lme_treatment <- lmer(SWdens ~ 1 + Treatment*BlockN + (1|SubID), REML = TRUE, data = SWS_data[SWS_data$Treatment == 'CIT' | SWS_data$Treatment == 'PLA',])
+summary(lme_treatment)
+
+lme_treatment <- lmer(SWdens ~ 1 + Treatment*BlockN + (1|SubID), REML = TRUE, data = SWS_data[SWS_data$Treatment == 'ATM' | SWS_data$Treatment == 'PLA',])
+summary(lme_treatment)
+
+lme_treatment <- lmer(SWdens ~ 1 + Treatment*BlockN + (1|SubID), REML = TRUE, data = SWS_data[SWS_data$Treatment == 'MPH' | SWS_data$Treatment == 'PLA',])
+summary(lme_treatment)
+
+```

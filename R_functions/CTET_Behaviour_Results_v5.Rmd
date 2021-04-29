@@ -1,0 +1,391 @@
+---
+title: "CTET_Behaviour_Results_v5"
+author: "Elaine P."
+date: "29/04/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(car)
+library(haven)
+library(data.table)
+library(visreg)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(rstatix)
+library(JWileymisc)
+library(lme4)
+library(lmerTest)
+library(multilevelTools)
+
+library(ggstance)
+library(jtools)
+library(broom.mixed)
+library(sjPlot)
+library(glmmTMB)
+
+library(lattice)
+
+library(arm)
+
+library(plyr)
+library(Rmisc)
+library(plotly)
+
+library(cowplot) 
+library(dplyr) 
+library(readr)
+
+##NOT WORKING:  CTET_Behaviour1 <- read.table("../Tables/CTET_behav_resblock.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+CTET_Behaviour1 <- read.csv("../Tables/CTET_behav_resblock_full.txt")
+
+CTET_Behaviour1$SubID<-as.factor(CTET_Behaviour1$SubID)
+CTET_Behaviour1$Treatment<-as.factor(CTET_Behaviour1$Treatment)
+CTET_Behaviour1<-CTET_Behaviour1[as.numeric(CTET_Behaviour1$BlockN)<11,]
+CTET_Behaviour1$BlockN<-as.numeric(CTET_Behaviour1$BlockN)
+CTET_Behaviour1$Treatment<-relevel(CTET_Behaviour1$Treatment,"PLA")
+CTET_Behaviour1<-CTET_Behaviour1[!is.na(CTET_Behaviour1$BlockN),]
+
+```
+
+```{r}
+##False Alarm
+lm.FA0 <- lmer(FA ~ 1 + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Effects of treatment on false alarms 
+lm.FA1 <- lmer(FA ~ 1 + Treatment + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+#Added effects of block number on false alarm
+lm.FA2 <- lmer(FA ~ 1 + Treatment + BlockN + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+#Added effects of block number as an interaction on false alarm
+lm.FA3 <- lmer(FA ~ 1 + Treatment * BlockN + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Anova to see which one has the most interaction
+anova(lm.FA0,lm.FA1,lm.FA2,lm.FA3)
+lm.FA2 <- lmer(FA ~ 1 + Treatment + BlockN + (1|SubID), data = CTET_Behaviour1, REML = TRUE)
+summary(lm.FA2)
+confint(lm.FA2, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals - TA: Try to plot QQ plots
+hist(residuals(lm.FA2))
+qqnorm(resid(lm.FA2))
+qqline(resid(lm.FA2))
+plot(lm.FA2)
+plot(fitted(lm.FA2), resid(lm.FA2))
+binnedplot(fitted(lm.FA2),resid(lm.FA2))
+```
+- ATM and BlockN had sig (***) effects on FA 
+```{r}
+##Misses 
+lm.Miss0 <- lmer(Miss ~ 1 + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Effects of treatment on misses
+lm.Miss1 <- lmer(Miss ~ 1 + Treatment + (1|SubID), data =  CTET_Behaviour1, REML = FALSE)
+
+##Added effects of block number on misses 
+lm.Miss2 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data =  CTET_Behaviour1, REML = FALSE)
+
+##Added effects of block number as an interaction on misses 
+lm.Miss3 <- lmer(Miss ~ 1 + Treatment*BlockN + (1|SubID), data =  CTET_Behaviour1, REML = FALSE)
+
+##Anova to see which one has the most interaction
+anova(lm.Miss0,lm.Miss1,lm.Miss2,lm.Miss3)
+lm.Miss2 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data =  CTET_Behaviour1, REML = TRUE)
+summary(lm.Miss2)
+confint(lm.Miss2, method = "Wald", oldNames = FALSE)
+
+##Normality plot of residuals 
+hist(residuals(lm.Miss2))
+boxplot(residuals(lm.Miss2))
+qqnorm(resid(lm.Miss2))
+qqline(resid(lm.Miss2))
+plot(lm.Miss2)
+plot(fitted(lm.Miss2), resid(lm.Miss2))
+
+binnedplot(fitted(lm.Miss2),resid(lm.Miss2))
+```
+-Although lm.Miss3 is the winning model, after Bonferonni correction, it does not sig any more (p > .00556) (NOTE: THIS WAS PREVIOUS ANALYSIS BUT STILL STANDS)
+- using lm.Miss2 as sig model 
+- note as well, BIC (takes into consideration complexity of model) says lm.Miss2 is winning model
+- everything is sig (***) except ATM
+```{r}
+##Hit Rate  
+lm.HR0 <- lmer(Hit_RT ~ 1 + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Effects of treatment on hit rate 
+lm.HR1 <- lmer(Hit_RT ~ 1 + Treatment + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Added effects of block number on hit rate  
+lm.HR2 <- lmer(Hit_RT ~ 1 + Treatment + BlockN + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Added effects of block number as an interaction on hit rate  
+lm.HR3 <- lmer(Hit_RT ~ 1 + Treatment*BlockN + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Anova to see which one has the most interaction
+anova(lm.HR0,lm.HR1,lm.HR2,lm.HR3)
+lm.HR1 <- lmer(Hit_RT ~ 1 + Treatment + (1|SubID), data = CTET_Behaviour1, REML = TRUE)
+summary(lm.HR1)
+confint(lm.HR1, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals 
+hist(residuals(lm.HR1))
+boxplot(residuals(lm.HR1))
+qqnorm(residuals(lm.HR1))
+qqline(resid(lm.HR1))
+plot(lm.HR3)
+plot(fitted(lm.HR1), resid(lm.HR1))
+binnedplot(fitted(lm.HR1), resid(lm.HR1))
+```
+- only MPH had a sig (**) effect on RT
+```{r}
+##SD Hit Rate  
+lm.SDHR0 <- lmer(STD_RT ~ 1 + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Effects of treatment on hit rate 
+lm.SDHR1 <- lmer(STD_RT ~ 1 + Treatment + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Added effects of block number on hit rate  
+lm.SDHR2 <- lmer(STD_RT ~ 1 + Treatment + BlockN + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Added effects of block number as an interaction on hit rate  
+lm.SDHR3 <- lmer(STD_RT ~ 1 + Treatment*BlockN + (1|SubID), data = CTET_Behaviour1, REML = FALSE)
+
+##Anova to see which one has the most interaction
+anova(lm.SDHR0,lm.SDHR1,lm.SDHR2,lm.SDHR3)
+lm.SDHR1 <- lmer(STD_RT ~ 1 + Treatment + (1|SubID), data = CTET_Behaviour1, REML = TRUE)
+summary(lm.SDHR1)
+confint(lm.SDHR1, method = "Wald", oldNames = FALSE)
+
+## Normality plot of residuals 
+hist(residuals(lm.SDHR1))
+boxplot(residuals(lm.SDHR1))
+qqnorm(residuals(lm.SDHR1))
+qqline(resid(lm.SDHR1))
+plot(lm.SDHR1)
+plot(fitted(lm.SDHR1), resid(lm.SDHR1))
+binnedplot(fitted(lm.SDHR1), resid(lm.SDHR1))
+```
+- none of the models were significant
+
+```{r}
+##Graph of the interaction between treatment and block number on false alarms
+fa.graph <- summarySE(CTET_Behaviour1, measurevar = "FA", groupvars = c("BlockN", "Treatment"))
+fa.graph$Treatment<-ordered(fa.graph$Treatment, c("PLA","MPH","ATM","CIT"))
+
+##REFERENCE GRAPH            
+ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.015)
+
+##Graph with Standard Error 
+ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.011) + geom_ribbon(aes(ymin = FA-se, ymax = FA+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::percent_format(accuracy = .01))+ theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank())+ coord_cartesian(ylim =c(0.0001, .017)) 
+
+
+ggsave(file="../Figures/CTET_LinePlot_FA_2021.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))
+
+##Barplot 
+fa2.graph <- summarySE(CTET_Behaviour1, measurevar = "FA", groupvars = c( "Treatment"))
+fa2.graph$FA<-fa2.graph$FA
+fa2.graph$Treatment<-ordered(fa2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+marks <- c(0,20000,40000,60000,80000,100000)
+
+
+ggplot(data=fa2.graph, aes(x=Treatment, y=FA, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA-se, ymax = FA+se), width = .4, size = .45) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("% of Mean False Alarms")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_y_continuous(labels = scales::percent_format(accuracy = .01)) +theme_classic() +theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) + coord_cartesian(ylim =c(0.00045, .015)) 
+
+ggsave(file="../Figures/CTET_BarPlot_FA_2021.png", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
+```
+
+```{r}
+##Graph of the interaction between treatment and block number on missed targets
+miss.graph <- summarySE(CTET_Behaviour1, measurevar = "Miss", groupvars = c("BlockN", "Treatment"), na.rm = TRUE)
+miss.graph$Treatment<-ordered(miss.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+##Reference graph 
+ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ylab("Missed Target") + xlab("Block Number") + xlim(0, 12) + ylim(0, 0.5)
+
+
+##Graph with Standard Error 
+ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11)  + geom_ribbon(aes(ymin = Miss-se, ymax = Miss+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))+ scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::percent_format(accuracy = 1))+ theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank()) + coord_cartesian(ylim =c(.1, 0.5))
+
+ggsave(file="../Figures/CTET_LinePlot_Misses_2021.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))
+
+##Barplot 
+miss2.graph <- summarySE(CTET_Behaviour1, measurevar = "Miss", groupvars = c("Treatment"), na.rm = TRUE)
+miss2.graph$Treatment<-ordered(miss2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data= miss2.graph, aes(x=Treatment, y=Miss, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Miss-se, ymax = Miss+se), width = .35, size = .6)  + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + labs (y = "% of Mean Missed Targets") + scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + coord_cartesian(ylim =c(0, 0.45))+theme_classic() + theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())+ coord_cartesian(ylim =c(0.1, .5)) 
+
+ggsave(file="../Figures/CTET_BarPlot_Misses_2021.png", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
+
+```
+
+```{r}
+##Graph of the interaction between treatment and block number on hit rates
+rt.graph <- summarySE(CTET_Behaviour1, measurevar = "Hit_RT", groupvars = c("BlockN", "Treatment"), na.rm = TRUE)
+rt.graph$Treatment<-ordered(rt.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+##Reference graph
+ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("Mean RT for Hits according to block number and treatment") + ylab("Reaction Time") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5)
+
+##Graph with Standard Error 
+ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ylab("Reaction Time (seconds)") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.9) + geom_ribbon(aes(ymin = Hit_RT-se, ymax = Hit_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +
+  scale_x_continuous(breaks = c(1:10)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank())
+
+ggsave(file="../Figures/CTET_LinePlot_RThits_2021.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))
+
+rt2.graph <- summarySE(CTET_Behaviour1, measurevar = "Hit_RT", groupvars = c("Treatment"), na.rm = TRUE)
+rt2.graph$Treatment<-ordered(rt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data= rt2.graph, aes(x=Treatment, y=Hit_RT, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Hit_RT-se, ymax = Hit_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + ylim(0, 2) + labs(y = "Reaction Time (seconds)") + coord_cartesian(ylim =c(1.3, 1.48)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+  
+ggsave(file="../Figures/CTET_BarPlot_RThits_2021.eps", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
+ggsave(file="../Figures/CTET_BarPlot_RThits_2021.png", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
+```
+
+
+```{r}
+##Graph of the interaction between treatment and block number on SD hit rates
+sdrt.graph <- summarySE(CTET_Behaviour1, measurevar = "STD_RT", groupvars = c("BlockN", "Treatment"), na.rm = TRUE)
+sdrt.graph$Treatment<-ordered(sdrt.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+##Reference graph
+ggplot(sdrt.graph, aes(x = BlockN, y = STD_RT, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("SD of RT for Hits according to block number and treatment") + ylab("SD RT") + xlab("Block Number") + xlim(0, 11) 
+
+##Graph with Standard Error 
+ggplot(sdrt.graph, aes(x = BlockN, y = STD_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ylab("Standard Deviation of Reaction Time (seconds)") + xlab("Block Number") + xlim(0, 11) + geom_ribbon(aes(ymin = STD_RT-se, ymax = STD_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +
+  scale_x_continuous(breaks = c(1:10)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank()) + ylim(0.065, 2)
+
+ggsave(file="../Figures/CTET_LinePlot_SDRThits_2021.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))
+
+sdrt2.graph <- summarySE(CTET_Behaviour1, measurevar = "STD_RT", groupvars = c("Treatment"), na.rm = TRUE)
+sdrt2.graph$Treatment<-ordered(sdrt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
+
+ggplot(data= sdrt2.graph, aes(x=Treatment, y=STD_RT, fill = Treatment)) +
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = STD_RT-se, ymax = STD_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + labs(y = "Reaction Time Variability (seconds)") + coord_cartesian(ylim =c(0.075, .35)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+  
+ggsave(file="../Figures/CTET_BarPlot_SDRThits_2021.eps", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
+ggsave(file="../Figures/CTET_BarPlot_SDRThits_2021.png", dpi = 600, 
+       width = 15/2,
+      height = 18/2,
+    units = c("cm"))
+```
+
+
+```{r} 
+##Raincloud plot of RT
+#summary stats 
+CTET_Behaviour1_noNA <-na.omit(CTET_Behaviour1)
+CTET_Behaviour1_noNA$Treatment<-ordered(CTET_Behaviour1_noNA$Treatment,c("PLA","MPH","ATM","CIT"))
+summary_RT <- summarySE(CTET_Behaviour1_noNA, measurevar = "Hit_RT", groupvars=c("Treatment", "BlockN"))
+summary_RT
+
+
+ 
+ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = Hit_RT, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = Hit_RT, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+  geom_boxplot(aes(x = Treatment, y = Hit_RT, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = summary_RT, aes(x = as.numeric(Treatment)+.1, y = Hit_RT, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
+  geom_point(data = summary_RT, aes(x = as.numeric(Treatment)+.1, y = Hit_RT, group = Treatment, colour = Treatment), shape = 18) +
+  geom_errorbar(data = summary_RT, aes(x = as.numeric(Treatment)+.1, y =  Hit_RT, group = Treatment, colour = Treatment, ymin = Hit_RT-se, ymax = Hit_RT+se), width = .05)+ ylim(1, 2) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) 
+
+
+# code from raincloud plot: 
+ geom_line(data = sumrepdat, aes(x = as.numeric(group)+.1, y = score_mean, group = time, colour = time), linetype = 3)
+   geom_point(data = sumrepdat, aes(x = as.numeric(time)+.1, y = score_mean, group = group, colour = group), shape = 18) +
+  geom_errorbar(data = sumrepdat, aes(x = as.numeric(time)+.1, y = score_mean, group = group, colour = group, ymin = score_mean-se, ymax = score_mean+se), width = .05)
+  
+   
+```
+
+```{r}
+##Raincloud plot of STD_RT
+#summary stats 
+summary_STDRT <- summarySE(CTET_Behaviour1_noNA, measurevar = "STD_RT", groupvars=c("Treatment", "BlockN"))
+summary_STDRT
+
+
+ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = STD_RT, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = STD_RT, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+  geom_boxplot(aes(x = Treatment, y = STD_RT, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = summary_STDRT, aes(x = as.numeric(Treatment)+.1, y = STD_RT, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
+  geom_point(data = summary_STDRT, aes(x = as.numeric(Treatment)+.1, y = STD_RT, group = Treatment, colour = Treatment), shape = 18) +
+  geom_errorbar(data = summary_STDRT, aes(x = as.numeric(Treatment)+.1, y =  STD_RT, group = Treatment, colour = Treatment, ymin = STD_RT-se, ymax = STD_RT+se), width = .05)+ ylim(0, 0.9) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time Variability (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+
+```
+
+```{r}
+##Raincloud plot of misses
+#summary stats 
+summary_miss <- summarySE(CTET_Behaviour1_noNA, measurevar = "Miss", groupvars=c("Treatment", "BlockN"))
+summary_miss
+
+ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = Miss, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = Miss, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+  geom_boxplot(aes(x = Treatment, y = Miss, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = summary_miss, aes(x = as.numeric(Treatment)+.1, y = Miss, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
+  geom_point(data = summary_miss, aes(x = as.numeric(Treatment)+.1, y = Miss, group = Treatment, colour = Treatment), shape = 18) +
+  geom_errorbar(data = summary_miss, aes(x = as.numeric(Treatment)+.1, y =  Miss, group = Treatment, colour = Treatment, ymin = Miss-se, ymax = Miss+se), width = .05)+ ylim(0, 1) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Misses") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+```
+```{r}
+##Raincloud plot of FA
+#summary stats 
+summary_FA <- summarySE(CTET_Behaviour1_noNA, measurevar = "FA", groupvars=c("Treatment", "BlockN"))
+summary_FA
+
+ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = FA, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = FA, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+  geom_boxplot(aes(x = Treatment, y = FA, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(data = summary_FA, aes(x = as.numeric(Treatment)+.1, y = FA, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
+  geom_point(data = summary_FA, aes(x = as.numeric(Treatment)+.1, y = FA, group = Treatment, colour = Treatment), shape = 18) +
+  geom_errorbar(data = summary_FA, aes(x = as.numeric(Treatment)+.1, y =  FA, group = Treatment, colour = Treatment, ymin = FA-se, ymax = FA+se), width = .05)+ ylim(-0.01, .05) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("False Alarm") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+```
+*** if probem occurs in geom_flat_violin : type in console: source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R") )
