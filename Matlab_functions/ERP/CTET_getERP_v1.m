@@ -103,7 +103,7 @@ if redo==1
     chLabels=av_data_NT.label;
     xTime_offset=av_data_TG_offset.time(av_data_TG_offset.time>-0.2 & av_data_TG_offset.time<0.8);
     save([data_path filesep 'CIcfe_ERPav_TG_NT'],'all_DrugC','all_ERP_TG','all_ERP_NT','xTime','NT_ITI','TG_ITI','chLabels',...
-        'all_ERP_NT_offset','all_ERP_NT_offset','xTime_offset')
+        'all_ERP_NT_offset','all_ERP_TG_offset','xTime_offset')
     
 else
     load([data_path filesep 'CIcfe_ERPav_TG_NT'])
@@ -112,7 +112,7 @@ end
 
 %%
 
-thisCh=match_str(chLabels,'Oz');
+thisCh=match_str(chLabels,'Pz');
 
 figure;
 plot(xTime,squeeze(nanmean(all_ERP_NT(:,thisCh,:),1)),'k')
@@ -207,3 +207,42 @@ for nDrug=1:4
     colorbar;
 caxis([-1 1]*5)
 end
+
+%%
+thisCh=match_str(chLabels,'Oz');
+
+all_DrugC2=all_DrugC;
+all_DrugC2(NT_ITI>1)={'wrongITI'};
+
+figure;
+set(gcf,'Position',[1         378        1396         420]);
+% ColorsD={[1 1 1]*0.5,[84 81 153]/255,[170 75 21]/255,[75 128 90]/255};
+% ColorsDlabels={'PLA','ATM','MPH','CIT'};
+for nDrug=1:4
+    subplot(1,4,nDrug);
+    hp=[];
+    [~,hp(1)]=simpleTplot(xTime_offset,squeeze(all_ERP_NT_offset(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)),0,'k',0,'-',0.5,1,5,1,3);
+    hold on;
+    [~,hp(2)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)),0,'r',0,'-',0.5,1,5,1,3);
+    title(ColorsDlabels{nDrug})
+    ylim([-2.5 9])
+    xlim([-0.2 0.8])
+    format_fig;
+    xlabel('Time from Offset')
+    ylabel('ERP (\muV)')
+end
+
+figure;
+% set(gcf,'Position',[1         378        1396         420]);
+    hp=[];
+for nDrug=1:4
+    [~,hp(nDrug)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)-...
+        all_ERP_NT_offset(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],'-',0.5,1,5,1,3);
+    title(ColorsDlabels{nDrug})
+%     ylim([-2 10])
+    xlim([-0.2 0.8])
+    format_fig;
+    xlabel('Time from Offset')
+    ylabel('ERP (\muV)')
+end
+legend(hp,ColorsDlabels)
