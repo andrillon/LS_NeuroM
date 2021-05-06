@@ -83,7 +83,7 @@ plot(fitted(lm.FA3), resid(lm.FA3))
 binnedplot(fitted(lm.FA3), resid(lm.FA3))
 
 ```
-RESULTS FOR FA: 
+RESULTS FOR FA (byE): 
 - sig. results (***) for FA2, FA3 and FA4 
 - important here (esp. for SWDens) is FA3 and FA4 
   - FA4 measures just the effects of slow wave density and block on false alarm, not taking into account treatment 
@@ -138,7 +138,7 @@ binnedplot(fitted(lm.Miss3), resid(lm.Miss3))
 
 
 ```
-RESULTS FOR MISSES: 
+RESULTS FOR MISSES (byE): 
 - everything was sig (***) except for lm.Miss5
 - important is lm.Miss3 and lm.Miss4 for SWDens
   - winning model is lm.Miss 3 
@@ -194,7 +194,7 @@ plot(fitted(lm.HR5), resid(lm.HR5))
 binnedplot(fitted(lm.HR5), resid(lm.HR5))
 
 ```
-NOTES FOR RESULTS FOR RT:
+NOTES FOR RESULTS FOR RT (byE):
 - everythin was sig 
 - importanto to note for SWDens is lm.HR3, lm.HR4, lm.HR5
 - according to AIC, lm.HR3 is winning (*), but according to BIC, lm.HR5 is winning (***)
@@ -251,17 +251,17 @@ cor.test(agg_SWS_data$SWdens, agg_SWS_data$RT)
 ```{r}
 #Subsetting Data
 
+fa.mph <- fa.dataset[which(fa.dataset$Treatment == c('MPH')), ]
+fa.atm <- fa.dataset[which(fa.dataset$Treatment == c('ATM')), ]
+fa.cit <- fa.dataset[which(fa.dataset$Treatment == c('CIT')), ]
+fa.pla <- fa.dataset[which(fa.dataset$Treatment == c('PLA')), ]
+
 ##false alarm
 fa.data <- c("SubID","Treatment", "FA", "SWdens")
 fa.dataset <- SWS_data[fa.data]
 fa.datset <- na.omit(fa.dataset)
 for(i in ((length(fa.mph$FA)+1):length(fa.pla$FA)))
 + { fa.mph$FA = c(fa.mph$FA, 0)}
-
-fa.mph <- fa.dataset[which(fa.dataset$Treatment == c('MPH')), ]
-fa.atm <- fa.dataset[which(fa.dataset$Treatment == c('ATM')), ]
-fa.cit <- fa.dataset[which(fa.dataset$Treatment == c('CIT')), ]
-fa.pla <- fa.dataset[which(fa.dataset$Treatment == c('PLA')), ]
 
 fa.mph$FA <- fa.mph$FA-fa.pla$FA
 fa.mph$SWdens <- fa.mph$SWdens-fa.pla$SWdens
