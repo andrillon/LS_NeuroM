@@ -199,6 +199,8 @@ NEG MPH ON FA:
 SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="ATM",] #|: . $: and
 SWS_data3<-SWS_data3[is.na(SWS_data3$RT)==FALSE,]
 SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
+SWS_data3$Miss <- 1 - SWS_data3$Hit
+SWS_data3<-SWS_data3[is.na(SWS_data3$Miss)==FALSE,]
 
 # names of channels
 channels.names <- unique(SWS_data$Elec)
@@ -231,7 +233,7 @@ for(i in channels.names){
   med.fit0 <- glmer(SWdens  ~ 1 + Treatment + (1|SubID), data = tmp)
 
     # run mediation on RT
-  out.fit1 <- glmer(Hit_RT  ~ 1 + SWdens * Treatment + (1|SubID), data = tmp)
+  out.fit1 <- glmer(RT  ~ 1 + SWdens * Treatment + (1|SubID), data = tmp)
   med.out1 <- mediate(med.fit0, out.fit1, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
   
   # run mediation on Miss
@@ -341,6 +343,7 @@ write.table(ATM_FA_pV,file="../Tables/CTET_Mediation_allE_ATM_FA_pV_v2.txt")
 SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="CIT",] #|: . $: and
 SWS_data3<-SWS_data3[is.na(SWS_data3$RT)==FALSE,]
 SWS_data3$Treatment<-droplevels(SWS_data3$Treatment)
+SWS_data3$Miss <- 1 - SWS_data3$Hit
 
 # names of channels
 channels.names <- unique(SWS_data$Elec)
@@ -373,7 +376,7 @@ for(i in channels.names){
   med.fit0 <- glmer(SWdens  ~ 1 + Treatment+ (1|SubID), data = tmp)
 
     # run mediation on RT
-  out.fit1 <- glmer(Hit_RT  ~ 1 + SWdens * Treatment+ (1|SubID), data = tmp)
+  out.fit1 <- glmer(RT  ~ 1 + SWdens * Treatment+ (1|SubID), data = tmp)
   med.out1 <- mediate(med.fit0, out.fit1, treat = "Treatment", mediator = "SWdens",robustSE = FALSE, sims = nsims)
   
   # run mediation on Miss

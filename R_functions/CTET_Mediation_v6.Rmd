@@ -35,6 +35,7 @@ SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 nsims<-10000
 
 ```
+
 ```{r}
 
 SWS_data3<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="MPH",] #|: . $: and
