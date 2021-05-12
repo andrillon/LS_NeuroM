@@ -28,7 +28,7 @@ library(tidyverse)
 library(Rmisc)
 
 
-SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v6.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_AllE_P2P_avDens_behav_vec_full_v6.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
@@ -223,9 +223,9 @@ dens.graph$Treatment<-ordered(dens.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 
 
 ##Graph with Standard Error 
-ggplot(dens.graph, aes(x = BlockN, y = SWdens, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = SWdens-se, ymax = SWdens+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(),  legend.position = "none", axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab("SW Density")
+ggplot(dens.graph, aes(x = BlockN, y = SWdens, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ ylab(NULL) + geom_ribbon(aes(ymin = SWdens-se, ymax = SWdens+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() + theme(panel.border = element_blank(),  legend.position = "none", axis.title=element_text(size=14),axis.text=element_text(size=14)) + coord_cartesian(ylim =c(4, 6.2))
 
-ggsave(file="../Figures/CTET_LinePlot_Dens_ByE_2021.png", 
+ggsave(file="../Figures/CTET_LinePlot_Dens_AllE_2021.png", 
        width = 30/2,
       height = 18/2,
     units = c("cm"))
@@ -235,9 +235,9 @@ dens.graph <- summarySE(SWS_data1, measurevar = "SWdens", groupvars = c( "Treatm
 dens.graph$Treatment<-ordered(dens.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data=dens.graph, aes(x=Treatment, y=SWdens, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("SW Density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(4, 6)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) 
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Slow Wave Density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(4, 6.2)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) 
 
-ggsave(file="../Figures/CTET_BarPlot_Dens_ByE_2021.png", dpi = 600, 
+ggsave(file="../Figures/CTET_BarPlot_Dens_AllE_2021.png", dpi = 600, 
        width = 15/2,
       height = 18/2,
     units = c("cm"))
@@ -250,9 +250,9 @@ p2p.graph$Treatment<-ordered(p2p.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 
 
 ##Graph with Standard Error 
-ggplot(p2p.graph, aes(x = BlockN, y = P2P, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = P2P-se, ymax = P2P+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(),  legend.position = "none", axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab("Mean Peak to Peak")
+ggplot(p2p.graph, aes(x = BlockN, y = P2P, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = P2P-se, ymax = P2P+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(),  legend.position = "none", axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab(NULL) + coord_cartesian(ylim =c(36, 44)) 
 
-ggsave(file="../Figures/CTET_LinePlot_P2P_byE_2021.png", 
+ggsave(file="../Figures/CTET_LinePlot_P2P_AllE_2021.png", 
        width = 30/2,
       height = 18/2,
     units = c("cm"))
@@ -262,9 +262,9 @@ p2p2.graph <- summarySE(SWS_data2, measurevar = "P2P", groupvars = c( "Treatment
 p2p2.graph$Treatment<-ordered(p2p2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data=p2p2.graph, aes(x=Treatment, y=P2P, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = P2P-se, ymax = P2P+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Peak to Peak")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(35, 43)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) 
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = P2P-se, ymax = P2P+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Peak to Peak")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(36, 44)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) 
 
-ggsave(file="../Figures/CTET_BarPlot_P2P_byE_2021.png", dpi = 600, 
+ggsave(file="../Figures/CTET_BarPlot_P2P_AllE_2021.png", dpi = 600, 
        width = 15/2,
       height = 18/2,
     units = c("cm"))
@@ -277,9 +277,9 @@ ps.graph$Treatment<-ordered(ps.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 
 
 ##Graph with Standard Error 
-ggplot(ps.graph, aes(x = BlockN, y = PosSlope, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = PosSlope-se, ymax = PosSlope+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none", axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab("Mean Positive Slope")
+ggplot(ps.graph, aes(x = BlockN, y = PosSlope, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = PosSlope-se, ymax = PosSlope+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none", axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab(NULL) + coord_cartesian(ylim =c(380, 520)) 
 
-ggsave(file="../Figures/CTET_LinePlot_PosSlope_byE_2021.png", 
+ggsave(file="../Figures/CTET_LinePlot_PosSlope_AllE_2021.png", 
        width = 30/2,
       height = 18/2,
     units = c("cm"))
@@ -289,9 +289,9 @@ ps2.graph <- summarySE(SWS_data3, measurevar = "PosSlope", groupvars = c( "Treat
 ps2.graph$Treatment<-ordered(ps2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data=ps2.graph, aes(x=Treatment, y=PosSlope, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = PosSlope-se, ymax = PosSlope+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Positive Slope")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(350, 500)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = PosSlope-se, ymax = PosSlope+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Positive Slope")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(380, 520)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
 
-ggsave(file="../Figures/CTET_BarPlot_PosSlope_byE_2021.png", dpi = 600, 
+ggsave(file="../Figures/CTET_BarPlot_PosSlope_AllE_2021.png", dpi = 600, 
        width = 15/2,
       height = 18/2,
     units = c("cm"))
@@ -305,9 +305,9 @@ ns.graph$Treatment<-ordered(ns.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 
 
 ##Graph with Standard Error 
-ggplot(ns.graph, aes(x = BlockN, y = NegSlope, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = NegSlope-se, ymax = NegSlope+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none", axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab("Mean Negaative Slope")
+ggplot(ns.graph, aes(x = BlockN, y = NegSlope, colour = Treatment)) + geom_point() + geom_line() + xlab("Block Number")+ geom_ribbon(aes(ymin = NegSlope-se, ymax = NegSlope+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10))+ scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none", axis.title=element_text(size=14),axis.text=element_text(size=14)) +ylab(NULL) + coord_cartesian(ylim =c(350, 525))
 
-ggsave(file="../Figures/CTET_LinePlot_NegSlope_ByE_2021.png", 
+ggsave(file="../Figures/CTET_LinePlot_NegSlope_AllE_2021.png", 
        width = 30/2,
       height = 18/2,
     units = c("cm"))
@@ -318,10 +318,10 @@ ns2.graph <- summarySE(SWS_data4, measurevar = "NegSlope", groupvars = c( "Treat
 ns2.graph$Treatment<-ordered(ns2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
 ggplot(data=ns2.graph, aes(x=Treatment, y=NegSlope, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = NegSlope-se, ymax = NegSlope+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Negative Slope")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(350, 500)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
+  geom_bar(stat="identity") + geom_errorbar(aes(ymin = NegSlope-se, ymax = NegSlope+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Negative Slope")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(350, 525)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
 
 
-ggsave(file="../Figures/CTET_BarPlot_NegSlope_ByE_2021.png", dpi = 600, 
+ggsave(file="../Figures/CTET_BarPlot_NegSlope_AllE_2021.png", dpi = 600, 
        width = 15/2,
       height = 18/2,
     units = c("cm"))
