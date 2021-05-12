@@ -1,6 +1,6 @@
 %%
 clear all
-close all
+% close all
 
 run ../localdef.m
 
@@ -26,6 +26,11 @@ for nF=1:length(filesPLA)
     SessN=str2num(File_Name(septag(3)-1));
     DrugC=(File_Name(septag(3)+1:septag(3)+3));
     
+        if ~ismember(SubN,ListSubjectsID)
+        fprintf('... %s not in subject list\n',File_Name);
+        continue;
+        end
+    
     if exist([data_path filesep '..' filesep 'SW_detection' filesep 'CIcfe_blocks_ft_allSW_' File_Name(1:end-4) '.mat'])==0
         continue;
     end
@@ -37,10 +42,10 @@ for nF=1:length(filesPLA)
     paramSW.LimFrqW=[1 4]; % [1 4] or [4 10]
     paramSW.AmpCriterionIdx=4; % 9 (MaxNegpkAmp) or 11 (MaxPosPeakAmp) or 4 (P2P)
     paramSW.fixThr=[];
-    paramSW.art_ampl=150;
+    paramSW.art_ampl=100;
     paramSW.max_posampl=75;
     paramSW.max_Freq=4;
-    paramSW.byElec=1;
+    paramSW.byElec=0;
     
     all_Waves=double(all_Waves);
     all_freq=1./(abs((all_Waves(:,5)-all_Waves(:,7)))./Fs);
@@ -111,7 +116,7 @@ for nF=1:length(files)
         thisE_Waves=all_Waves(all_Waves(:,3)==nE,:);
         temp_p2p=thisE_Waves(:,paramSW.AmpCriterionIdx);
         
-        thr_Wave=sw_thr(sw_thr(:,1)==SubN & sw_thr(:,3)==nE,2);
+        thr_Wave=min([sw_thr(sw_thr(:,1)==SubN & sw_thr(:,3)==nE,2) 75]);
         if isempty(thr_Wave) || length(thr_Wave)>1
             continue;
         end
@@ -224,7 +229,7 @@ table_SW.Drug=categorical(table_SW.Drug);
 table_SW.Drug=reordercats(table_SW.Drug,[4 1 2 3]);
 
 %%% clean for extreme SWdens values
-table_SW.SWdens(table_SW.SWdens>(mean(table_SW.SWdens)+5*std(table_SW.SWdens)))=NaN;
+% table_SW.SWdens(table_SW.SWdens>(mean(table_SW.SWdens)+5*std(table_SW.SWdens)))=NaN;
 
 mdl0=fitlme(table_SW,'SWdens~1+(1|SubID)');
 mdl1=fitlme(table_SW,'SWdens~1+Elec+(1|SubID)');
@@ -248,6 +253,8 @@ ft_defaults;
 cfg = [];
 cfg.layout = 'biosemi64.lay';
 cfg.center      = 'yes';
+cfg.channel=data_clean.label;
+cfg.channel(match_str(cfg.channel,'Iz'))=[];
 layout=ft_prepare_layout(cfg);
 
 Drugs={'PLA','CIT','MPH','ATM'};
@@ -258,11 +265,12 @@ for nDrug=1:4
     temp_topo=[];
     for nE=1:length(layout.label)-2
         temp_topo(nE)=nanmean(table_allSW.SWdens(table_allSW.Drug==Drugs{nDrug} & table_allSW.Elec==layout.label{nE}),1);
+        
     end
     %     temp_topo=(nanmean(all_slow_Waves(:,4:67),1));
     simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
     title(Drugs{nDrug}); h=colorbar;  ylabel(h, 'waves/min')
-    caxis([2 15])
+    caxis([3.5 6.5])
     h=colorbar;
     %     set(h,'Position',[0.85 0.7 0.04 0.2])
     format_fig;
@@ -281,3 +289,24 @@ title('Thr'); h=colorbar;  ylabel(h, 'waves/min')
 h=colorbar;
 %     set(h,'Position',[0.85 0.7 0.04 0.2])
 format_fig;
+
+
+temp_topo=[];
+for nE=1:length(layout.label)-2
+    mdl_byElec=fitlme(table_allSW(table_allSW.Elec==layout.label{nE},:),'SWdens~1+Drug+(1|SubID)');
+    temp_topo(nE,:)=mdl_byElec.Coefficients(2:4,4);
+end
+ModDrugs={'ATM','CIT','MPH'};
+figure;
+for nDrug=1:3
+    subplot(1,3,nDrug);
+    
+    %     temp_topo=(nanmean(all_slow_Waves(:,4:67),1));
+    simpleTopoPlot_ft(temp_topo(:,nDrug), layout,'on',[],0,1);
+    title(ModDrugs{nDrug}); h=colorbar;  ylabel(h, 't-values')
+    caxis([-1 1]*6)
+    h=colorbar;
+    %     set(h,'Position',[0.85 0.7 0.04 0.2])
+    format_fig;
+    %     set(h,'FontSize',22);
+end

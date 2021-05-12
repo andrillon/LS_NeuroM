@@ -9,8 +9,8 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath([pwd filesep '..']));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v3.txt']);
-table_avSW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3.txt']);
+table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v6.txt']);
+table_avSW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_avDens_behav_vec_full_v6.txt']);
 
 % prctile(table_SW.SWdens,99)
 %%
@@ -20,7 +20,7 @@ cfg.channel=unique(table_SW.Elec);
 cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
-cmap=cbrewer('seq','YlOrRd',64); % select a sequential colorscale from yellow to red (64)
+cmap=cbrewer('seq','YlOrRd',64,'nearest'); % select a sequential colorscale from yellow to red (64)
 Drugs={'PLA','ATM','CIT','MPH'};
 
 limMax=[3.5 5.5];
@@ -32,7 +32,7 @@ for nE=1:length(layout.label)-2
 end
 simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
 title('All');
-caxis(limMax)
+% caxis(limMax)
 h=colorbar;
 colormap(cmap);
 ylabel(h, 'waves/min')
@@ -64,7 +64,7 @@ for nBl=1:10
     end
     format_fig;
 end
-print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens_byBlock.png')
+% print('-dpng', '-r300', '../../Figures/Topo_LS_SWdens_byBlock.png')
 
 figure;
 temp_plot=[];
@@ -84,9 +84,13 @@ ylabel('waves/min')
 % print('-dpng', '-r300', '../../Figures/Line_LS_SWdens_byBlock.png')
 
 %% By Drug
-figure; hold on; set(gcf,'Position',[201         428        1135         500]);
+limMax=[0 18];
+cmap=colormap('hot'); cmap=flipud(cmap);
+
+figure; hold on; %set(gcf,'Position',[201         428        1135         500]);
+PosPlots=[1 3 2 4];
 for nD=1:4
-    subplot(1,4,nD);
+    subplot(2,2,PosPlots(nD));
     sub_table_SW=table_SW(ismember(table_SW.Drug,Drugs{nD}),:);
     temp_topo=[];
     for nE=1:length(layout.label)-2

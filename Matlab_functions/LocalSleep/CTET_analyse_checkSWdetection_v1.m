@@ -29,6 +29,11 @@ for nF=1:length(filesPLA)
     SessN=str2num(File_Name(septag(3)-1));
     DrugC=(File_Name(septag(3)+1:septag(3)+3));
     
+        if ~ismember(SubN,ListSubjectsID)
+        fprintf('... %s not in subject list\n',File_Name);
+        continue;
+        end
+    
     if exist([data_path filesep '..' filesep 'SW_detection' filesep 'CIcfe_blocks_ft_allSW_' File_Name(1:end-4) '.mat'])==0
         continue;
     end
@@ -39,7 +44,7 @@ for nF=1:length(filesPLA)
     paramSW.prticle_Thr=90; % 80 or 90 or 95
     paramSW.LimFrqW=[1 4]; % [1 4] or [4 10]
     paramSW.AmpCriterionIdx=4; % 9 (MaxNegpkAmp) or 11 (MaxPosPeakAmp) or 4 (P2P)
-    paramSW.fixThr=[];
+    paramSW.fixThr=75/2;
     paramSW.art_ampl=150;
     paramSW.max_posampl=75;
     paramSW.max_Freq=4;
@@ -210,7 +215,7 @@ for nDrug=1:4
         temp_topo(nE)=nanmean(all_slow_Waves(match_str(all_drug_types,Drugs{nDrug}),4+findElec),1);
     end
     %     temp_topo=(nanmean(all_slow_Waves(:,4:67),1));
-    simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+    simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
     title(Drugs{nDrug}); h=colorbar;  ylabel(h, 'waves/min')
     caxis([4 7])
     h=colorbar;
