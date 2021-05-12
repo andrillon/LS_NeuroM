@@ -32,19 +32,23 @@ for nF=1:length(files)
     SessN=str2num(File_Name(septag(3)-1));
     DrugC=(File_Name(septag(3)+1:septag(3)+3));
     
-       if redo==1 || exist([save_path filesep 'CTET_behav_' File_Name(1:end-4) '.txt'])==0
- % data=ft_read_data('/Volumes/tLab_BackUp1/Monash/CTET_Dockree/EEG_CTET/01_ctet_session1_ATM.bdf');
-    hdr=ft_read_header([data_path filesep File_Name]);
-    events=ft_read_event([data_path filesep File_Name]);
-
-    my_events=events(find_trials({events.type},'STATUS'));
-    unique_values=unique([my_events.value]);
-    fprintf('... %g events found:',length([my_events.value]));
-    for nU=1:length(unique_values)
-        fprintf(' %g (n=%g) ',unique_values(nU),sum([my_events.value]==unique_values(nU)))
+    if ~ismember(SubN,ListSubjectsID)
+        fprintf('... %s not in subject list\n',File_Name);
+        continue;
     end
-    fprintf('\n');
-
+    if redo==1 || exist([save_path filesep 'CTET_behav_' File_Name(1:end-4) '.txt'])==0
+        % data=ft_read_data('/Volumes/tLab_BackUp1/Monash/CTET_Dockree/EEG_CTET/01_ctet_session1_ATM.bdf');
+        hdr=ft_read_header([data_path filesep File_Name]);
+        events=ft_read_event([data_path filesep File_Name]);
+        
+        my_events=events(find_trials({events.type},'STATUS'));
+        unique_values=unique([my_events.value]);
+        fprintf('... %g events found:',length([my_events.value]));
+        for nU=1:length(unique_values)
+            fprintf(' %g (n=%g) ',unique_values(nU),sum([my_events.value]==unique_values(nU)))
+        end
+        fprintf('\n');
+        
         
         %%% find blocks
         all_idx=[my_events.sample];
@@ -170,7 +174,7 @@ for nF=1:length(files)
     end
     res_mat=[res_mat; [SubN*ones(size(this_behav,1),1) SessN*ones(size(this_behav,1),1) this_behav]];
     drug_cond=[drug_cond ; repmat({DrugC},size(this_behav,1),1)];
-
+    
     for nbl=1:10
         [dprime,crit]=calc_dprime(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==0,6)==1,this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==0);
         resblock_mat=[resblock_mat; [SubN SessN nbl nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==0,6)==1) nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==0,6)==0) ...
