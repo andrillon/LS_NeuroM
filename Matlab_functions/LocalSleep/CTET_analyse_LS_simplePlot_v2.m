@@ -234,7 +234,7 @@ for nDrug=1:3
     
     title(Drugs{nDrug+1})
 end
-% print('-dpng', '-r300', '../../Figures/Topo_LS_LME_DrugEffect_v3.png')
+print('-dpng', '-r300', '../../Figures/Topo_LS_LME_DrugEffect_v6.png')
 
 %% Make new table
 table_avSW.C_Pos_ATM=nan(size(table_avSW,1),1);
