@@ -24,7 +24,7 @@ library(tidyverse)
 library(mediation)
 
 
-SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_full_v3_CLUSTERS.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_v6_CLUSTERS.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
 
@@ -113,20 +113,20 @@ summary(lmer(FA  ~ 1 + C_Pos_ATM  + (1|SubID), data = SWS_data4))
 
 ```{r}
 SWS_data5<-SWS_data[SWS_data$Treatment=="PLA" | SWS_data$Treatment=="CIT",] 
-SWS_data5<-SWS_data5[is.na(SWS_data5$Hit_RT)==FALSE,]
+#SWS_data5<-SWS_data5[is.na(SWS_data5$Hit_RT)==FALSE,]
 SWS_data5$Treatment<-droplevels(SWS_data5$Treatment)
 
 
 ### Pos CIT on RT
 summary(lmer(C_Pos_CIT  ~ 1 + Treatment + (1|SubID), data = SWS_data5))
-summary(lmer(Hit_RT  ~ 1 + C_Pos_CIT  + (1|SubID), data = SWS_data5))
+summary(lmer(RT  ~ 1 + C_Pos_CIT  + (1|SubID), data = SWS_data5))
 
 
 ### Pos CIT on SD RT
-summary(lmer(C_Pos_CIT  ~ 1 + Treatment + (1|SubID), data = SWS_data5))
-summary(lmer(STD_RT  ~ 1 + C_Pos_CIT + (1|SubID), data = SWS_data5))
+#summary(lmer(C_Pos_CIT  ~ 1 + Treatment + (1|SubID), data = SWS_data5))
+#summary(lmer(STD_RT  ~ 1 + C_Pos_CIT + (1|SubID), data = SWS_data5))
 
-
+SWS_data5$Miss <- 1 - SWS_data5$RT
 ## Pos CIT on misses 
 summary(lmer(C_Pos_CIT  ~ 1 + Treatment + (1|SubID), data = SWS_data5))
 summary(lmer(Miss  ~ 1 + C_Pos_CIT + (1|SubID), data = SWS_data5))

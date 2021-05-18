@@ -27,7 +27,7 @@ library(multilevelTools)
 library(tidyverse)
 library(Rmisc)
 
-SWS_data<- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_behav_vec_full_v6.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+SWS_data<- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_behav_vec_v6.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 ##NOTE: this was saved as SWS_data_perElec before
 
@@ -40,7 +40,7 @@ SWS_data$Treatment<-as.factor(SWS_data$Treatment)
 SWS_data$Treatment<-relevel(SWS_data$Treatment,"PLA")
 
 ##removing missing data 
-SWS_data <- na.omit(SWS_data)
+#SWS_data <- na.omit(SWS_data)
 ```
 
 ```{r}
