@@ -239,12 +239,11 @@ print('-dpng', '-r300', '../../Figures/Topo_LS_LME_DrugEffect_v6.png')
 %% Make new table
 % table_behav.C_Pos_ATM=nan(size(table_avSW,1),1);
 % table_behav.C_Neg_ATM=nan(size(table_avSW,1),1);
-table_behav.C_Pos_CIT=nan(size(table_behav,1),1);
+table_behav.C_Pos_CIT=nan(size(table_avSW,1),1);
 % table_avSW.C_Neg_CIT=nan(size(table_avSW,1),1);
 % table_avSW.C_Pos_MPH=nan(size(table_avSW,1),1);
 % table_behav.C_Neg_MPH=nan(size(table_behav,1),1);
 
-table_behav.Drug=table_behav.Treatment;
 uS=unique(table_behav.SubID);
 for nS=1:length(uS)
     for nB=1:10
@@ -279,7 +278,7 @@ for nS=1:length(uS)
 %             nanmean(table_SW.SWdens(ismember(table_SW.SubID,uS(nS)) & table_SW.BlockN==nB & ismember(table_SW.Drug,'PLA') & ismember(table_SW.Elec,ClustersByDrugs{2,3})));
     end
 end
-writetable(table_behav,[save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_v6_CLUSTERS.txt']);
+writetable(table_avSW,[save_path filesep 'CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_v6_CLUSTERS.txt']);
 
 % figure;
 % for nDrug=1:3

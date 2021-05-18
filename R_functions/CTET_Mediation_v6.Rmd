@@ -23,7 +23,7 @@ library(lmerTest)
 library(tidyverse)
 library(mediation)
 
-
+        
 SWS_data <- read.table("../Tables/CTET_SWdetection_thr90_byE_P2P_avDens_behav_vec_v6_CLUSTERS.txt", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 names(SWS_data)[names(SWS_data) == "Drug"] <- "Treatment"
