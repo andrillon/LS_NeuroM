@@ -17,6 +17,7 @@ table_behav=readtable([save_path filesep 'CTET_behav_resblock.txt']);
 cfg = [];
 cfg.layout = 'biosemi64.lay';
 cfg.channel=unique(table_SW.Elec);
+cfg.channel(match_str(cfg.channel,'Iz'))=[];
 cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 

@@ -2,22 +2,17 @@
 clear all
 close all
 
-path_fieldtrip='/Users/tand0009/Work/local/fieldtrip/';
-path_localsleep='/Users/tand0009/WorkGit/projects/inprogress/wanderIM/localsleep';
+run ../localdef.m
 addpath(path_fieldtrip);
-addpath(path_localsleep);
 ft_defaults;
-
-path_LSCPtools='/Users/tand0009/WorkGit/LSCPtools/';
 addpath(genpath(path_LSCPtools));
+addpath(genpath([pwd filesep '..']));
 
-data_path='/Volumes/tLab_BackUp1/Monash/CTET_Dockree/EEG_CTET/';
-save_path='/Users/tand0009/Data/CTET_Dockree/';
 % data_path='/Volumes/shared/R-MNHS-SPP/Bellgrove-data/Jess Barnes EEG Backup Data/EEG_CTET/';
 files=dir([data_path filesep '*.bdf']);
 filesPLA=dir([data_path filesep '*PLA.bdf']);
 
-table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
+table=readtable([save_path 'CTET_behav_res.txt']);
 
 %% Get the thresholds
 sw_thr=[];

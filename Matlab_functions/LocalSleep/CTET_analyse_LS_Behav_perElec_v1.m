@@ -9,11 +9,14 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath([pwd filesep '..']));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec.txt']);
+table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_v6.txt']);
 
 %%
 cfg = [];
 cfg.layout = 'biosemi64.lay';
+cfg.channel=unique(table_SW.Elec);
+cfg.channel(match_str(cfg.channel,'Iz'))=[];
+cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
 cmap=cbrewer('seq','YlOrRd',64); % select a sequential colorscale from yellow to red (64)
@@ -28,15 +31,15 @@ table_SW2.Drug=categorical(table_SW2.Drug);
 table_SW2.Drug=reordercats(table_SW2.Drug,[4 1 2 3]);
 
 %%
-redo=0;
+redo=1;
 totperm=1000;
 if redo==1
     % fprintf('%2.0f/%2.0f\n',0,64)
     Miss_est=cell(1,2);
     FA_est=cell(1,2);
     Hit_RT_est=cell(1,2);
-    for nE=1:64
-        fprintf('%2.0f/%2.0f\n',nE,64)
+    for nE=1:size(layout.label,1)-2
+        fprintf('%2.0f/%2.0f\n',nE,size(layout.label,1)-2)
         sub_table_SW2=table_SW2(find_trials(table_SW.Elec,layout.label{nE}),:);
         
         %%%% FA
@@ -45,18 +48,18 @@ if redo==1
         FA_est{2}=[FA_est{2} ; [nE*ones(totperm,1) perm_out]];
         
         %%%% MISS
-        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Miss~1+pred+BlockN+(1|SubID)',totperm);
+        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Hit~1+pred+BlockN+(1|SubID)',totperm);
         Miss_est{1}=[Miss_est{1} ; [nE real_out]];
         Miss_est{2}=[Miss_est{2} ; [nE*ones(totperm,1) perm_out]];
         
         %%%% RT
-        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Hit_RT~1+pred+BlockN+(1|SubID)',totperm);
+        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','RT~1+pred+BlockN+(1|SubID)',totperm);
         Hit_RT_est{1}=[Hit_RT_est{1} ; [nE real_out]];
         Hit_RT_est{2}=[Hit_RT_est{2} ; [nE*ones(totperm,1) perm_out]];
     end
-    save('../../Tables/model_Behav_est','Miss_est','Hit_RT_est','FA_est');
+    save('../../Tables/model_Behav_est_v6','Miss_est','Hit_RT_est','FA_est');
 else
-    load('../../Tables/model_Behav_est');
+    load('../../Tables/model_Behav_est_v6');
 end
 %% Filter clusters
 clus_alpha=0.05;
@@ -65,6 +68,7 @@ montecarlo_alpha=0.05;
 cfg_neighb=[];
 cfg_neighb.method = 'template';
 cfg_neighb.layout='biosemi64.lay';
+cfg_neighb.channel=layout.label;
 neighbours = ft_prepare_neighbours(cfg_neighb);
 
 [FA_clus]=get_clusterperm_lme_lsneurom(FA_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
@@ -74,8 +78,8 @@ neighbours = ft_prepare_neighbours(cfg_neighb);
 %%
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap2=flipud(cmap2);
-limNumClus=2;
-limMax=10;%max(max(abs(temp_topo_tval)));
+% limNumClus=2;
+limMax=5;%max(max(abs(temp_topo_tval)));
 figure; set(gcf,'Position',[213         173        1027         805]);
 PlotTitles={'FA','Miss','Hit_RT'};
 for nPlot=1:3
@@ -128,7 +132,7 @@ for nPlot=1:3
     
     title(PlotTitles{nPlot})
 end
-print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect.png')
+% print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect.png')
 % figure;
 % for nDrug=1:3
 %     subplot(1,3,nDrug)

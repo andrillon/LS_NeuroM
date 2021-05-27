@@ -11,9 +11,9 @@ addpath(genpath(path_LSCPtools));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
 
-load(['/Users/tand0009/Data/CTET_Dockree/headers_BDFfiles']);
+load(['/Users/thandrillon/Data/CTET_Dockree/headers_BDFfiles']);
 %%
-files=dir(['/Users/tand0009/Data/CTET_Dockree/CTET_*_FOOOF_FFT_perBlock_byElec_avMast_ICAcleaned.mat']);
+files=dir(['/Users/thandrillon/Data/CTET_Dockree/CTET_*_FOOOF_FFT_perBlock_byElec_avMast_ICAcleaned.mat']);
 
 nFc=0;
 av_bg=[];
@@ -28,7 +28,12 @@ for nF=1:length(files)
     SessN=str2num(File_Name(septag(4)-1));
     DrugC=(File_Name(septag(4)+1:septag(4)+3));
     
-     load(['/Users/tand0009/Data/CTET_Dockree/' File_Name]);
+     if ~ismember(SubN,ListSubjectsID)
+        fprintf('... %s not in subject list\n',File_Name);
+        continue;
+     end
+         
+     load(['/Users/thandrillon/Data/CTET_Dockree/' File_Name]);
         nFc=nFc+1;
         av_pow(nFc,:,:,:)=(all_spec);
         all_Drugs{nFc}=DrugC;
@@ -160,8 +165,12 @@ cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
 Drugs={'PLA','ATM','CIT','MPH'};
-cmap=cbrewer('seq','YlOrRd',64); % select a sequential colorscale from yellow to red (64)
-cmap3=cbrewer('div','Spectral',64); cmap3=flipud(cmap3);
+cmap=cbrewer('seq','YlOrRd',64,'spline'); % select a sequential colorscale from yellow to red (64)
+cmap(cmap<0)=0;
+cmap(cmap>1)=1;
+cmap3=cbrewer('div','Spectral',64,'spline'); cmap3=flipud(cmap3);
+cmap3(cmap3<0)=0;
+cmap3(cmap3>1)=1;
 
 clus_alpha=0.05;
 montecarlo_alpha=0.05;

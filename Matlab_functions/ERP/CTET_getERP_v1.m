@@ -20,7 +20,7 @@ cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
 load ../EEG_Cleaning.mat
-redo=1;
+redo=0;
 %%
 if redo==1
     nFc=0;
@@ -35,6 +35,11 @@ if redo==1
         SessN=str2num(File_Name(septag(3)-1));
         DrugC=(File_Name(septag(3)+1:septag(3)+3));
         
+         if ~ismember(SubN,ListSubjectsID)
+        fprintf('... %s not in subject list\n',File_Name);
+        continue;
+         end
+      
         table=readtable([save_path 'CTET_behav_' File_Name(1:end-4) '.txt']);
         NT_ITI(nF)=mode(table.ITI);
         TG_ITI(nF)=mode(table.ITI(table.ITI>mode(table.ITI)+0.1));
@@ -145,10 +150,30 @@ figure;
 set(gcf,'Position',[1         378        1396         420]);
 % ColorsD={[1 1 1]*0.5,[84 81 153]/255,[170 75 21]/255,[75 128 90]/255};
 % ColorsDlabels={'PLA','ATM','MPH','CIT'};
+for nDrug=1:4
+    subplot(1,4,nDrug);
+    hp=[];
+    [~,hp(1)]=simpleTplot(xTime,squeeze(all_ERP_NT(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)),0,'k',0,'-',0.5,1,5,1,3);
+    hold on;
+    [~,hp(2)]=simpleTplot(xTime,squeeze(all_ERP_TG(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)),0,'r',0,'-',0.5,1,5,1,3);
+    title(ColorsDlabels{nDrug})
+    ylim([-2 10])
+    xlim([-0.2 1.8])
+    format_fig;
+    xlabel('Time from Onset')
+    ylabel('ERP (\muV)')
+end
+
+%%
+thisCh=match_str(chLabels,'Fz');
+
+figure;
+set(gcf,'Position',[1         378        1396         420]);
+% ColorsD={[1 1 1]*0.5,[84 81 153]/255,[170 75 21]/255,[75 128 90]/255};
+% ColorsDlabels={'PLA','ATM','MPH','CIT'};
     hp=[];
 for nDrug=1:4
-    [~,hp(nDrug)]=simpleTplot(xTime,squeeze(all_ERP_TG(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)-...
-        all_ERP_NT(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)),0,Colors(nDrug,:),[2 0.05 0.0001 1000],'-',0.5,1,5,1,3);
+    [~,hp(nDrug)]=simpleTplot(xTime,squeeze(all_ERP_TG(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],'-',0.5,1,5,1,3);
     title(ColorsDlabels{nDrug})
 %     ylim([-2 10])
     xlim([-0.2 1.8])

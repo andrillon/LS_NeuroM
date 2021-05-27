@@ -9,7 +9,7 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath([pwd filesep '..']));
 path_mediation=[pwd filesep '..' filesep '..' filesep 'Tables'];
 
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec_full_v3.txt']);
+table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_allE_P2P_behav_vec_v6.txt']);
 
 cfg = [];
 cfg.layout = 'biosemi64.lay';

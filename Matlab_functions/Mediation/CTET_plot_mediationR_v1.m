@@ -10,62 +10,62 @@ addpath(genpath([pwd filesep '..']));
 path_mediation=[pwd filesep '..' filesep '..' filesep 'Tables'];
 
 %% Load all drugs
-filename='CTET_Mediation_byE_ATM_FA_Est_v2.txt';
+filename='CTET_Mediation_allE_ATM_FA_Est_v6.txt';
 mediation_ATM_FA_Est = CTET_import_mediationoutput([path_mediation filesep filename]);
-filename='CTET_Mediation_byE_ATM_FA_pV_v2.txt';
+filename='CTET_Mediation_allE_ATM_FA_pV_v6.txt';
 mediation_ATM_FA_pV = CTET_import_mediationoutput([path_mediation filesep filename]);
 
 myChannels=cellstr(mediation_ATM_FA_Est.Channels);
 
-filename='CTET_Mediation_byE_ATM_RT_Est_v2.txt';
+filename='CTET_Mediation_allE_ATM_RT_Est_v6.txt';
 mediation_ATM_RT_Est = CTET_import_mediationoutput([path_mediation filesep filename]);
-filename='CTET_Mediation_byE_ATM_RT_pV_v2.txt';
+filename='CTET_Mediation_allE_ATM_RT_pV_v6.txt';
 mediation_ATM_RT_pV = CTET_import_mediationoutput([path_mediation filesep filename]);
 
-filename='CTET_Mediation_byE_ATM_Miss_Est_v2.txt';
+filename='CTET_Mediation_allE_ATM_Miss_Est_v6.txt';
 mediation_ATM_Miss_Est = CTET_import_mediationoutput([path_mediation filesep filename]);
-filename='CTET_Mediation_byE_ATM_Miss_pV_v2.txt';
+filename='CTET_Mediation_allE_ATM_Miss_pV_v6.txt';
 mediation_ATM_Miss_pV = CTET_import_mediationoutput([path_mediation filesep filename]);
 
-filename='CTET_Mediation_byE_MPH_FA_Est_v2.txt';
+filename='CTET_Mediation_allE_MPH_FA_Est_v6.txt';
 mediation_MPH_FA_Est = CTET_import_mediationoutput([path_mediation filesep filename]);
-filename='CTET_Mediation_byE_MPH_FA_pV_v2.txt';
+filename='CTET_Mediation_allE_MPH_FA_pV_v6.txt';
 mediation_MPH_FA_pV = CTET_import_mediationoutput([path_mediation filesep filename]);
 
 myChannels=cellstr(mediation_MPH_FA_Est.Channels);
 
-filename='CTET_Mediation_byE_MPH_RT_Est_v2.txt';
+filename='CTET_Mediation_allE_MPH_RT_Est_v6.txt';
 mediation_MPH_RT_Est = CTET_import_mediationoutput([path_mediation filesep filename]);
-filename='CTET_Mediation_byE_MPH_RT_pV_v2.txt';
+filename='CTET_Mediation_allE_MPH_RT_pV_v6.txt';
 mediation_MPH_RT_pV = CTET_import_mediationoutput([path_mediation filesep filename]);
 
-filename='CTET_Mediation_byE_MPH_Miss_Est_v2.txt';
+filename='CTET_Mediation_allE_MPH_Miss_Est_v6.txt';
 mediation_MPH_Miss_Est = CTET_import_mediationoutput([path_mediation filesep filename]);
-filename='CTET_Mediation_byE_MPH_Miss_pV_v2.txt';
+filename='CTET_Mediation_allE_MPH_Miss_pV_v6.txt';
 mediation_MPH_Miss_pV = CTET_import_mediationoutput([path_mediation filesep filename]);
 
-filename='CTET_Mediation_byE_CIT_FA_Est_v2.txt';
+filename='CTET_Mediation_allE_CIT_FA_Est_v6.txt';
 mediation_CIT_FA_Est = CTET_import_mediationoutput([path_mediation filesep filename]);
-filename='CTET_Mediation_byE_CIT_FA_pV_v2.txt';
+filename='CTET_Mediation_allE_CIT_FA_pV_v6.txt';
 mediation_CIT_FA_pV = CTET_import_mediationoutput([path_mediation filesep filename]);
 
 myChannels=cellstr(mediation_CIT_FA_Est.Channels);
 
-filename='CTET_Mediation_byE_CIT_RT_Est_v2.txt';
+filename='CTET_Mediation_allE_CIT_RT_Est_v6.txt';
 mediation_CIT_RT_Est = CTET_import_mediationoutput([path_mediation filesep filename]);
-filename='CTET_Mediation_byE_CIT_RT_pV_v2.txt';
+filename='CTET_Mediation_allE_CIT_RT_pV_v6.txt';
 mediation_CIT_RT_pV = CTET_import_mediationoutput([path_mediation filesep filename]);
 
-filename='CTET_Mediation_byE_CIT_Miss_Est_v2.txt';
+filename='CTET_Mediation_allE_CIT_Miss_Est_v6.txt';
 mediation_CIT_Miss_Est = CTET_import_mediationoutput([path_mediation filesep filename]);
-filename='CTET_Mediation_byE_CIT_Miss_pV_v2.txt';
+filename='CTET_Mediation_allE_CIT_Miss_pV_v6.txt';
 mediation_CIT_Miss_pV = CTET_import_mediationoutput([path_mediation filesep filename]);
 
 all_pVs=[mediation_ATM_RT_pV.ACME_treated ; mediation_ATM_Miss_pV.ACME_treated ; mediation_ATM_FA_pV.ACME_treated ; ....
     mediation_MPH_RT_pV.ACME_treated ; mediation_MPH_Miss_pV.ACME_treated ; mediation_MPH_FA_pV.ACME_treated ; ....
     mediation_CIT_RT_pV.ACME_treated ; mediation_CIT_Miss_pV.ACME_treated ; mediation_CIT_FA_pV.ACME_treated];
 
-FDR_Thr=fdr(all_pVs,0.05);
+FDR_Thr=fdr(all_pVs(all_pVs~=0),0.05);
 
 %% ATM
 cfg = [];
