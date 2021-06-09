@@ -147,8 +147,8 @@ mdl5=fitlme(table_SW2,'SWdens~1+Elec*BlockN*Drug+(1|SubID)');
 compare(mdl4,mdl5)
 
 %%
-redo=0;
-    totperm=1000;
+redo=1;
+totperm=1000;
 if redo==1
     temp_topo_tval=[];
     temp_topo_pval=[];
@@ -156,12 +156,16 @@ if redo==1
     SWdens_est=cell(1,2);
     for nE=1:length(layout.label)-2
         fprintf('%2.0f/%2.0f\n',nE,64)
-        sub_table_SW2=table_SW2(find_trials(table_SW.Elec,layout.label{nE}),:);
+        sub_table_SW2=table_SW2(match_str(table_SW.Elec,layout.label{nE}),:);
         mdl_byEle{nE}=fitlme(sub_table_SW2,'SWdens~1+BlockN+Drug+(1|SubID)');
         temp_topo_tval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:end,4));
         temp_topo_pval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:end,6));
         
-        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'Drug','SWdens~1+pred+BlockN+(1|SubID)',totperm);
+        if nE==1
+            [real_out, perm_out, out_pred_perm]=lme_perm_lsneurom(sub_table_SW2,'Drug','SWdens~1+pred+(1|SubID)',totperm);
+        else
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'Drug','SWdens~1+pred+(1|SubID)',totperm, out_pred_perm);
+        end
         SWdens_est{1}=[SWdens_est{1} ; [nE*ones(3,1) real_out]];
         for nDrug=1:3
             SWdens_est{2}=[SWdens_est{2} ; [nE*ones(totperm,1) perm_out{nDrug} nDrug*ones(totperm,1)]];
@@ -172,7 +176,7 @@ else
     load('../../Tables/model_SWdens_est_v6_byE');
 end
 %% Filter clusters
-clus_alpha=0.01;
+clus_alpha=0.05;
 montecarlo_alpha=0.05/3;
 
 cfg_neighb=[];
@@ -185,9 +189,9 @@ neighbours(~ismember({neighbours.label},unique(table_SW.Elec)))=[];
 %%
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap2=flipud(cmap2);
-limNumClus=5;
-limMax=10;%max(max(abs(temp_topo_tval)));
-figure; set(gcf,'Position',[213         173        1027         805]);
+limNumClus=2;
+limMax=8;%max(max(abs(temp_topo_tval)));
+figure; set(gcf,'Position',[213         173        1027         805/3]);
 ClustersByDrugs=cell(2,3);
 for nDrug=1:3
     subplot(1,3,nDrug)
@@ -215,7 +219,7 @@ for nDrug=1:3
             end
         end
     end
-    simpleTopoPlot_ft(temp_topo2, layout,'on',[],0,1);
+    simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
     ft_plot_lay_me(layout, 'chanindx',1:length(layout.label)-2,'pointsymbol','o','pointcolor',[1 1 1]*0.7,'pointsize',6,'box','no','label','no')
     format_fig;
     caxis([-1 1]*limMax)
@@ -224,7 +228,7 @@ for nDrug=1:3
             if length(match_str(layout.label,temp_clus{nclus}{2}))<limNumClus
                 continue;
             end
-            ft_plot_lay_me(layout, 'chanindx',match_str(layout.label,temp_clus{nclus}{2}),'pointsymbol','o','pointcolor','k','pointsize',12,'box','no','label','no')
+            ft_plot_lay_me(layout, 'chanindx',match_str(layout.label,temp_clus{nclus}{2}),'pointsymbol','o','pointcolor','k','pointsize',36,'box','no','label','no')
         end
     end
     if nDrug==3

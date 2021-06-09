@@ -32,7 +32,7 @@ table_SW2.Drug=reordercats(table_SW2.Drug,[4 1 2 3]);
 
 %%
 redo=1;
-totperm=1000;
+totperm=10;
 if redo==1
         SWdens_est=cell(3,2);
         for nBehav=1:3
@@ -40,14 +40,14 @@ if redo==1
             SWdens_est{nBehav,2}=nan(totperm*(length(layout.label)-2),5);
             if nBehav==1
                 Behav_Var='RT';
-                sub_table_SW2=table_SW2(ismember(table_SW2.Drug,{'CIT','PLA'}) & ~isnan(table_SW2.RT) & table_SW2.StimType==1,:);
+                sub_table_SW2=table_SW2(~isnan(table_SW2.RT) & table_SW2.StimType==1,:);
             elseif nBehav==2
                 Behav_Var='Miss';
-                sub_table_SW2=table_SW2(ismember(table_SW2.Drug,{'CIT','PLA'}) & ~isnan(table_SW2.corrTG) & table_SW2.StimType==1,:);
+                sub_table_SW2=table_SW2(~isnan(table_SW2.corrTG) & table_SW2.StimType==1,:);
                 sub_table_SW2.Miss=1-sub_table_SW2.corrTG;
             elseif nBehav==3
                 Behav_Var='FA';
-                sub_table_SW2=table_SW2(ismember(table_SW2.Drug,{'CIT','PLA'}) & ~isnan(table_SW2.corrNT) & table_SW2.StimType==0,:);
+                sub_table_SW2=table_SW2(~isnan(table_SW2.corrNT) & table_SW2.StimType==0,:);
                 sub_table_SW2.FA=1-sub_table_SW2.corrNT;
             end
             
@@ -66,18 +66,27 @@ if redo==1
                 temp_topo_pval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:end,6));
                 
                 if strcmp(Behav_Var,'Miss') || strcmp(Behav_Var,'FA')
-                    [real_out, perm_out]=glme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+pred+(1|SubID)',Behav_Var),totperm);
+                    if nE==1
+                        [real_out, perm_out, out_perm]=glme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+pred+(1|SubID)',Behav_Var),totperm);
+                    else
+                        [real_out, perm_out]=glme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+pred+(1|SubID)',Behav_Var),totperm,out_perm);
+                    end
                 else
-                    [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+pred+(1|SubID)',Behav_Var),totperm);
+                    if nE==1
+                        [real_out, perm_out, out_perm]=lme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+pred+(1|SubID)',Behav_Var),totperm);
+                    else
+                        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+pred+(1|SubID)',Behav_Var),totperm,out_perm);
+                    end
                 end
                 SWdens_est{nBehav,1}(nE,:)=[nE real_out];
                 SWdens_est{nBehav,2}(((nE-1)*totperm+1):nE*totperm,:)=[nE*ones(totperm,1) perm_out];
             end
         end
-    save('../../Tables/model_SWflag_Behav_singleTrial_est_v6_onlyCIT','SWdens_est');
+    save('../../Tables/model_SWflag_Behav_singleTrial_est_v6','SWdens_est');
 else
-    load('../../Tables/model_SWflag_Behav_singleTrial_est_v6_onlyCIT');
+    load('../../Tables/model_SWflag_Behav_singleTrial_est_v6');
 end
+%%
 if redo==1
         SWdens_est=cell(3,2);
         for nBehav=1:3
@@ -85,14 +94,14 @@ if redo==1
             SWdens_est{nBehav,2}=nan(totperm*(length(layout.label)-2),5);
             if nBehav==1
                 Behav_Var='RT';
-                sub_table_SW2=table_SW2(ismember(table_SW2.Drug,{'CIT','PLA'}) & ~isnan(table_SW2.RT) & table_SW2.StimType==1,:);
+                sub_table_SW2=table_SW2(~isnan(table_SW2.RT) & table_SW2.StimType==1,:);
             elseif nBehav==2
                 Behav_Var='Miss';
-                sub_table_SW2=table_SW2(ismember(table_SW2.Drug,{'CIT','PLA'}) & ~isnan(table_SW2.corrTG) & table_SW2.StimType==1,:);
+                sub_table_SW2=table_SW2(~isnan(table_SW2.corrTG) & table_SW2.StimType==1,:);
                 sub_table_SW2.Miss=1-sub_table_SW2.corrTG;
             elseif nBehav==3
                 Behav_Var='FA';
-                sub_table_SW2=table_SW2(ismember(table_SW2.Drug,{'CIT','PLA'}) & ~isnan(table_SW2.corrNT) & table_SW2.StimType==0,:);
+                sub_table_SW2=table_SW2(~isnan(table_SW2.corrNT) & table_SW2.StimType==0,:);
                 sub_table_SW2.FA=1-sub_table_SW2.corrNT;
             end
             
@@ -103,7 +112,7 @@ if redo==1
             for nE=1:length(layout.label)-2
                 fprintf('B%g: %2.0f/%2.0f\n',nBehav,nE,64)
                 if strcmp(Behav_Var,'Miss') || strcmp(Behav_Var,'FA')
-                    mdl_byEle{nE}=fitglme(sub_table_SW2,sprintf('%s~1+BlockN+Drug+%s+(1|SubID)',Behav_Var,layout.label{nE}),'Distribution','binomial');
+                    mdl_byEle{nE}=fitglme(sub_table_SW2,sprintf('%s~1+Drug+%s+(1+%s|SubID)+(1+%s|Drug)',Behav_Var,layout.label{nE},layout.label{nE},layout.label{nE}),'Distribution','binomial');
                 else
                     mdl_byEle{nE}=fitlme(sub_table_SW2,sprintf('%s~1+BlockN+Drug+%s+(1|SubID)',Behav_Var,layout.label{nE}));
                 end
@@ -111,17 +120,25 @@ if redo==1
                 temp_topo_pval(nE,:)=double(mdl_byEle{nE}.Coefficients(2:end,6));
                 
                 if strcmp(Behav_Var,'Miss') || strcmp(Behav_Var,'FA')
-                    [real_out, perm_out]=glme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+Drug+pred+(1|SubID)',Behav_Var),totperm);
+                    if nE==1
+                        [real_out, perm_out, out_perm]=glme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+Drug+pred+(1|SubID)',Behav_Var),totperm);
+                    else
+                        [real_out, perm_out]=glme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+Drug+pred+(1|SubID)',Behav_Var),totperm,out_perm);
+                    end
                 else
-                    [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+Drug+pred+(1|SubID)',Behav_Var),totperm);
+                    if nE==1
+                        [real_out, perm_out, out_perm]=lme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+Drug+pred+(1|SubID)',Behav_Var),totperm);
+                    else
+                        [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,layout.label{nE},sprintf('%s~1+BlockN+Drug+pred+(1|SubID)',Behav_Var),totperm,out_perm);
+                    end
                 end
                 SWdens_est{nBehav,1}(nE,:)=[nE real_out];
                 SWdens_est{nBehav,2}(((nE-1)*totperm+1):nE*totperm,:)=[nE*ones(totperm,1) perm_out];
             end
         end
-    save('../../Tables/model_SWflag_Behav_Drug_singleTrial_est_v6_onlyCIT','SWdens_est');
+    save('../../Tables/model_SWflag_Behav_Drug_singleTrial_est_v6','SWdens_est');
 else
-    load('../../Tables/model_SWflag_Behav_Drug_singleTrial_est_v6_onlyCIT');
+    load('../../Tables/model_SWflag_Behav_Drug_singleTrial_est_v6');
 end
 
 %% Filter clusters

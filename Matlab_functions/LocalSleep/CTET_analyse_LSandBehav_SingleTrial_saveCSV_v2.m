@@ -115,20 +115,24 @@ for nF=1:length(files)
         slow_Waves=[slow_Waves ; thisE_Waves(temp_p2p>thr_Wave,:)];
     end
     %     save([save_path filesep 'SW_detection' filesep 'PH_CTET_SW_' File_Name(1:end-4)],'slow_Waves','hdr','paramSW')
-    temp_table=table(table.SubID==SubN & table.SessN==SessN,:);
-    temp_all_SWflag=zeros(size(temp_table,1),65);
-    if isempty(temp_table)
-        continue;
+    
+    for nBlock=1:max(table.BlockN)
+        temp_table=table(table.SubID==SubN & table.SessN==SessN & table.BlockN==nBlock,:);
+        if isempty(temp_table)
+            continue;
+        end
+        temp_sample=temp_table.Sample/1000*Fs-(temp_table.Sample(1)/1000*Fs-2*Fs);
+        temp_all_SWflag=zeros(size(temp_table,1),65);
+        for nTr=1:length(temp_sample)
+            temp_trial=temp_sample(nTr);
+            beg_sample=(temp_trial)+0*Fs;
+            end_sample=(temp_trial)+1.5*Fs;
+            temp_slow_Waves=slow_Waves(:,5)>beg_sample & slow_Waves(:,7)<end_sample & slow_Waves(:,2)==nBlock;
+            temp_all_SWflag(nTr,slow_Waves(temp_slow_Waves,3))=1;
+            temp_all_SWflag(nTr,65)=sum(temp_slow_Waves);
+        end
+        all_SWflag(table.SubID==SubN & table.SessN==SessN & table.BlockN==nBlock,:)=temp_all_SWflag;
     end
-    for nTr=1:size(temp_table,1)
-        temp_trial=temp_table(nTr,:);
-        beg_sample=(temp_trial.Sample)+0*Fs;
-        end_sample=(temp_trial.Sample)+1.5*Fs;
-        temp_slow_Waves=slow_Waves(:,5)>beg_sample & slow_Waves(:,7)<end_sample;
-        temp_all_SWflag(nTr,slow_Waves(temp_slow_Waves,3))=1;
-        temp_all_SWflag(nTr,65)=sum(temp_slow_Waves);
-    end
-    all_SWflag(table.SubID==SubN & table.SessN==SessN,:)=temp_all_SWflag;
 end
 %%
 table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_v6.txt']);
