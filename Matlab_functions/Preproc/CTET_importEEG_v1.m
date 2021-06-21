@@ -24,7 +24,7 @@ layout=ft_prepare_layout(cfg);
 %%
 nFc=0;
 redo=1;
-for nF=1:length(files)
+for nF=40:length(files)
     File_Name=files(nF).name;
     fprintf('... processing %s\n',File_Name);
     septag=findstr(File_Name,'_');
