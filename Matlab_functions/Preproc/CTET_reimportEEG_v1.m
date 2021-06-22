@@ -32,7 +32,7 @@ for nF=1:length(files)
     DrugC=(File_Name(septag(3)+1:septag(3)+3));
     %     hdr=ft_read_header([data_path filesep File_Name]);
     table=readtable([save_path 'CTET_behav_' File_Name(1:end-4) '.txt']);
-    if length(unique(table.BlockN))~=10
+    if ~ismember(SubN,ListSubjectsID)
         continue;
     end
     nFc=nFc+1;
@@ -64,9 +64,9 @@ for nF=1:length(files)
         else
             badChannels=[];
         end
-        if isempty(badChannels)==1
-            continue;
-        end
+%         if isempty(badChannels)==1
+%             continue;
+%         end
          %%% Define epochs
         load([data_path filesep 'fe_ft_' File_Name(1:end-4)])
         

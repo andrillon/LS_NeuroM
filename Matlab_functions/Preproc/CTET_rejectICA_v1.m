@@ -12,6 +12,7 @@ files=dir([data_path filesep 'Icfe_ft_*.mat']);
 
 load('../ICA_Artifacts.mat')
 
+redo=1;
 %%
 nFc=0;
 for nF=1:length(files)
@@ -27,9 +28,10 @@ for nF=1:length(files)
         continue;
     end
     nFc=nFc+1;
-    if exist([data_path filesep 'CIcfe_ft_' File_Name])==0
+    if redo==1 || exist([data_path filesep 'CIcfe_ft_' File_Name])==0
         fprintf('... processing %s\n',File_Name);
-        load([data_path filesep 'Icfe_ft_' File_Name(1:end-4)]);
+        load([data_path filesep 'cfe_ft_' File_Name(1:end-4)]);
+        load([data_path filesep 'Icfe_ft_' File_Name(1:end-4)],'comp');
         
         %%% Reject bad component
         cfg = [];
@@ -42,7 +44,7 @@ for nF=1:length(files)
         cfg.reref           = 'yes';
         cfg.refchannel      = 'all';
         cfg.demean          = 'yes';
-        cfg.baselinewindow  = [-0.1 0];
+        cfg.baselinewindow  = [-0.2 0];
         data_clean = ft_preprocessing(cfg,data_clean);
         data = ft_preprocessing(cfg,data);
         

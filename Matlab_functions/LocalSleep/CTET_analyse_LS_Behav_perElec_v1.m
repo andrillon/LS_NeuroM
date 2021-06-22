@@ -240,3 +240,112 @@ end
 %
 %     title(sprintf('BlockN*%s',Drugs{nDrug+1}))
 % end
+
+%%
+% redo=1;
+% totperm=1;
+% if redo==1
+%     % fprintf('%2.0f/%2.0f\n',0,64)
+%     Miss_P2P_est=cell(1,2);
+%     FA_P2P_est=cell(1,2);
+%     Hit_RT_P2P_est=cell(1,2);
+%     for nE=1:size(layout.label,1)-2
+%         fprintf('%2.0f/%2.0f\n',nE,size(layout.label,1)-2)
+%         sub_table_SW2=table_SW2(match_str(table_SW.Elec,layout.label{nE}),:);
+%         
+%         %%%% FA
+%         if nE==1
+%             [real_out, perm_out, out_perm_FA]=lme_perm_lsneurom(sub_table_SW2,'P2P','FA~1+pred+Drug+(1|SubID)',totperm);
+%         else
+%             [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'P2P','FA~1+pred+Drug+(1|SubID)',totperm,out_perm_FA);
+%         end
+%         FA_P2P_est{1}=[FA_P2P_est{1} ; [nE real_out]];
+%         FA_P2P_est{2}=[FA_P2P_est{2} ; [nE*ones(totperm,1) perm_out]];
+%         
+%         %%%% MISS
+%         if nE==1
+%             [real_out, perm_out, out_perm_Miss]=lme_perm_lsneurom(sub_table_SW2,'P2P','Miss~1+pred+Drug+(1|SubID)',totperm);
+%         else
+%             [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'P2P','Miss~1+pred+Drug+(1|SubID)',totperm,out_perm_Miss);
+%         end
+%         Miss_P2P_est{1}=[Miss_P2P_est{1} ; [nE real_out]];
+%         Miss_P2P_est{2}=[Miss_P2P_est{2} ; [nE*ones(totperm,1) perm_out]];
+%         
+%         %%%% RT
+%         if nE==1
+%             [real_out, perm_out, out_perm_RT]=lme_perm_lsneurom(sub_table_SW2,'P2P','RT~1+pred+Drug+(1|SubID)',totperm);
+%         else
+%             [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'P2P','RT~1+pred+Drug+(1|SubID)',totperm,out_perm_RT);
+%         end
+%         Hit_RT_P2P_est{1}=[Hit_RT_P2P_est{1} ; [nE real_out]];
+%         Hit_RT_P2P_est{2}=[Hit_RT_P2P_est{2} ; [nE*ones(totperm,1) perm_out]];
+%     end
+%     
+%     
+%     % fprintf('%2.0f/%2.0f\n',0,64)
+%     Miss_NegSlope_est=cell(1,2);
+%     FA_NegSlope_est=cell(1,2);
+%     Hit_RT_NegSlope_est=cell(1,2);
+%     for nE=1:size(layout.label,1)-2
+%         fprintf('%2.0f/%2.0f\n',nE,size(layout.label,1)-2)
+%         sub_table_SW2=table_SW2(match_str(table_SW.Elec,layout.label{nE}),:);
+%         
+%         %%%% FA
+%         if nE==1
+%             [real_out, perm_out, out_perm_FA]=lme_perm_lsneurom(sub_table_SW2,'NegSlope','FA~1+pred+Drug+(1|SubID)',totperm);
+%         else
+%             [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'NegSlope','FA~1+pred+Drug+(1|SubID)',totperm,out_perm_FA);
+%         end
+%         FA_NegSlope_est{1}=[FA_NegSlope_est{1} ; [nE real_out]];
+%         FA_NegSlope_est{2}=[FA_NegSlope_est{2} ; [nE*ones(totperm,1) perm_out]];
+%         
+%         %%%% MISS
+%         if nE==1
+%             [real_out, perm_out, out_perm_Miss]=lme_perm_lsneurom(sub_table_SW2,'NegSlope','Miss~1+pred+Drug+(1|SubID)',totperm);
+%         else
+%             [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'NegSlope','Miss~1+pred+Drug+(1|SubID)',totperm,out_perm_Miss);
+%         end
+%         Miss_NegSlope_est{1}=[Miss_NegSlope_est{1} ; [nE real_out]];
+%         Miss_NegSlope_est{2}=[Miss_NegSlope_est{2} ; [nE*ones(totperm,1) perm_out]];
+%         
+%         %%%% RT
+%         if nE==1
+%             [real_out, perm_out, out_perm_RT]=lme_perm_lsneurom(sub_table_SW2,'NegSlope','RT~1+pred+Drug+(1|SubID)',totperm);
+%         else
+%             [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'NegSlope','RT~1+pred+Drug+(1|SubID)',totperm,out_perm_RT);
+%         end
+%         Hit_RT_NegSlope_est{1}=[Hit_RT_NegSlope_est{1} ; [nE real_out]];
+%         Hit_RT_NegSlope_est{2}=[Hit_RT_NegSlope_est{2} ; [nE*ones(totperm,1) perm_out]];
+%     end
+% %     save('../../Tables/model_Behav_Drug_est_v6b','Miss_est','Hit_RT_est','FA_est');
+% else
+% %     load('../../Tables/model_Behav_Drug_est_v6b');
+% end
+% 
+% %%
+% limMax=5;
+% figure;
+% subplot(3,3,1);
+% simpleTopoPlot_ft(FA_est{1}(:,3), layout,'on',[],0,1); caxis([-1 1]*limMax); colormap(cmap2);
+% subplot(3,3,2);
+% simpleTopoPlot_ft(Miss_est{1}(:,3), layout,'on',[],0,1); caxis([-1 1]*limMax); colormap(cmap2);
+% subplot(3,3,3);
+% simpleTopoPlot_ft(Hit_RT_est{1}(:,3), layout,'on',[],0,1); caxis([-1 1]*limMax); colormap(cmap2);
+% 
+% 
+% subplot(3,3,4);
+% simpleTopoPlot_ft(FA_P2P_est{1}(:,3), layout,'on',[],0,1); caxis([-1 1]*limMax); colormap(cmap2);
+% subplot(3,3,5);
+% simpleTopoPlot_ft(Miss_P2P_est{1}(:,3), layout,'on',[],0,1); caxis([-1 1]*limMax); colormap(cmap2);
+% subplot(3,3,6);
+% simpleTopoPlot_ft(Hit_RT_P2P_est{1}(:,3), layout,'on',[],0,1); caxis([-1 1]*limMax); colormap(cmap2);
+% 
+% 
+% subplot(3,3,7);
+% simpleTopoPlot_ft(FA_NegSlope_est{1}(:,3), layout,'on',[],0,1); caxis([-1 1]*limMax); colormap(cmap2);
+% subplot(3,3,8);
+% simpleTopoPlot_ft(Miss_NegSlope_est{1}(:,3), layout,'on',[],0,1); caxis([-1 1]*limMax); colormap(cmap2);
+% subplot(3,3,9);
+% simpleTopoPlot_ft(Hit_RT_NegSlope_est{1}(:,3), layout,'on',[],0,1); caxis([-1 1]*limMax); colormap(cmap2);
+% 
+

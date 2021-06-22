@@ -173,7 +173,8 @@ set(gcf,'Position',[1         378        1396         420]);
 % ColorsDlabels={'PLA','ATM','MPH','CIT'};
     hp=[];
 for nDrug=1:4
-    [~,hp(nDrug)]=simpleTplot(xTime,squeeze(all_ERP_TG(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],'-',0.5,1,5,1,3);
+    [~,hp(nDrug)]=simpleTplot(xTime,squeeze(all_ERP_TG(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:))-...
+        squeeze(all_ERP_TG(match_str(all_DrugC2,ColorsDlabels{nDrug}),thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],'-',0.5,1,5,1,3);
     title(ColorsDlabels{nDrug})
 %     ylim([-2 10])
     xlim([-0.2 1.8])
