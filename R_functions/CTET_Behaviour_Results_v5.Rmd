@@ -26,19 +26,10 @@ library(lme4)
 library(lmerTest)
 library(multilevelTools)
 
-#library(ggstance)
-#library(jtools)
-#library(broom.mixed)
-#library(sjPlot)
-#library(glmmTMB)
-
 library(lattice)
-
-#library(arm)
 
 library(plyr)
 library(Rmisc)
-#library(plotly)
 
 library(cowplot) 
 library(dplyr) 
@@ -294,7 +285,7 @@ fa.graph$Treatment<-ordered(fa.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.015)
 
 ##Graph with Standard Error 
-ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.011) + geom_ribbon(aes(ymin = FA-se, ymax = FA+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::percent_format(accuracy = .01))+ theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank())+ coord_cartesian(ylim =c(0.0009, .017))
+ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.011) + geom_ribbon(aes(ymin = FA-se, ymax = FA+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::percent_format(accuracy = .1))+ theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank())+ coord_cartesian(ylim =c(0.0009, .017))
 
 
 ggsave(file="../Figures/CTET_LinePlot_FA_2021.png", 
@@ -488,26 +479,26 @@ ggsave(file="../Figures/CTET_BarPlot_criterion_2021.png", dpi = 600,
 #summary stats 
 CTET_Behaviour1_noNA <-na.omit(CTET_Behaviour1)
 CTET_Behaviour1_noNA$Treatment<-ordered(CTET_Behaviour1_noNA$Treatment,c("PLA","MPH","ATM","CIT"))
+
+
 summary_RT <- summarySE(CTET_Behaviour1_noNA, measurevar = "Hit_RT", groupvars=c("Treatment", "SubID"))
 summary_RT
 
 
  
 ggplot(summary_RT, aes(x = Treatment, y = Hit_RT, fill = Treatment)) +
-  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + ylim(1.15,1.65) +
-  geom_point(aes(x = as.numeric(Treatment)-.225, y = Hit_RT, colour = Treatment), position = position_jitter(width = .05), size = 4, shape = 20) + 
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .15, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
   geom_boxplot(aes(x = Treatment, y = Hit_RT, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("RT") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+  geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
+    geom_point(aes(x = as.numeric(Treatment)-.225, y = Hit_RT, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme(legend.position="none") + coord_cartesian(ylim =c(1, 1.7))
 
 ggsave(file="../Figures/CTET_RainCloudPlot_RT_2021.png", 
        width = 30/2,
       height = 18/2,
     units = c("cm"))  
 
-#code from raincloud plot: 
- geom_line(data = sumrepdat, aes(x = as.numeric(group)+.1, y = score_mean, group = time, colour = time), linetype = 3)
-   geom_point(data = sumrepdat, aes(x = as.numeric(time)+.1, y = score_mean, group = group, colour = group), shape = 18) +
-  geom_errorbar(data = sumrepdat, aes(x = as.numeric(time)+.1, y = score_mean, group = group, colour = group, ymin = score_mean-se, ymax = score_mean+se), width = .05)
   
  
 ```
@@ -515,18 +506,18 @@ ggsave(file="../Figures/CTET_RainCloudPlot_RT_2021.png",
 ```{r}
 ##Raincloud plot of STD_RT
 #summary stats 
-summary_STDRT <- summarySE(CTET_Behaviour1_noNA, measurevar = "STD_RT", groupvars=c("Treatment", "BlockN"))
+summary_STDRT <- summarySE(CTET_Behaviour1_noNA, measurevar = "STD_RT", groupvars=c("Treatment", "SubID"))
 summary_STDRT
 
 
-ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = STD_RT, fill = Treatment)) +
-  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
-  geom_point(aes(x = as.numeric(Treatment)-.225, y = STD_RT, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+ggplot(summary_STDRT, aes(x = Treatment, y = STD_RT, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .15, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = STD_RT, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
   geom_boxplot(aes(x = Treatment, y = STD_RT, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
-  geom_line(data = summary_STDRT, aes(x = as.numeric(Treatment)+.1, y = STD_RT, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
-  geom_point(data = summary_STDRT, aes(x = as.numeric(Treatment)+.1, y = STD_RT, group = Treatment, colour = Treatment), shape = 18) +
-  geom_errorbar(data = summary_STDRT, aes(x = as.numeric(Treatment)+.1, y =  STD_RT, group = Treatment, colour = Treatment, ymin = STD_RT-se, ymax = STD_RT+se), width = .05)+ ylim(0, 0.75) +
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time Variability (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+    geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time Variability (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+    font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) +
+  scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme(legend.position="none")
 
 ggsave(file="../Figures/CTET_RainCloudPlot_STDRT_2021.png", 
        width = 30/2,
@@ -541,10 +532,13 @@ summary_miss <- summarySE(CTET_Behaviour1_noNA, measurevar = "Miss", groupvars=c
 summary_miss
 
 ggplot(summary_miss, aes(x = Treatment, y = Miss, fill = Treatment)) +
-  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + ylim(0,1) +
-  geom_point(aes(x = as.numeric(Treatment)-.225, y = Miss, colour = Treatment), position = position_jitter(width = .05), size = 4, shape = 20) + 
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .15, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = Miss, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
   geom_boxplot(aes(x = Treatment, y = Miss, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Misses") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+  geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Misses") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + theme(legend.position="none")
 
 ggsave(file="../Figures/CTET_RainCloudPlot_Miss_2021.png", 
        width = 30/2,
@@ -554,17 +548,17 @@ ggsave(file="../Figures/CTET_RainCloudPlot_Miss_2021.png",
 ```{r}
 ##Raincloud plot of FA
 #summary stats 
-summary_FA <- summarySE(CTET_Behaviour1_noNA, measurevar = "FA", groupvars=c("Treatment", "BlockN"))
+summary_FA <- summarySE(CTET_Behaviour1_noNA, measurevar = "FA", groupvars=c("Treatment", "SubID"))
 summary_FA
 
-ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = FA, fill = Treatment)) +
-  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
-  geom_point(aes(x = as.numeric(Treatment)-.225, y = FA, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+ggplot(summary_FA, aes(x = Treatment, y = FA, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .15, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = FA, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
   geom_boxplot(aes(x = Treatment, y = FA, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
-  geom_line(data = summary_FA, aes(x = as.numeric(Treatment)+.1, y = FA, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
-  geom_point(data = summary_FA, aes(x = as.numeric(Treatment)+.1, y = FA, group = Treatment, colour = Treatment), shape = 18) +
-  geom_errorbar(data = summary_FA, aes(x = as.numeric(Treatment)+.1, y =  FA, group = Treatment, colour = Treatment, ymin = FA-se, ymax = FA+se), width = .05)+ ylim(0, .065) +
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("False Alarm") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+  geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("False Alarm") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) + theme(legend.position="none")
 
 ggsave(file="../Figures/CTET_RainCloudPlot_FA_2021.png", 
        width = 30/2,
@@ -575,17 +569,17 @@ ggsave(file="../Figures/CTET_RainCloudPlot_FA_2021.png",
 ```{r}
 ##Raincloud plot of dprime
 #summary stats 
-summary_dprime <- summarySE(CTET_Behaviour1_noNA, measurevar = "dprime", groupvars=c("Treatment", "BlockN"))
+summary_dprime <- summarySE(CTET_Behaviour1_noNA, measurevar = "dprime", groupvars=c("Treatment", "SubID"))
 summary_dprime
 
-ggplot(CTET_Behaviour1_noNA, aes(x = Treatment, y = dprime, fill = Treatment)) +
-  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
-  geom_point(aes(x = as.numeric(Treatment)-.225, y = dprime, colour = Treatment), position = position_jitter(width = .05), size = .25, shape = 20) + 
+ggplot(summary_dprime, aes(x = Treatment, y = dprime, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .15, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = dprime, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
   geom_boxplot(aes(x = Treatment, y = dprime, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
-  geom_line(data = summary_dprime, aes(x = as.numeric(Treatment)+.1, y = dprime, group = Treatment, colour = Treatment), linetype = 3, size = .6) + 
-  geom_point(data = summary_dprime, aes(x = as.numeric(Treatment)+.1, y = dprime, group = Treatment, colour = Treatment), shape = 18) +
-  geom_errorbar(data = summary_dprime, aes(x = as.numeric(Treatment)+.1, y =  dprime, group = Treatment, colour = Treatment, ymin = dprime-se, ymax = dprime+se), width = .05) +
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("dprime") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+  geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("D-prime") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) +
+  scale_y_continuous(labels = scales::number_format(accuracy = .01))+ theme(legend.position="none")
 
 ggsave(file="../Figures/CTET_RainCloudPlot_dprime_2021.png", 
        width = 30/2,
@@ -596,14 +590,16 @@ ggsave(file="../Figures/CTET_RainCloudPlot_dprime_2021.png",
 ```{r}
 ##Raincloud plot of criterion
 #summary stats 
-summary_crit <- summarySE(CTET_Behaviour1_noNA, measurevar = "crit", groupvars=c("Treatment", "SubID"))
+summary_crit <- summarySE(CTET_Behaviour1_noNA, measurevar = "crit", groupvars=c("Treatment", "SubID"), na.rm= FALSE)
 summary_crit
 
 ggplot(summary_crit, aes(x = Treatment, y = crit, fill = Treatment)) +
-  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
-  geom_point(aes(x = as.numeric(Treatment)-.225, y = crit, colour = Treatment), position = position_jitter(width = .05), size = 4, shape = 20) + 
-  geom_boxplot(aes(x = Treatment, y = crit, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("criterion") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .15, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+   geom_point(aes(x = as.numeric(Treatment)-.225, y = crit, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
+  geom_boxplot(aes(x = Treatment, y = crit, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black")  +
+  geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Criterion") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme(legend.position="none")
 
 ggsave(file="../Figures/CTET_RainCloudPlot_criterion_2021.png", 
        width = 30/2,
