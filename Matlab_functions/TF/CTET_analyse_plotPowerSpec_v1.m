@@ -193,8 +193,8 @@ for nD=1:size(PosDrugs,1)
             ft_plot_lay_me(layout, 'chanindx',find(stat.negclusterslabelmat==sigClusters(k)),'pointsymbol','o','pointcolor','k','pointsize',36,'box','no','label','no')
         end
     end
-    if nD==4
-        hb=colorbar('Position',[0.9195    0.6373    0.0143    0.2881]);
+    if nD==3 && nD2==3
+        hb=colorbar('Position',[0.93    0.8    0.02    0.15]);
     end
     caxis([-1 1]*5);
     title(sprintf('%s vs %s',ColorsDlabels{PosDrugs{nD,nD2}(1)},ColorsDlabels{PosDrugs{nD,nD2}(2)}));
@@ -276,8 +276,8 @@ for nD=1:size(PosDrugs,1)
             ft_plot_lay_me(layout, 'chanindx',find(stat.negclusterslabelmat==sigClusters(k)),'pointsymbol','o','pointcolor','k','pointsize',36,'box','no','label','no')
         end
     end
-    if nD==4
-        hb=colorbar('Position',[0.9195    0.6373    0.0143    0.2881]);
+    if nD==3 && nD2==3
+        hb=colorbar('Position',[0.93    0.8    0.02    0.15]);
     end
     caxis([-1 1]*5);
     title(sprintf('%s vs %s',ColorsDlabels{PosDrugs{nD,nD2}(1)},ColorsDlabels{PosDrugs{nD,nD2}(2)}));

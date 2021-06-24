@@ -231,11 +231,14 @@ ggsave(file="../Figures/CTET_LinePlot_Dens_AllE_2021.png",
     units = c("cm"))
 
 ##Barplot 
-dens.graph <- summarySE(SWS_data1, measurevar = "SWdens", groupvars = c( "Treatment"))
+dens.graph <- summarySE(SWS_data1, measurevar = "SWdens", groupvars = c( "Treatment","SubID"))
 dens.graph$Treatment<-ordered(dens.graph$Treatment,c("PLA","MPH","ATM","CIT"))
 
-ggplot(data=dens.graph, aes(x=Treatment, y=SWdens, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = SWdens-se, ymax = SWdens+se), width = .5, size = .6) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("Mean Slow Wave Density")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + coord_cartesian(ylim =c(4, 6.5)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) 
+ggplot(dens.graph, aes(x = Treatment, y = SWdens, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .1, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + ylim(2, 12) +
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = SWdens, colour = Treatment), position = position_jitter(width = .05), size = 4, shape = 20) + 
+  geom_boxplot(aes(x = Treatment, y = SWdens, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("SW Dens") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
 ggsave(file="../Figures/CTET_BarPlot_Dens_AllE_2021.png", dpi = 600, 
        width = 15/2,

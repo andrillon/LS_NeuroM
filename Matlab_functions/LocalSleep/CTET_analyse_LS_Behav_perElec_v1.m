@@ -9,7 +9,7 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath([pwd filesep '..']));
 
 % table=readtable('/Users/tand0009/Data/CTET_Dockree/CTET_behav_res.txt');
-table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_vec_v6.txt']);
+table_SW=readtable([save_path filesep 'CTET_SWdetection_thr90_byE_P2P_behav_TF_vec_v6.txt']);
 
 %%
 cfg = [];
