@@ -326,3 +326,24 @@ ggsave(file="../Figures/CTET_BarPlot_NegSlope_AllE_2021.png", dpi = 600,
       height = 18/2,
     units = c("cm"))
 ```
+
+```{r}
+##Raincloud plot of SWDens
+#summary stats 
+summary_SWdens <- summarySE(SWS_data, measurevar = "SWdens", groupvars=c("Treatment", "SubID"))
+summary_SWdens
+
+ggplot(summary_SWdens, aes(x = Treatment, y = SWdens, fill = Treatment)) +
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .15, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_point(aes(x = as.numeric(Treatment)-.225, y = SWdens, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
+  geom_boxplot(aes(x = Treatment, y = SWdens, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
+  geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Slow Wave Density") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) +
+  scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme(legend.position="none")
+
+ggsave(file="../Figures/CTET_RainCloudPlot_SWdens_2021.png", 
+       width = 30/2,
+      height = 18/2,
+    units = c("cm"))  
+```
