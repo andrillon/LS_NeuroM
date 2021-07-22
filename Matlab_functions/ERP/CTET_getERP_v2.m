@@ -20,7 +20,7 @@ cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
 load ../EEG_Cleaning.mat
-redo=1;
+redo=0;
 %%
 
 if redo==1
@@ -123,7 +123,6 @@ else
 end
 
 %%
-chLabels=data_clean.label(1:64);
 cfg = [];
 cfg.layout = 'biosemi64.lay';
 cfg.channel=chLabels(~ismember(chLabels,{'Iz','M1','M2'}));

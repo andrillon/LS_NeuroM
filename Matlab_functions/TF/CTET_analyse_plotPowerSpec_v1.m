@@ -119,21 +119,24 @@ for nCh=1:length(layout.label)-2
     correspCh(nCh)=match_str(chLabels,layout.label(nCh));
 end
 
-figure; set(gcf,'Position',[213         173        1027         805/3]);
+%%
+figure; set(gcf,'Position',[1     1   244   796]);
+[ha pos]=tight_subplot(4,1,0.02,0.05,0.05);
 cmap=cbrewer('seq','YlOrRd',64); % select a sequential colorscale from yellow to red (64)
 cmap(cmap<0)=0;
 for nD=1:4
-    subplot(1,4,nD); format_fig;
+      hs=subplot(4,1,nD); format_fig;
+            set(hs,'Position',pos{nD})
     temp_topo=squeeze(nanmean(nanmean(all_SNRtag(:,nD,:,correspCh),1),3));
     simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
     colormap(cmap);
-    if nD==4
-        hb=colorbar('Position',[0.9195    0.6373    0.0143    0.2881]);
-    end
-    caxis([0 1]*3);
-    title(ColorsDlabels{nD});
+if nD==4
+        hb=colorbar('Position',[ 0.8033    0.9133    0.0902    0.0653]);
 end
-print('-dpng', '-r300', '../../Figures/Topo_FreqTag_v5.eps')
+    caxis([0 1]*3);
+%     title(ColorsDlabels{nD});
+end
+print('-dpng', '-r300', '../../Figures/Topo_FreqTag_v5.png')
 
 %%
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
@@ -151,21 +154,27 @@ xlim([2 30])
 ylim([-.7 2])
 xlabel('Frequency (Hz)')
 ylabel('SNR')
-print('-dpng', '-r300', '../../Figures/Topo_FreqTag_Clusters_byFreq_v5.eps')
+print('-dpng', '-r300', '../../Figures/Topo_FreqTag_Clusters_byFreq_v5.png')
 
 %%
 PosDrugs={[3 1],[2 1],[4 1];[],[2 3],[4 3];[],[],[4 2]};
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap2=flipud(cmap2);
 figure; set(gcf,'Position',[1 1 880 880]);
+[ha pos]=tight_subplot(3,3,0.02,0.05,0.05);
 winTime=[0.05 0.3];
 for nD=1:size(PosDrugs,1)
     for nD2=1:size(PosDrugs,2)
         if isempty(PosDrugs{nD,nD2})
+            hs=subplot(3,3,3*(nD-1)+(nD2));
+            set(hs,'Position',pos{3*(nD-1)+(nD2)})
+            set(gcf,'Color','w')
+            set(gca,'Xcolor','w','Ycolor','w')
             continue;
         end
-    subplot(3,3,3*(nD-1)+(nD2)); format_fig;
-    temp_topo=[];
+ hs=subplot(3,3,3*(nD-1)+(nD2)); format_fig;
+        set(hs,'Position',pos{3*(nD-1)+(nD2)})
+        temp_topo=[];
     for nCh=1:length(layout.label)-2
         temp1=squeeze(nanmean(all_SNRtag(:,PosDrugs{nD,nD2}(1),:,match_str(chLabels,layout.label(nCh))),3));
         temp0=squeeze(nanmean(all_SNRtag(:,PosDrugs{nD,nD2}(2),:,match_str(chLabels,layout.label(nCh))),3));
@@ -194,32 +203,34 @@ for nD=1:size(PosDrugs,1)
         end
     end
     if nD==3 && nD2==3
-        hb=colorbar('Position',[0.93    0.8    0.02    0.15]);
+        hb=colorbar('Position',[0.9411    0.8807    0.0260    0.0950]);
     end
     caxis([-1 1]*5);
-    title(sprintf('%s vs %s',ColorsDlabels{PosDrugs{nD,nD2}(1)},ColorsDlabels{PosDrugs{nD,nD2}(2)}));
+%     title(sprintf('%s vs %s',ColorsDlabels{PosDrugs{nD,nD2}(1)},ColorsDlabels{PosDrugs{nD,nD2}(2)}));
     end
 end
 
-print('-dpng', '-r300', '../../Figures/Topo_FreqTag_Clusters_v5.eps')
+print('-dpng', '-r300', '../../Figures/Topo_FreqTag_Clusters_v5.png')
 
 
 %% Alpha 8-11Hz
-figure; set(gcf,'Position',[213         173        1027         805/3]);
+figure; set(gcf,'Position',[1     1   244   796]);
+[ha pos]=tight_subplot(4,1,0.02,0.05,0.05);
 cmap=cbrewer('seq','YlOrRd',64); % select a sequential colorscale from yellow to red (64)
 cmap(cmap<0)=0;
 for nD=1:4
-    subplot(1,4,nD); format_fig;
-    temp_topo=squeeze(nanmean(nanmean(nanmean(all_pow(:,nD,:,correspCh,faxis>8 & faxis<11),1),3),5));
+    hs=subplot(4,1,nD); format_fig;
+            set(hs,'Position',pos{nD})
+            temp_topo=squeeze(nanmean(nanmean(nanmean(all_pow(:,nD,:,correspCh,faxis>8 & faxis<11),1),3),5));
     simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
     colormap(cmap);
     if nD==4
-        hb=colorbar('Position',[0.9195    0.6373    0.0143    0.2881]);
+        hb=colorbar('Position',[0.7497    0.9183    0.0902    0.0653]);
     end
     caxis([-2.5 -1]);
-    title(ColorsDlabels{nD});
+%     title(ColorsDlabels{nD});
 end
-print('-dpng', '-r300', '../../Figures/Topo_Alpha_v5.eps')
+print('-dpng', '-r300', '../../Figures/Topo_Alpha_v5.png')
 
 %%
 % alphaFreqs=find((faxis>8 & faxis<8.6) | (faxis>8.95 & faxis<9.8) | (faxis>10.125 & faxis<11));
@@ -238,16 +249,23 @@ ylim([[-5 -0.5]])
 xlabel('Frequency (Hz)')
 ylabel('Power (dB)')
 legend(hp,ColorsDlabels)
-print('-dpng', '-r300', '../../Figures/Topo_Alpha_Clusters_byFreq_v5.eps')
+print('-dpng', '-r300', '../../Figures/Topo_Alpha_Clusters_byFreq_v5.png')
 
 figure; set(gcf,'Position',[1 1 880 880]);
+[ha pos]=tight_subplot(3,3,0.02,0.05,0.05);
 winTime=[0.05 0.3];
 for nD=1:size(PosDrugs,1)
     for nD2=1:size(PosDrugs,2)
         if isempty(PosDrugs{nD,nD2})
+            hs=subplot(3,3,3*(nD-1)+(nD2));
+            set(hs,'Position',pos{3*(nD-1)+(nD2)})
+            set(gcf,'Color','w')
+            set(gca,'Xcolor','w','Ycolor','w')
             continue;
         end
-    subplot(3,3,3*(nD-1)+(nD2)); format_fig;
+        hs=subplot(3,3,3*(nD-1)+(nD2)); format_fig;
+        set(hs,'Position',pos{3*(nD-1)+(nD2)})
+        
     temp_topo=[];
     for nCh=1:length(layout.label)-2
         temp1=squeeze(nanmean(nanmean(all_pow(:,PosDrugs{nD,nD2}(1),:,match_str(chLabels,layout.label(nCh)),alphaFreqs),3),5));
@@ -277,14 +295,14 @@ for nD=1:size(PosDrugs,1)
         end
     end
     if nD==3 && nD2==3
-        hb=colorbar('Position',[0.93    0.8    0.02    0.15]);
+        hb=colorbar('Position',[0.9411    0.8807    0.0260    0.0950]);
     end
     caxis([-1 1]*5);
-    title(sprintf('%s vs %s',ColorsDlabels{PosDrugs{nD,nD2}(1)},ColorsDlabels{PosDrugs{nD,nD2}(2)}));
+%     title(sprintf('%s vs %s',ColorsDlabels{PosDrugs{nD,nD2}(1)},ColorsDlabels{PosDrugs{nD,nD2}(2)}));
     end
 end
 
-print('-dpng', '-r300', '../../Figures/Topo_Alpha_Clusters_v5.eps')
+print('-dpng', '-r300', '../../Figures/Topo_Alpha_Clusters_v5.png')
 
 
 %%

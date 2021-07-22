@@ -105,11 +105,11 @@ for nF=1:length(ListSubjectsID)
             %             all_pow(nFc,nDrug,:,:,:)=subj_pow;
             %             all_SNR(nFc,nDrug,:,:,:)=subj_SNR;
             %             all_SNRtag(nFc,nDrug,:,:)=subj_SNRtag;
-      alphaFreqs=find((faxis>8 & faxis<11));
-      
+            alphaFreqs=find((faxis>8 & faxis<11));
+            
             table_avSW.SSVEP(table_avSW.SubID==SubN & table_avSW.SessN==SessN)=subj_SNRtag(:,match_str(data_clean.label,'Oz'));
             table_avSW.Alpha(table_avSW.SubID==SubN & table_avSW.SessN==SessN)=squeeze(mean(subj_pow(:,match_str(data_clean.label,'Oz'),alphaFreqs),3));
-
+            
             
             for nE=1:size(subj_SNRtag,2)
                 if sum(table_SW.SubID==SubN & table_SW.SessN==SessN & ismember(table_SW.Elec,data_clean.label{nE}))~=0
@@ -119,8 +119,8 @@ for nF=1:length(ListSubjectsID)
             end
         elseif nFc~=0
             %             all_pow(nFc,nDrug,:,:,:)=nan(10,64,640);
-%             all_SNR(nFc,nDrug,:,:,:)=nan(10,64,640);
-%             all_SNRtag(nFc,nDrug,:,:)=nan(10,64);
+            %             all_SNR(nFc,nDrug,:,:,:)=nan(10,64,640);
+            %             all_SNRtag(nFc,nDrug,:,:)=nan(10,64);
         end
     end
 end

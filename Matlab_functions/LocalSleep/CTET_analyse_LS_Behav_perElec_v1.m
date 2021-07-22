@@ -31,53 +31,146 @@ table_SW2.Drug=categorical(table_SW2.Drug);
 table_SW2.Drug=reordercats(table_SW2.Drug,[4 1 2 3]);
 
 table_SW2.Miss=1-table_SW2.Hit;
+
+table_SW2.dprime=nan(size(table_SW2,1),1);
+table_SW2.crit=nan(size(table_SW2,1),1);
+for k=1:size(table_SW2,1)
+    [dp,crit]=calc_dprime(table_SW2.Hit(k),table_SW2.FA(k));
+    table_SW2.dprime(k)=dp;
+    table_SW2.crit(k)=crit;
+end
 %%
-redo=0;
+redo=1;
 totperm=1000;
 if redo==1
     % fprintf('%2.0f/%2.0f\n',0,64)
     Miss_est=cell(1,2);
     FA_est=cell(1,2);
     Hit_RT_est=cell(1,2);
+    dprime_est=cell(1,2);
+    crit_est=cell(1,2);
     for nE=1:size(layout.label,1)-2
         fprintf('%2.0f/%2.0f\n',nE,size(layout.label,1)-2)
         sub_table_SW2=table_SW2(match_str(table_SW.Elec,layout.label{nE}),:);
         
         %%%% FA
         if nE==1
-            [real_out, perm_out, out_perm_FA]=lme_perm_lsneurom(sub_table_SW2,'SWdens','FA~1+pred+Drug+(1|SubID)',totperm);
+            [real_out, perm_out, out_perm_FA]=lme_perm_lsneurom(sub_table_SW2,'SWdens','FA~1+pred+Alpha+(1|SubID)',totperm);
         else
-            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','FA~1+pred+Drug+(1|SubID)',totperm,out_perm_FA);
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','FA~1+pred+Alpha+(1|SubID)',totperm,out_perm_FA);
         end
         FA_est{1}=[FA_est{1} ; [nE real_out]];
         FA_est{2}=[FA_est{2} ; [nE*ones(totperm,1) perm_out]];
         
         %%%% MISS
         if nE==1
-            [real_out, perm_out, out_perm_Miss]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Miss~1+pred+Drug+(1|SubID)',totperm);
+            [real_out, perm_out, out_perm_Miss]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Miss~1+pred+Alpha+(1|SubID)',totperm);
         else
-            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Miss~1+pred+Drug+(1|SubID)',totperm,out_perm_Miss);
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','Miss~1+pred+Alpha+(1|SubID)',totperm,out_perm_Miss);
         end
         Miss_est{1}=[Miss_est{1} ; [nE real_out]];
         Miss_est{2}=[Miss_est{2} ; [nE*ones(totperm,1) perm_out]];
         
         %%%% RT
         if nE==1
-            [real_out, perm_out, out_perm_RT]=lme_perm_lsneurom(sub_table_SW2,'SWdens','RT~1+pred+Drug+(1|SubID)',totperm);
+            [real_out, perm_out, out_perm_RT]=lme_perm_lsneurom(sub_table_SW2,'SWdens','RT~1+pred+Alpha+(1|SubID)',totperm);
         else
-            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','RT~1+pred+Drug+(1|SubID)',totperm,out_perm_RT);
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','RT~1+pred+Alpha+(1|SubID)',totperm,out_perm_RT);
         end
         Hit_RT_est{1}=[Hit_RT_est{1} ; [nE real_out]];
         Hit_RT_est{2}=[Hit_RT_est{2} ; [nE*ones(totperm,1) perm_out]];
+        
+        %%%% dprime
+        if nE==1
+            [real_out, perm_out, out_perm_RT]=lme_perm_lsneurom(sub_table_SW2,'SWdens','dprime~1+pred+Alpha+(1|SubID)',totperm);
+        else
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','dprime~1+pred+Alpha+(1|SubID)',totperm,out_perm_RT);
+        end
+        dprime_est{1}=[dprime_est{1} ; [nE real_out]];
+        dprime_est{2}=[dprime_est{2} ; [nE*ones(totperm,1) perm_out]];
+        
+        
+        %%%% crit
+        if nE==1
+            [real_out, perm_out, out_perm_RT]=lme_perm_lsneurom(sub_table_SW2,'SWdens','crit~1+pred+Alpha+(1|SubID)',totperm);
+        else
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'SWdens','crit~1+pred+Alpha+(1|SubID)',totperm,out_perm_RT);
+        end
+        crit_est{1}=[crit_est{1} ; [nE real_out]];
+        crit_est{2}=[crit_est{2} ; [nE*ones(totperm,1) perm_out]];
     end
-%     save('../../Tables/model_Behav_Drug_est_v6b','Miss_est','Hit_RT_est','FA_est');
+    save('../../Tables/model_Behav_SWoverAlpha_est_v6','Miss_est','Hit_RT_est','FA_est','dprime_est','crit_est');
 else
-    load('../../Tables/model_Behav_Drug_est_v6b');
+    load('../../Tables/model_Behav_SWoverAlpha_est_v6');
+end
+
+redo=1;
+totperm=1000;
+if redo==1
+    % fprintf('%2.0f/%2.0f\n',0,64)
+    Miss_est=cell(1,2);
+    FA_est=cell(1,2);
+    Hit_RT_est=cell(1,2);
+    dprime_est=cell(1,2);
+    crit_est=cell(1,2);
+    for nE=1:size(layout.label,1)-2
+        fprintf('%2.0f/%2.0f\n',nE,size(layout.label,1)-2)
+        sub_table_SW2=table_SW2(match_str(table_SW.Elec,layout.label{nE}),:);
+        
+        %%%% FA
+        if nE==1
+            [real_out, perm_out, out_perm_FA]=lme_perm_lsneurom(sub_table_SW2,'Alpha','FA~1+pred+SWdens+(1|SubID)',totperm);
+        else
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'Alpha','FA~1+pred+SWdens+(1|SubID)',totperm,out_perm_FA);
+        end
+        FA_est{1}=[FA_est{1} ; [nE real_out]];
+        FA_est{2}=[FA_est{2} ; [nE*ones(totperm,1) perm_out]];
+        
+        %%%% MISS
+        if nE==1
+            [real_out, perm_out, out_perm_Miss]=lme_perm_lsneurom(sub_table_SW2,'Alpha','Miss~1+pred+SWdens+(1|SubID)',totperm);
+        else
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'Alpha','Miss~1+pred+SWdens+(1|SubID)',totperm,out_perm_Miss);
+        end
+        Miss_est{1}=[Miss_est{1} ; [nE real_out]];
+        Miss_est{2}=[Miss_est{2} ; [nE*ones(totperm,1) perm_out]];
+        
+        %%%% RT
+        if nE==1
+            [real_out, perm_out, out_perm_RT]=lme_perm_lsneurom(sub_table_SW2,'Alpha','RT~1+pred+SWdens+(1|SubID)',totperm);
+        else
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'Alpha','RT~1+pred+SWdens+(1|SubID)',totperm,out_perm_RT);
+        end
+        Hit_RT_est{1}=[Hit_RT_est{1} ; [nE real_out]];
+        Hit_RT_est{2}=[Hit_RT_est{2} ; [nE*ones(totperm,1) perm_out]];
+        
+        %%%% dprime
+        if nE==1
+            [real_out, perm_out, out_perm_RT]=lme_perm_lsneurom(sub_table_SW2,'Alpha','dprime~1+pred+SWdens+(1|SubID)',totperm);
+        else
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'Alpha','dprime~1+pred+SWdens+(1|SubID)',totperm,out_perm_RT);
+        end
+        dprime_est{1}=[dprime_est{1} ; [nE real_out]];
+        dprime_est{2}=[dprime_est{2} ; [nE*ones(totperm,1) perm_out]];
+        
+        
+        %%%% crit
+        if nE==1
+            [real_out, perm_out, out_perm_RT]=lme_perm_lsneurom(sub_table_SW2,'Alpha','crit~1+pred+SWdens+(1|SubID)',totperm);
+        else
+            [real_out, perm_out]=lme_perm_lsneurom(sub_table_SW2,'Alpha','crit~1+pred+SWdens+(1|SubID)',totperm,out_perm_RT);
+        end
+        crit_est{1}=[crit_est{1} ; [nE real_out]];
+        crit_est{2}=[crit_est{2} ; [nE*ones(totperm,1) perm_out]];
+    end
+    save('../../Tables/model_Behav_AlphaoverSW_est_v6','Miss_est','Hit_RT_est','FA_est','dprime_est','crit_est');
+else
+    load('../../Tables/model_Behav_AlphaoverSW_est_v6');
 end
 %% Filter clusters - SW in addition to Drug
-load('../../Tables/model_Behav_Drug_est_v6b');
+load('../../Tables/model_Behav_SWoverAlpha_est_v6');
 clus_alpha=0.05;
-montecarlo_alpha=0.05;
+montecarlo_alpha=0.1;
 
 cfg_neighb=[];
 cfg_neighb.method = 'template';
@@ -88,17 +181,20 @@ neighbours = ft_prepare_neighbours(cfg_neighb);
 [FA_clus]=get_clusterperm_lme_lsneurom(FA_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
 [Miss_clus]=get_clusterperm_lme_lsneurom(Miss_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
 [Hit_RT_clus]=get_clusterperm_lme_lsneurom(Hit_RT_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
+[dprime_clus]=get_clusterperm_lme_lsneurom(dprime_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
+[crit_clus]=get_clusterperm_lme_lsneurom(crit_est,clus_alpha,montecarlo_alpha,totperm,neighbours);
+
 
 
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap2=flipud(cmap2);
-limNumClus=2;
+limNumClus=0;
 limMax=6;%max(max(abs(temp_topo_tval)));
-figure; set(gcf,'Position',[213         173        1027         805/3]);
-PlotTitles={'FA','Miss','Hit_RT'};
-for nPlot=1:3
+figure; set(gcf,'Position',[213         173        1027*1.5         805/3]);
+PlotTitles={'FA','Miss','RT','d''','crit'};
+for nPlot=1:5
     
-    subplot(1,3,nPlot)
+    subplot(1,5,nPlot)
     switch nPlot
         case 1
             temp_topo=FA_est{1}(:,3);
@@ -109,6 +205,12 @@ for nPlot=1:3
         case 3
             temp_topo=Hit_RT_est{1}(:,3);
             temp_clus=Hit_RT_clus;
+        case 4
+            temp_topo=dprime_est{1}(:,3);
+            temp_clus=dprime_clus;
+        case 5
+            temp_topo=crit_est{1}(:,3);
+            temp_clus=crit_clus;
     end
     temp_topo2=zeros(size(temp_topo));
     temp_topo3=zeros(size(temp_topo));
@@ -138,7 +240,7 @@ for nPlot=1:3
             ft_plot_lay_me(layout, 'chanindx',match_str(layout.label,temp_clus{nclus}{2}),'pointsymbol','o','pointcolor','k','pointsize',36,'box','no','label','no')
         end
     end
-    if nPlot==3
+    if nPlot==5
         h=colorbar;
         set(h,'Position',[0.93 0.4 0.02 0.2])
     end
@@ -146,7 +248,7 @@ for nPlot=1:3
     
     title(PlotTitles{nPlot})
 end
-print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect_byBlock_onTopOfDrug.png')
+% print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect_byBlock_onTopOfDrug.png')
 
 
 %% Filter clusters - SW instead of Drug

@@ -82,7 +82,7 @@ neighbours = ft_prepare_neighbours(cfg_neighb);
 cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap2=flipud(cmap2);
 limNumClus=2;
-limMax=6;%max(max(abs(temp_topo_tval)));
+limMax=12;%max(max(abs(temp_topo_tval)));
 figure; set(gcf,'Position',[213         173        1027         805/3]);
 PlotTitles={'Alpha','SSVEP'};
 for nPlot=1:2
@@ -203,5 +203,5 @@ for nPlot=1:2
     
     title(PlotTitles{nPlot})
 end
-% print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect_byBlock_insteadOfDrug.png')
+print('-dpng', '-r300', '../../Figures/Topo_LME_TFEffect_byBlock_insteadOfDrug.png')
 
