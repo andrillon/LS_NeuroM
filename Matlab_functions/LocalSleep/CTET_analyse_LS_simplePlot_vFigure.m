@@ -182,7 +182,7 @@ else
 end
 %% Filter clusters
 clus_alpha=0.05;
-montecarlo_alpha=0.05/2;
+montecarlo_alpha=0.05;
 
 cfg_neighb=[];
 cfg_neighb.method = 'template';

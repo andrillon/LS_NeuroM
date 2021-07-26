@@ -188,16 +188,18 @@ cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to 
 cmap2=flipud(cmap2);
 limNumClus=2;
 limMax=6;%max(max(abs(temp_topo_tval)));
-figure; set(gcf,'Position',[213         173        1027*1.5         805/3]);
-PlotTitles={'FA','Miss','RT','d''','crit'};
-for nPlot=1:5
+figure; set(gcf,'Position',[1 1 320*3 320*1]);
+[ha pos]=tight_subplot(1,3,0.02,0.05,0.05);
+PlotTitles={'Miss','FA','RT'};
+for nPlot=1:3
     
-    subplot(1,5,nPlot)
+    hs=subplot(1,3,nPlot); format_fig;
+    set(hs,'Position',pos{nPlot})
     switch nPlot
-        case 1
+        case 2
             temp_topo=FA_est{1}(:,3);
             temp_clus=FA_clus;
-        case 2
+        case 1
             temp_topo=Miss_est{1}(:,3);
             temp_clus=Miss_clus;
         case 3
@@ -227,7 +229,7 @@ for nPlot=1:5
         end
     end
     simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
-    ft_plot_lay_me(layout, 'chanindx',1:64,'pointsymbol','o','pointcolor',[1 1 1]*0.7,'pointsize',6,'box','no','label','no')
+%     ft_plot_lay_me(layout, 'chanindx',1:64,'pointsymbol','o','pointcolor',[1 1 1]*0.7,'pointsize',6,'box','no','label','no')
     format_fig;
     caxis([-1 1]*limMax)
     if ~isempty(temp_clus)
@@ -235,18 +237,18 @@ for nPlot=1:5
             if length(match_str(layout.label,temp_clus{nclus}{2}))<limNumClus
                 continue;
             end
-            ft_plot_lay_me(layout, 'chanindx',match_str(layout.label,temp_clus{nclus}{2}),'pointsymbol','o','pointcolor','k','pointsize',36,'box','no','label','no')
+            ft_plot_lay_me(layout, 'chanindx',match_str(layout.label,temp_clus{nclus}{2}),'pointsymbol','o','pointcolor','k','pointsize',72,'box','no','label','no')
         end
     end
-    if nPlot==5
-        h=colorbar;
-        set(h,'Position',[0.93 0.4 0.02 0.2])
+    if nPlot==3
+        hb=colorbar('Position',[0.975    0.33   0.02    0.33]);
+
     end
     colormap(cmap2);
     
     title(PlotTitles{nPlot})
 end
-% print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect_byBlock_onTopOfDrug.png')
+print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect_byBlock_onTopOfDrug.png')
 
 
 %% Filter clusters - SW in addition to Drug
@@ -272,16 +274,18 @@ cmap2=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to 
 cmap2=flipud(cmap2);
 limNumClus=2;
 limMax=6;%max(max(abs(temp_topo_tval)));
-figure; set(gcf,'Position',[213         173        1027*1.5         805/3]);
-PlotTitles={'FA','Miss','RT','d''','crit'};
-for nPlot=1:5
+figure; set(gcf,'Position',[1 1 320*3 320*1]);
+[ha pos]=tight_subplot(1,3,0.02,0.05,0.05);
+PlotTitles={'Miss','FA','RT'};
+for nPlot=1:3
     
-    subplot(1,5,nPlot)
+    hs=subplot(1,3,nPlot); format_fig;
+    set(hs,'Position',pos{nPlot})
     switch nPlot
-        case 1
+        case 2
             temp_topo=FA_est{1}(:,3);
             temp_clus=FA_clus;
-        case 2
+        case 1
             temp_topo=Miss_est{1}(:,3);
             temp_clus=Miss_clus;
         case 3
@@ -310,8 +314,8 @@ for nPlot=1:5
             fprintf('... ... found %s cluster (%g) of %g electrodes (tval cluster=%g, Pmc=%g)\n',temp_clus{nclus}{1},nclus,length(temp_clus{nclus}{2}),temp_clus{nclus}{3},temp_clus{nclus}{4})
         end
     end
-    simpleTopoPlot_ft(temp_topo, layout,'labels',[],0,1);
-    ft_plot_lay_me(layout, 'chanindx',1:64,'pointsymbol','o','pointcolor',[1 1 1]*0.7,'pointsize',6,'box','no','label','no')
+    simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
+%     ft_plot_lay_me(layout, 'chanindx',1:64,'pointsymbol','o','pointcolor',[1 1 1]*0.7,'pointsize',6,'box','no','label','no')
     format_fig;
     caxis([-1 1]*limMax)
     if ~isempty(temp_clus)
@@ -319,16 +323,16 @@ for nPlot=1:5
             if length(match_str(layout.label,temp_clus{nclus}{2}))<limNumClus
                 continue;
             end
-            ft_plot_lay_me(layout, 'chanindx',match_str(layout.label,temp_clus{nclus}{2}),'pointsymbol','o','pointcolor','k','pointsize',36,'box','no','label','no')
+            ft_plot_lay_me(layout, 'chanindx',match_str(layout.label,temp_clus{nclus}{2}),'pointsymbol','o','pointcolor','k','pointsize',72,'box','no','label','no')
         end
     end
-    if nPlot==5
-        h=colorbar;
-        set(h,'Position',[0.93 0.4 0.02 0.2])
+    if nPlot==3
+        hb=colorbar('Position',[0.975    0.33   0.02    0.33]);
+
     end
     colormap(cmap2);
     
     title(PlotTitles{nPlot})
 end
-% print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect_byBlock_onTopOfDrug.png')
+print('-dpng', '-r300', '../../Figures/Topo_LME_BehavEffect_Alpha_byBlock_onTopOfDrug.png')
 

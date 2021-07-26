@@ -134,43 +134,40 @@ for nCh=1:length(layout.label)-2
 end
 
 %%
-ColorRec=[255 255 0]/256;
+
 figure;
 set(gcf,'Position',[1         134         560*2         800/2]);
 subplot(1,2,2);
 thisCh=match_str(chLabels,'Pz');
-jbfill([0.05 0.3],[-1.5 -1.5],[6 6],ColorRec,ColorRec,1,0.2);
+jbfill([0.05 0.3],[-1.5 -1.5],[6 6],[50,205,50]/256,[50,205,50]/256,1,0.2);
     hp=[];
 for nDrug=1:4
 %     [~,hp(nDrug)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(:,nDrug,thisCh,:)-...
 %         all_ERP_NT_offset(:,nDrug,thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],'-',0.1,1,5,1,3);
-    [~,hp(nDrug)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(:,nDrug,thisCh,:)),0,ColorsD{nDrug},[0 0.05 0.0001 1000],'-',0.1,1,5,1,3);
-    [~,~]=simpleTplot(xTime_offset,squeeze(all_ERP_NT_offset(:,nDrug,thisCh,:)),0,ColorsD{nDrug},[0 0.05 0.0001 1000],':',0.1,1,5,1,3);
+    [~,hp(nDrug)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(:,nDrug,thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],'-',0.1,1,5,1,3);
+    [~,~]=simpleTplot(xTime_offset,squeeze(all_ERP_NT_offset(:,nDrug,thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],':',0.1,1,5,1,3);
+    title('Pz','FontSize',22)
     ylim([-1.5 6])
     xlim([-0.2 0.6])
     format_fig;
-       set(gca,'FontSize',22)
- title('Pz','FontSize',28)
     xlabel('Time from Offset')
     ylabel('ERP (\muV)')
 end
-hl=legend(hp,ColorsDlabels,'box','off','position',[0.8790    0.6913    0.0777    0.2537])
+legend(hp,ColorsDlabels,'box','off')
 set(gca,'LineWidth',2);
 
 subplot(1,2,1);
 thisCh=match_str(chLabels,'Fz');
-jbfill([0.05 0.3],[-4.5 -4.5],[3 3],ColorRec,ColorRec,1,0.2);
+jbfill([0.05 0.3],[-4.5 -4.5],[3 3],[50,205,50]/256,[50,205,50]/256,1,0.2);
     hp=[];
 for nDrug=1:4
 %     [~,hp(nDrug)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(:,nDrug,thisCh,:)-...
 %         all_ERP_NT_offset(:,nDrug,thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],'-',0.1,1,5,1,3);
-    [~,hp(nDrug)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(:,nDrug,thisCh,:)),0,ColorsD{nDrug},[0 0.05 0.0001 1000],'-',0.1,1,5,1,3);
-    [~,hp(nDrug)]=simpleTplot(xTime_offset,squeeze(all_ERP_NT_offset(:,nDrug,thisCh,:)),0,ColorsD{nDrug},[0 0.05 0.0001 1000],':',0.1,1,5,1,3);
+    [~,hp(nDrug)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(:,nDrug,thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],'-',0.1,1,5,1,3);
+    [~,hp(nDrug)]=simpleTplot(xTime_offset,squeeze(all_ERP_NT_offset(:,nDrug,thisCh,:)),0,Colors(nDrug,:),[0 0.05 0.0001 1000],':',0.1,1,5,1,3);
     ylim([-4.5 3])
     xlim([-0.2 0.6])
     format_fig;
-    set(gca,'FontSize',22)
-    title('Fz','FontSize',28)
     xlabel('Time from Offset')
     ylabel('ERP (\muV)')
 end

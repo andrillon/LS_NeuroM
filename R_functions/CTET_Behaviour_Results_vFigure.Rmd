@@ -35,6 +35,7 @@ library(cowplot)
 library(dplyr) 
 library(readr)
 
+source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R")
 
 CTET_Behaviour1 <- read.csv("../Tables/CTET_behav_resblock_full.txt")
 
@@ -44,6 +45,9 @@ CTET_Behaviour1<-CTET_Behaviour1[as.numeric(CTET_Behaviour1$BlockN)<11,]
 CTET_Behaviour1$BlockN<-as.numeric(CTET_Behaviour1$BlockN)
 CTET_Behaviour1$Treatment<-relevel(CTET_Behaviour1$Treatment,"PLA")
 CTET_Behaviour1<-CTET_Behaviour1[!is.na(CTET_Behaviour1$BlockN),]
+
+CTET_Behaviour1$FA<-CTET_Behaviour1$FA*100
+CTET_Behaviour1$Miss<-CTET_Behaviour1$Miss*100
 
 ```
 
@@ -66,12 +70,8 @@ lm.FA2 <- lmer(FA ~ 1 + Treatment + BlockN + (1|SubID), data = CTET_Behaviour1, 
 summary(lm.FA2)
 confint(lm.FA2, method = "Wald", oldNames = FALSE)
 
+summary(lm.FA1)
 ## Normality plot of residuals - TA: Try to plot QQ plots
-hist(residuals(lm.FA2))
-qqnorm(resid(lm.FA2))
-qqline(resid(lm.FA2))
-plot(lm.FA2)
-plot(fitted(lm.FA2), resid(lm.FA2))
 ##binnedplot(fitted(lm.FA2),resid(lm.FA2))
 ```
 - lm.FA2 was the winning model (AIC and BIC)
@@ -95,14 +95,9 @@ lm.Miss2 <- lmer(Miss ~ 1 + Treatment + BlockN + (1|SubID), data =  CTET_Behavio
 summary(lm.Miss2)
 confint(lm.Miss2, method = "Wald", oldNames = FALSE)
 
-##Normality plot of residuals 
-hist(residuals(lm.Miss2))
-boxplot(residuals(lm.Miss2))
-qqnorm(resid(lm.Miss2))
-qqline(resid(lm.Miss2))
-plot(lm.Miss2)
-plot(fitted(lm.Miss2), resid(lm.Miss2))
+summary(lm.Miss1)
 
+##Normality plot of residuals 
 #binnedplot(fitted(lm.Miss2),resid(lm.Miss2))
 ```
 -Although lm.Miss3 is the winning model, after Bonferonni correction, it does not sig any more (p > .00556) (NOTE: THIS WAS PREVIOUS ANALYSIS BUT STILL STANDS)
@@ -129,12 +124,6 @@ summary(lm.HR1)
 confint(lm.HR1, method = "Wald", oldNames = FALSE)
 
 ## Normality plot of residuals 
-hist(residuals(lm.HR1))
-boxplot(residuals(lm.HR1))
-qqnorm(residuals(lm.HR1))
-qqline(resid(lm.HR1))
-plot(lm.HR3)
-plot(fitted(lm.HR1), resid(lm.HR1))
 #binnedplot(fitted(lm.HR1), resid(lm.HR1))
 ```
 - lm.HR1 is the winning model (AIC and BIC)
@@ -159,12 +148,6 @@ summary(lm.SDHR1)
 confint(lm.SDHR1, method = "Wald", oldNames = FALSE)
 
 ## Normality plot of residuals 
-hist(residuals(lm.SDHR1))
-boxplot(residuals(lm.SDHR1))
-qqnorm(residuals(lm.SDHR1))
-qqline(resid(lm.SDHR1))
-plot(lm.SDHR1)
-plot(fitted(lm.SDHR1), resid(lm.SDHR1))
 #binnedplot(fitted(lm.SDHR1), resid(lm.SDHR1))
 ```
 - lm.SDHR1 was the winning model (AIC and BIC)
@@ -192,12 +175,6 @@ summary(lm.dprime2)
 confint(lm.dprime2, method = "Wald", oldNames = FALSE)
 
 ## Normality plot of residuals 
-hist(residuals(lm.dprime2))
-boxplot(residuals(lm.dprime2))
-qqnorm(residuals(lm.dprime2))
-qqline(resid(lm.dprime2))
-plot(lm.dprime2)
-plot(fitted(lm.dprime2), resid(lm.dprime2))
 #binnedplot(fitted(lm.dprime2), resid(lm.dprime2))
 
 
@@ -206,12 +183,6 @@ summary(lm.dprime3)
 confint(lm.dprime3, method = "Wald", oldNames = FALSE)
 
 ## Normality plot of residuals 
-hist(residuals(lm.dprime3))
-boxplot(residuals(lm.dprime3))
-qqnorm(residuals(lm.dprime3))
-qqline(resid(lm.dprime3))
-plot(lm.dprime3)
-plot(fitted(lm.dprime3), resid(lm.dprime3))
 #binnedplot(fitted(lm.dprime3), resid(lm.dprime3))
 
 
@@ -245,12 +216,6 @@ summary(lm.crit2)
 confint(lm.crit2, method = "Wald", oldNames = FALSE)
 
 ## Normality plot of residuals 
-hist(residuals(lm.crit2))
-boxplot(residuals(lm.crit2))
-qqnorm(residuals(lm.crit2))
-qqline(resid(lm.crit2))
-plot(lm.crit2)
-plot(fitted(lm.crit2), resid(lm.crit2))
 #binnedplot(fitted(lm.crit2), resid(lm.crit2))
 
 
@@ -259,12 +224,6 @@ summary(lm.crit3)
 confint(lm.crit3, method = "Wald", oldNames = FALSE)
 
 ## Normality plot of residuals 
-hist(residuals(lm.crit3))
-boxplot(residuals(lm.crit3))
-qqnorm(residuals(lm.crit3))
-qqline(resid(lm.crit3))
-plot(lm.crit3)
-plot(fitted(lm.crit3), resid(lm.crit3))
 #binnedplot(fitted(lm.crit3), resid(lm.crit3))
 
 
@@ -285,26 +244,11 @@ fa.graph$Treatment<-ordered(fa.graph$Treatment, c("PLA","MPH","ATM","CIT"))
 ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + scale_colour_brewer(palette = "Dark2") + scale_fill_brewer(palette = "Dark2") + ggtitle("False alarms according to block number and treatment") + ylab("False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.015)
 
 ##Graph with Standard Error 
-ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.011) + geom_ribbon(aes(ymin = FA-se, ymax = FA+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::percent_format(accuracy = .1))+ theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank())+ coord_cartesian(ylim =c(0.0009, .017))
+ggplot(fa.graph, aes(x = BlockN, y = FA, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean False Alarms") + xlab("Block Number") + xlim(0, 10.5) + ylim(0, 0.011) + geom_ribbon(aes(ymin = FA-se, ymax = FA+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::number_format(accuracy = .1))+ theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14,family="Arial", face="bold"),axis.text=element_text(size=14,family="Arial", face="bold"), axis.title.y = element_blank()) + coord_cartesian(ylim =c(0.09, 1.7))
 
 
 ggsave(file="../Figures/CTET_LinePlot_FA_2021.png", 
-       width = 30/2,
-      height = 18/2,
-    units = c("cm"))
-
-##Barplot 
-fa2.graph <- summarySE(CTET_Behaviour1, measurevar = "FA", groupvars = c( "Treatment"))
-fa2.graph$FA<-fa2.graph$FA
-fa2.graph$Treatment<-ordered(fa2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
-marks <- c(0,20000,40000,60000,80000,100000)
-
-
-ggplot(data=fa2.graph, aes(x=Treatment, y=FA, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = FA-se, ymax = FA+se), width = .4, size = .45) + scale_fill_discrete( name = "Treatment", breaks = c("PLA", "MPH", "ATM", "CIT"), labels = c("Placebo", "Methylphenidate", "Atomoxetine", "Citalopram")) + ylab("% of Mean False Alarms")+ scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_y_continuous(labels = scales::percent_format(accuracy = .01)) +theme_classic() +theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank()) + coord_cartesian(ylim =c(0.0009, .017)) 
-
-ggsave(file="../Figures/CTET_BarPlot_FA_2021.png", dpi = 600, 
-       width = 15/2,
+       width = 30/3,
       height = 18/2,
     units = c("cm"))
 ```
@@ -319,25 +263,12 @@ ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point()
 
 
 ##Graph with Standard Error 
-ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11)  + geom_ribbon(aes(ymin = Miss-se, ymax = Miss+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))+ scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::percent_format(accuracy = 1))+ theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank()) + coord_cartesian(ylim =c(.1, 0.5))
+ggplot(miss.graph, aes(x = BlockN, y = Miss, colour = Treatment)) + geom_point() + geom_line() + ylab("Mean Missed Targets") + xlab("Block Number") + xlim(0, 11)  + geom_ribbon(aes(ymin = Miss-se, ymax = Miss+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))+ scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::number_format(accuracy = 1))+ theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14,family="Arial", face="bold"),axis.text=element_text(size=14,family="Arial", face="bold"), axis.title.y = element_blank()) + coord_cartesian(ylim =c(15, 50))
 
 ggsave(file="../Figures/CTET_LinePlot_Misses_2021.png", 
-       width = 30/2,
+       width = 30/3,
       height = 18/2,
     units = c("cm"))
-
-##Barplot 
-miss2.graph <- summarySE(CTET_Behaviour1, measurevar = "Miss", groupvars = c("Treatment"), na.rm = TRUE)
-miss2.graph$Treatment<-ordered(miss2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
-
-ggplot(data= miss2.graph, aes(x=Treatment, y=Miss, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Miss-se, ymax = Miss+se), width = .35, size = .6)  + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77"))  + labs (y = "% of Mean Missed Targets") + scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + coord_cartesian(ylim =c(0, 0.45))+theme_classic() + theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())+ coord_cartesian(ylim =c(0.1, .5)) 
-
-ggsave(file="../Figures/CTET_BarPlot_Misses_2021.png", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
-
 ```
 
 ```{r}
@@ -350,27 +281,13 @@ ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point()
 
 ##Graph with Standard Error 
 ggplot(rt.graph, aes(x = BlockN, y = Hit_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ylab("Reaction Time (seconds)") + xlab("Block Number") + xlim(0, 11) + ylim(1.3, 1.5) + geom_ribbon(aes(ymin = Hit_RT-se, ymax = Hit_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +
-  scale_x_continuous(breaks = c(1:10)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank())
+  scale_x_continuous(breaks = c(1:10)) + scale_y_continuous(labels = scales::number_format(accuracy = .01))+ theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14,family="Arial", face="bold"),axis.text=element_text(size=14,family="Arial", face="bold"), axis.title.y = element_blank()) + coord_cartesian(ylim =c(1.32, 1.46))
 
 ggsave(file="../Figures/CTET_LinePlot_RThits_2021.png", 
-       width = 30/2,
+       width = 30/3,
       height = 18/2,
     units = c("cm"))
 
-rt2.graph <- summarySE(CTET_Behaviour1, measurevar = "Hit_RT", groupvars = c("Treatment"), na.rm = TRUE)
-rt2.graph$Treatment<-ordered(rt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
-
-ggplot(data= rt2.graph, aes(x=Treatment, y=Hit_RT, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = Hit_RT-se, ymax = Hit_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + ylim(0, 2) + labs(y = "Reaction Time (seconds)") + coord_cartesian(ylim =c(1.3, 1.5)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
-  
-ggsave(file="../Figures/CTET_BarPlot_RThits_2021.eps", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
-ggsave(file="../Figures/CTET_BarPlot_RThits_2021.png", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
 ```
 
 
@@ -384,27 +301,13 @@ ggplot(sdrt.graph, aes(x = BlockN, y = STD_RT, colour = Treatment)) + geom_point
 
 ##Graph with Standard Error 
 ggplot(sdrt.graph, aes(x = BlockN, y = STD_RT, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ylab("Standard Deviation of Reaction Time (seconds)") + xlab("Block Number") + xlim(0, 11) + geom_ribbon(aes(ymin = STD_RT-se, ymax = STD_RT+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +
-  scale_x_continuous(breaks = c(1:10)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank()) + ylim(0.065, .25)
+  scale_x_continuous(breaks = c(1:10)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank()) + ylim(0.08, .22)
 
 ggsave(file="../Figures/CTET_LinePlot_SDRThits_2021.png", 
-       width = 30/2,
+       width = 30/3,
       height = 18/2,
     units = c("cm"))
 
-sdrt2.graph <- summarySE(CTET_Behaviour1, measurevar = "STD_RT", groupvars = c("Treatment"), na.rm = TRUE)
-sdrt2.graph$Treatment<-ordered(sdrt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
-
-ggplot(data= sdrt2.graph, aes(x=Treatment, y=STD_RT, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = STD_RT-se, ymax = STD_RT+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + labs(y = "Reaction Time Variability (seconds)") + coord_cartesian(ylim =c(0.075, .25)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
-  
-ggsave(file="../Figures/CTET_BarPlot_SDRThits_2021.eps", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
-ggsave(file="../Figures/CTET_BarPlot_SDRThits_2021.png", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
 ```
 
 ```{r}
@@ -417,27 +320,13 @@ ggplot(dprime.graph, aes(x = BlockN, y = dprime, colour = Treatment)) + geom_poi
 
 ##Graph with Standard Error 
 ggplot(dprime.graph, aes(x = BlockN, y = dprime, colour = Treatment)) + geom_point() + geom_line(alpha = .7) +  ylab("dprime") + xlab("Block Number") + xlim(0, 11) + geom_ribbon(aes(ymin = dprime-se, ymax = dprime+se, fill = Treatment), alpha = .35, linetype = 0) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +
-  scale_x_continuous(breaks = c(1:10)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank())+ coord_cartesian(ylim =c(0.5, 5)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) 
+  scale_x_continuous(breaks = c(1:10)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank())+ coord_cartesian(ylim =c(0.5, 5)) + scale_y_continuous(labels = scales::number_format(accuracy = .01))  + coord_cartesian(ylim =c(1.5, 5))
 
 ggsave(file="../Figures/CTET_LinePlot_dprime_2021.png", 
-       width = 30/2,
+       width = 30/3,
       height = 18/2,
     units = c("cm"))
 
-dprime2.graph <- summarySE(CTET_Behaviour1, measurevar = "dprime", groupvars = c("Treatment"), na.rm = TRUE)
-dprime2.graph$Treatment<-ordered(sdrt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
-
-ggplot(data= dprime2.graph, aes(x=Treatment, y=dprime, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = dprime-se, ymax = dprime+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + labs(y = "dprime") + coord_cartesian(ylim =c(0.5, 5)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
-  
-ggsave(file="../Figures/CTET_BarPlot_dprime_2021.eps", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
-ggsave(file="../Figures/CTET_BarPlot_dprime_2021.png", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
 ```
 
 ```{r}
@@ -453,24 +342,10 @@ ggplot(criterion.graph, aes(x = BlockN, y = crit, colour = Treatment)) + geom_po
   scale_x_continuous(breaks = c(1:10)) + theme_classic() +theme(panel.border = element_blank(), legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.y = element_blank()) + coord_cartesian(ylim =c(-1.3, -0.75)) + scale_y_continuous(labels = scales::number_format(accuracy = .01))
 
 ggsave(file="../Figures/CTET_LinePlot_criterion_2021.png", 
-       width = 30/2,
+       width = 30/3,
       height = 18/2,
     units = c("cm"))
 
-dprime2.graph <- summarySE(CTET_Behaviour1, measurevar = "crit", groupvars = c("Treatment"), na.rm = TRUE)
-dprime2.graph$Treatment<-ordered(sdrt2.graph$Treatment,c("PLA","MPH","ATM","CIT"))
-
-ggplot(data= dprime2.graph, aes(x=Treatment, y=crit, fill = Treatment)) +
-  geom_bar(stat="identity") + geom_errorbar(aes(ymin = crit-se, ymax = crit+se), width = .4, size = .5) + scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + labs(y = "criterion") + coord_cartesian(ylim =c(-1.3, -0.75)) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme_classic()+theme(legend.position = "none",axis.title=element_text(size=14),axis.text=element_text(size=14), axis.title.x = element_blank())
-  
-ggsave(file="../Figures/CTET_BarPlot_criterion_2021.eps", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
-ggsave(file="../Figures/CTET_BarPlot_criterion_2021.png", dpi = 600, 
-       width = 15/2,
-      height = 18/2,
-    units = c("cm"))
 ```
 
 
@@ -479,6 +354,8 @@ ggsave(file="../Figures/CTET_BarPlot_criterion_2021.png", dpi = 600,
 #summary stats 
 CTET_Behaviour1_noNA <-na.omit(CTET_Behaviour1)
 CTET_Behaviour1_noNA$Treatment<-ordered(CTET_Behaviour1_noNA$Treatment,c("PLA","MPH","ATM","CIT"))
+#CTET_Behaviour1_noNA$Miss<-CTET_Behaviour1_noNA$Miss*100
+#CTET_Behaviour1_noNA$FA<-CTET_Behaviour1_noNA$FA*100
 
 
 summary_RT <- summarySE(CTET_Behaviour1_noNA, measurevar = "Hit_RT", groupvars=c("Treatment", "SubID"))
@@ -491,11 +368,11 @@ ggplot(summary_RT, aes(x = Treatment, y = Hit_RT, fill = Treatment)) +
   geom_boxplot(aes(x = Treatment, y = Hit_RT, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
   geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
     geom_point(aes(x = as.numeric(Treatment)-.225, y = Hit_RT, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme(legend.position="none") + coord_cartesian(ylim =c(1, 1.7))
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time (s)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  font("ylab", size = 14,family="Arial", face="bold") + font("xlab", size = 14,family="Arial", face="bold") + font("y.text", size = 12.5,family="Arial", face="bold") + font("x.text", size = 12.5,family="Arial", face="bold") + scale_y_continuous(labels = scales::number_format(accuracy = .1)) + theme(legend.position="none") + coord_cartesian(ylim =c(1.1, 1.65))
 
 ggsave(file="../Figures/CTET_RainCloudPlot_RT_2021.png", 
-       width = 30/2,
+       width = 30/4,
       height = 18/2,
     units = c("cm"))  
 
@@ -515,33 +392,33 @@ ggplot(summary_STDRT, aes(x = Treatment, y = STD_RT, fill = Treatment)) +
   geom_point(aes(x = as.numeric(Treatment)-.225, y = STD_RT, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
   geom_boxplot(aes(x = Treatment, y = STD_RT, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
     geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Reaction Time Variability (seconds)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("RT Variability (s)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
     font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) +
   scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme(legend.position="none")
 
 ggsave(file="../Figures/CTET_RainCloudPlot_STDRT_2021.png", 
-       width = 30/2,
+       width = 30/4,
       height = 18/2,
     units = c("cm"))  
 ```
 
 ```{r}
 ##Raincloud plot of misses
-#summary stats 
+#summary stats
 summary_miss <- summarySE(CTET_Behaviour1_noNA, measurevar = "Miss", groupvars=c("Treatment", "SubID"))
 summary_miss
 
 ggplot(summary_miss, aes(x = Treatment, y = Miss, fill = Treatment)) +
-  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .15, y = 0), adjust = 1.5, trim = FALSE, alpha = .25, colour = NA) + 
+  geom_flat_violin(aes(fill = Treatment), position = position_nudge(x = .15, y = 0), adjust = 1.5, alpha = .25, colour = NA, trim=FALSE) + 
   geom_point(aes(x = as.numeric(Treatment)-.225, y = Miss, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
   geom_boxplot(aes(x = Treatment, y = Miss, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
   geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Misses") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + theme(legend.position="none")
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Misses (%)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  font("ylab", size = 14,family="Arial", face="bold") + font("xlab", size = 14,family="Arial", face="bold") + font("y.text", size = 12.5,family="Arial", face="bold") + font("x.text", size = 12.5,family="Arial", face="bold") +
+  scale_y_continuous(labels = scales::number_format(accuracy = 1)) + theme(legend.position="none") + coord_cartesian(ylim =c(0, 90))
 
 ggsave(file="../Figures/CTET_RainCloudPlot_Miss_2021.png", 
-       width = 30/2,
+       width = 30/4,
       height = 18/2,
     units = c("cm"))  
 ```
@@ -556,12 +433,12 @@ ggplot(summary_FA, aes(x = Treatment, y = FA, fill = Treatment)) +
   geom_point(aes(x = as.numeric(Treatment)-.225, y = FA, colour = Treatment), position = position_jitter(width = .05), size = 3, shape = 20, alpha = .4) + 
   geom_boxplot(aes(x = Treatment, y = FA, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black") +
   geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
-  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("False Alarm") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) + theme(legend.position="none")
+  scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("False Alarms (%)") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  font("ylab", size = 14,family="Arial", face="bold") + font("xlab", size = 14,family="Arial", face="bold") + font("y.text", size = 12.5,family="Arial", face="bold") + font("x.text", size = 12.5,family="Arial", face="bold") +
+  scale_y_continuous(labels = scales::number_format(accuracy = .1)) + theme(legend.position="none")
 
 ggsave(file="../Figures/CTET_RainCloudPlot_FA_2021.png", 
-       width = 30/2,
+       width = 30/4,
       height = 18/2,
     units = c("cm"))  
 ```
@@ -579,10 +456,10 @@ ggplot(summary_dprime, aes(x = Treatment, y = dprime, fill = Treatment)) +
   geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
   scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("D-prime") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
   font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) +
-  scale_y_continuous(labels = scales::number_format(accuracy = .01))+ theme(legend.position="none")
+  scale_y_continuous(labels = scales::number_format(accuracy = .1))+ theme(legend.position="none")
 
 ggsave(file="../Figures/CTET_RainCloudPlot_dprime_2021.png", 
-       width = 30/2,
+       width = 30/4,
       height = 18/2,
     units = c("cm"))  
 ```
@@ -599,7 +476,7 @@ ggplot(summary_crit, aes(x = Treatment, y = crit, fill = Treatment)) +
   geom_boxplot(aes(x = Treatment, y = crit, fill = Treatment), outlier.shape = NA, alpha = .5, width = .225, colour = "black")  +
   geom_line(aes(group = SubID),color= "grey", alpha = 0.55, linetype = "dashed", position = position_nudge(x = -.225, y = 0)) +
   scale_fill_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) + scale_colour_manual(values = c("#666666", "#d95f02", "#7570b3", "#1b9e77")) +xlab("Treatment") + ylab("Criterion") + theme(panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) + scale_y_continuous(labels = scales::number_format(accuracy = .01)) + theme(legend.position="none")
+  font("ylab", size = 14) + font("xlab", size = 14) + font("y.text", size = 12.5) + font("x.text", size = 12.5) + scale_y_continuous(labels = scales::number_format(accuracy = .1)) + theme(legend.position="none")
 
 ggsave(file="../Figures/CTET_RainCloudPlot_criterion_2021.png", 
        width = 30/2,
